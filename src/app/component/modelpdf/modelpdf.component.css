@@ -1,0 +1,76 @@
+.customdialog{
+    color: black;
+    flex-direction: row;
+    display: flex;
+    height: 100%;
+}
+.img-secction,
+.img-secction img{
+    border-radius: 5px;
+    width: 70vw;
+}
+.alert {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.alertE {
+  background-color: rgb(168, 30, 30);
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+.data-secction{
+    flex-direction: row; 
+    display: flex;
+    padding: 1%;
+}
+.textqr{
+    margin: 1%;
+}
+.share-secction{
+    background-color: #E7F4F9;
+    display: flex;
+    width: fit-content;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    padding-left: 4%;
+    padding-right: 4%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    margin-top: 1%;
+    margin-bottom: 4%;
+    color: #00A0B6;
+}
+
+.vertical-layout{
+    flex-direction: column;
+    display: flex;
+    width: 100%;
+    
+}
+.button-secction{
+    color: #06367A;
+    flex: 5;
+    flex-direction: row;
+    display: flex;
+}button{
+    margin: 1%;
+}
+.example-full-width{
+    width: 100%;
+
+}
+
+.name{
+    width: 100%;
+    font-size: 150%;
+    margin: 2%;
+}
+.date{
+    font-size: 80%;
+    margin: 2%;
+}

@@ -1,0 +1,82 @@
+.container {
+    display: flex;
+    height: 100vh; /* Use full height of the viewport */
+    flex-direction: column;
+  }
+.vertical-layout{
+    background-color: white;
+    border-radius: 10px;
+    padding: 2%;
+    flex-direction: column;
+    display: flex;
+    margin-top: 2%;
+    margin-left: 3%;
+    width: 40%;
+}
+
+.horizontal-layout{
+    display: flex;
+    flex-direction: row;
+}
+
+.title{
+    margin-left: 2%;
+    font-size: 250%;
+    font-weight: bold;
+}
+.subtitle{
+    font-weight: bold;
+}
+.data{}
+.baja{
+    margin: 1%;
+    flex-direction: row;
+    display: flex;
+}
+
+.personal-data{
+    margin: 4%;
+    font-size: 150%;
+    font-weight: bold;
+}
+.account-data{
+    margin: 4%;
+    font-size: 150%;
+    font-weight: bold;
+}
+.label{
+    margin-left: 2%;
+    font-size: 100%;
+    font-weight: bold;
+}
+.value{
+    margin-left: 2%;
+    font-size: 100%;
+    font-weight: normal;
+    margin-bottom: 1%;
+}
+.data-secction{
+    background-color: white;
+    margin: 1%;
+    border-radius: 15px;
+}
+.button-secction{
+    margin: 2%;
+}
+
+@media only screen and (max-width: 768px) {
+    .horizontal-layout{
+        display: flex;
+        flex-direction: column;
+    }
+    .vertical-layout{
+        background-color: white;
+        border-radius: 15px;
+        padding: 2%;
+        flex-direction: column;
+        display: flex;
+        margin-top: 3%;
+        margin-left: 3%;
+        width: 94%;
+    }
+  }

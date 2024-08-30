@@ -1,0 +1,268 @@
+.container {
+  display: flex;
+  height: calc(100vh - 64px);
+  flex-direction: row;
+}
+.example-full-width {
+  width: 100%;
+}
+.share-secction{
+  background-color: #E7F4F9;
+  display: flex;
+  width: fit-content;
+  border-radius: 20px;
+  justify-content: center;
+  align-items: center;
+  padding-left: 4%;
+  padding-right: 4%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  color: #00A0B6;
+}
+.square-up{
+    background-color: white;
+    border-radius: 20px;
+    display: flex; /* Activa Flexbox para este contenedor */
+    flex-direction: row; /* Organiza los elementos en filas (horizontalmente) */
+    padding: 2%;
+    width: 75%;
+}
+.square-down{
+    margin-top: 2%;
+    background-color: white;
+    border-radius: 20px;
+    display: flex; /* Activa Flexbox para este contenedor */
+    flex-direction: column; /* Organiza los elementos en filas (horizontalmente) */
+    width: max-content;
+    padding: 2%;
+    width: 75%;
+}
+.uploadsquare{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.settings{
+  display: flex;
+  flex-direction: column;
+  padding-left: 1%;
+}
+.title-settings{
+  font-size: 150%;
+  margin-bottom: 2%;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: calc(100vh - 64px);
+  }
+  .alert {
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px;
+    text-align: center;
+  }
+
+  .alertE {
+    background-color: rgb(168, 30, 30);
+    color: white;
+    padding: 15px;
+    text-align: center;
+  }
+
+.title{
+    text-align: center;
+    font-weight: bold;
+    font-size: 25px;
+    margin-top: 2%;
+}
+.subtitle{
+    flex: 1;
+    text-align: center;
+    font-size: 15px;
+    margin: 3%;
+}
+.blue-square{
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #EBF2FC;
+    border-radius: 20px;
+    flex-direction: column;
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+.blue-rectangle{
+    flex: 1;
+    display: flex;
+    background-color: #EBF2FC;
+    border-radius: 15px;
+    flex-direction: row;
+    margin-bottom: 2%;
+}
+.icon-secction{
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2%;
+    flex-direction: column;
+    padding: 1%;
+    border-radius: 5px;
+}
+.middle-secction{
+    flex:5;
+    flex-direction: column;
+    margin-top: 2%;
+
+}
+.button-secction{
+    margin-top: 1%;
+}
+
+.example-button-row button,
+.example-button-row a {
+  border-width: 1px;
+  border-color: #4181DA;
+  border-radius: 10px;
+  color: #4181DA
+
+}
+.bold{
+    font-weight: bold;
+}
+.blue-icon-big {
+    color: #266FD5;
+    font-size: 50px;
+    height: 50px;
+    width: 50px;
+  }
+  .blue-icon-small {
+    color: #266FD5;
+  }
+
+  .recentfile{
+    padding-bottom: 2%;
+    width: 95%;
+  }
+  .rectangle{
+    background-color: #EBF2FC;
+    border-radius: 15px;
+    display: flex; /* Activa Flexbox para este contenedor */
+    flex-direction: row; /* Organiza los elementos en filas (horizontalmente) */
+    padding: 2%;
+  }
+  .rectangle2{
+    border-radius: 10%;
+    display: flex; /* Activa Flexbox para este contenedor */
+    flex-direction: row; /* Organiza los elementos en filas (horizontalmente) */
+    padding: 10px;
+  }
+  .seccion {
+    flex: 1; /* Distribuye el espacio disponible igualmente entre los elementos */
+    padding: 10px; /* Espacio interior para no pegar el contenido a los bordes */
+  }
+  .seccion2 {
+    flex: 2; /* Distribuye el espacio disponible igualmente entre los elementos */
+
+  }
+
+  @media only screen and (max-width: 768px) {
+    .square-up{
+      background-color: white;
+      border-radius: 20px;
+      display: flex; /* Activa Flexbox para este contenedor */
+      flex-direction: column; /* Organiza los elementos en filas (horizontalmente) */
+      width: max-content;
+      padding: 2%;
+      width: 90%;
+  }
+  .center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: calc(100vh);
+  }
+  .square-down{
+      margin-top: 2%;
+      background-color: white;
+      border-radius: 20px;
+      display: flex; /* Activa Flexbox para este contenedor */
+      flex-direction: column; /* Organiza los elementos en filas (horizontalmente) */
+      width: max-content;
+      padding: 2%;
+      width: 90%;
+  }
+  }
+
+/* aumente */
+
+.progress-and-uploaded {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.blue-rectangle .content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #EBF2FC;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.blue-rectangle .details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 15px;
+}
+
+.blue-rectangle .details .name,
+.blue-rectangle .details .size,
+.blue-rectangle .details .percent {
+  margin: 5px 0;
+}
+
+.progress-bar {
+  width: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  height: 10px;
+  margin-left: 15px;
+}
+
+.progress {
+  height: 100%;
+  background-color: #6990F2;
+  width: 0%; /* Este valor debería actualizarse dinámicamente con el progreso de la carga */
+}
+
+.fas {
+  color: #6990F2;
+}
+
+.subtitle {
+  margin-top: 20px;
+  width: 100%;
+  text-align: left;
+  font-size: 18px;
+  color: #6990F2;
+}
+
+/* Estilos para los iconos de FontAwesome */
+.fas.fa-file-alt {
+  font-size: 24px;
+  color: #6990F2;
+}
+
+.fas.fa-check {
+  font-size: 24px;
+  color: green;
+}

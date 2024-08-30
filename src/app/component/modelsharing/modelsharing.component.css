@@ -1,0 +1,57 @@
+.customdialog,
+.customdialog mat-dialog-content{
+    background-color: white;
+    color: black;
+    flex-direction: column;
+    display: flex;
+}
+.icon-title{
+    margin: 2%;
+}
+.title{
+    margin-top: 2%;
+    font-size: 150%;
+    display: flex;
+}
+.close{
+    flex: 5;
+    display: flex;
+    justify-content: flex-end;
+}
+.title-secction{
+    flex-direction: row;
+    display: flex;
+}
+.label-email-secction{
+    display: flex;
+    margin-top: 2%;
+}
+.email-secction,
+.email-secction mat-form-field{
+    display: flex;
+    width: 50vw;
+}
+.custom-input{
+}
+.share-secction{
+    background-color: #E7F4F9;
+    display: flex;
+    width: fit-content;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    padding-left: 4%;
+    padding-right: 4%;
+    padding-top: 1%;
+    padding-bottom: 1%;
+    color: #00A0B6;
+}
+.link{
+    display: flex;
+    margin-top: 2%;
+    margin-bottom: 2%;
+}
+.button-secction{
+    display: flex;
+    margin-top: 2%;
+}

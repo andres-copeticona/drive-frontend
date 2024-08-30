@@ -1,0 +1,46 @@
+<div class="customdialog">
+    <div class="img-secction">
+        <ngx-extended-pdf-viewer [src]="url" useBrowserLocale="true" height="100%" width="100%"></ngx-extended-pdf-viewer>
+    </div>
+    <div class="data-secction">
+        <div class="vertical-layout">
+            <div class="name">{{data.name| truncateDocumentName}}</div>
+            <div class="date">{{data.date| formatDate }}</div>
+            @if(data.categoria == "Nuevo" || data.categoria == "Reemplazado"){
+                <div class="textqr">
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Titulo del sello</mat-label>
+                        <input type="text" matInput [formControl]="titlesign">
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width">
+                        <mat-label>Ingresar información en el sello</mat-label>
+                        <textarea matInput placeholder="Ex. It makes me feel..." [formControl]="description"></textarea>
+                        
+                        @if(mostrarAlerta){
+                        <div class="alert">
+                            Se firmo el documento
+                        </div>
+                        }
+                        @if(mostrarAlertaError){
+                        <div class="alertE">
+                            No se pudo firmar el documento {{stringerror}}
+                            </div>
+                        }
+                    </mat-form-field>
+                </div>
+            }
+            <div class="share-secction">
+                <div>
+                    {{data.privacy}}
+                </div>
+            </div>
+            <div class="button-secction">
+                @if(data.categoria == "Nuevo" || data.categoria == "Reemplazado"){
+                    <button mat-raised-button (click)="prepareRoute()">Firmar</button>
+                }@else{
+                    <button mat-raised-button mat-dialog-close (click)="gotoreemplazar()">Reemplazar</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

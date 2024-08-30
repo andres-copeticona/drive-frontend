@@ -1,0 +1,89 @@
+<div class="container">
+    <div class="head">
+        <div class="title">Sellado</div>
+        <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="openDialog()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <div class="horizontal-layout">
+        @if(folderList$ | async ; as folderList){
+            @for(file of folderList; track file.id){
+                <div class="card-square" (click)="selectfolder(file.id)" [style.background-color]="this.colors[file.id-1]">
+                    <div class="icon-secction">
+                        <div class="circle-icon">
+                            <mat-icon class="blue-icon">folder open icon</mat-icon>
+                        </div>
+                        <div class="star">
+                            <mat-icon>supervisor_account</mat-icon>
+                        </div>
+                    </div>
+                    <div class="nameCategory">
+                        {{file}}
+                    </div>
+                    <div class="numberOfFiles">
+                        {{file.numberOfFiles}} Files
+                    </div>
+                </div>
+            }@empty{
+                <p>No hay folders registrados</p>
+            }
+        }
+    </div>
+    <div class="head">
+        <div class="title">Nuevo</div>
+        <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="openDialog()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+    <div class="horizontal-layout">
+        @if(fileList$ | async ; as fileList){
+            @for(file of fileList; track file.id){
+                @if(selectedFolder == file.folderId){
+                    <div class="card-image">
+                        <div class="image-secction">
+                            <img src="https://gallery.yopriceville.com/var/albums/Backgrounds/Sea_Beach_Background.jpg?m=1432120782" width="260px" height="180px" style="border-radius: 15px;">
+                        </div>
+                        <div class="name-file-section">
+                            {{file.name| truncateDocumentName}}
+                        </div>
+                        <div class="date-section">
+                            {{file.size}}
+                        </div>
+                    </div>
+                }
+            }@empty{
+                <p>No hay archivos registrados</p>
+            }
+        }
+    </div>
+
+    <div class="head">
+        <div class="title">Reemplazado</div>
+        <button mat-mini-fab color="primary" aria-label="Example icon button with a menu icon" (click)="openDialog()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+
+    <div class="horizontal-layout">
+        @if(fileList$ | async ; as fileList){
+            @for(file of fileList; track file.id){
+                @if(selectedFolder == file.folderId){
+                    <div class="card-image">
+                        <div class="image-secction">
+                            <img src="https://gallery.yopriceville.com/var/albums/Backgrounds/Sea_Beach_Background.jpg?m=1432120782" width="260px" height="180px" style="border-radius: 15px;">
+                        </div>
+                        <div class="name-file-section">
+                            {{file.name| truncateDocumentName}}
+                        </div>
+                        <div class="date-section">
+                            {{file.size}}
+                        </div>
+                    </div>
+                }
+            }@empty{
+                <p>No hay archivos registrados</p>
+            }
+        }
+    </div>
+</div>

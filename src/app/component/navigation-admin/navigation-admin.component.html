@@ -1,0 +1,56 @@
+<mat-toolbar class="mat-elevation-z3">
+    <button mat-icon-button aria-label="Example icon button with a home icon" class="hidebar" (click)="openSideNav()">
+        <mat-icon>arrow_back_ios</mat-icon>
+    </button>
+    <button mat-icon-button aria-label="Example icon button with a home icon" (click)="collapsed.set(!collapsed())">
+        <mat-icon>menu</mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+
+</mat-toolbar>
+<mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side" [(opened)]="opened" [style.width]="sidenavwidth()" class="custom-sidebar">
+        <mat-nav-list>
+            @if(rol !== 3){
+                <a mat-list-item routerLink="profile" routerLinkActive="active" matTooltip="Perfil de usuario" [matTooltipPosition]="'right'">
+                    <mat-icon class="iconoblanco">person</mat-icon>
+                    <label class="iconoblanco">Perfil de usuario</label>
+                </a>
+                <a mat-list-item routerLink="home" routerLinkActive="active" matTooltip="Pagina principal" [matTooltipPosition]="'right'">
+                    <mat-icon class="iconoblanco">cloud</mat-icon>
+                    <label class="iconoblanco">Pagina principal</label>
+                </a>
+                <a mat-list-item routerLink="favorites" routerLinkActive="active" matTooltip="Carpetas" [matTooltipPosition]="'right'">
+                    <mat-icon class="iconoblanco">folder</mat-icon>
+                    <label class="iconoblanco">Carpetas</label>
+                </a>
+                <a mat-list-item routerLink="sharedfolders" routerLinkActive="active" matTooltip="Carpetas Compartidas" [matTooltipPosition]="'right'">
+                    <mat-icon class="iconoblanco">folder_shared</mat-icon>
+                    <label class="iconoblanco">Carpetas compartidas</label>
+                </a>
+                <a mat-list-item routerLink="sharedFiles" routerLinkActive="active" matTooltip="Archivos compartidos" [matTooltipPosition]="'right'">
+                    <mat-icon class="iconoblanco">share</mat-icon>
+                    <label class="iconoblanco">Archivos compartidos</label>
+                </a>
+            }
+
+            @if(rol == 3){
+                <a mat-list-item routerLink="userlist" routerLinkActive="active" matTooltip="Administrar usuarios" [matTooltipPosition]="'right'">
+                    <mat-icon class="iconoblanco">people</mat-icon>
+                    <label class="iconoblanco">Administrar usuarios</label>
+                </a>
+                <a mat-list-item routerLink="activity" routerLinkActive="active" matTooltip="Reportes" [matTooltipPosition]="'right'">
+                    <mat-icon class="iconoblanco">work</mat-icon>
+                    <label class="iconoblanco">Reportes</label>
+                </a>
+            }
+            <a mat-list-item routerLink="/loggout" routerLinkActive="active"  (click)="logout()" matTooltip="Cerrar sesión" [matTooltipPosition]="'right'">
+                <mat-icon class="iconoblanco">logout</mat-icon>
+                <label class="iconoblanco">Cerrar sesión</label>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="content" [style.margin-left]="sidenavwidth()">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

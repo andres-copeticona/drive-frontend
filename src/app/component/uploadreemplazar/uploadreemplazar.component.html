@@ -1,0 +1,67 @@
+<div class="center">
+    <div class="square-up">
+        <div class="uploadsquare">
+            <ngx-dropzone (change)="onSelect($event)" class="blue-square">
+                <mat-icon class="blue-icon-big">cloud_upload</mat-icon>
+                <h4 class="bold">Arrastra y suelta tus archivos aqui.</h4>
+                <p>o</p>
+                <div class="example-button-row">
+                    <button mat-stroked-button color="primary">Escoge archivos de tu computadora</button>
+                </div>
+            </ngx-dropzone>
+        </div>
+
+        <div class="settings">
+            <!-- BARRA DE PROGRESO -->
+            <div class="progress-and-uploaded">
+                <!-- Progreso de Subida -->
+                <div *ngIf="filesInProcess && filesInProcess.length > 0">
+                    <div class="subtitle">
+                        <p>Subiendo archivo</p>
+                    </div>
+                    <div *ngFor="let file of filesInProcess" class="blue-rectangle">
+                        <div class="content">
+                            <mat-icon>insert_drive_file</mat-icon>
+                            <div class="details">
+                                <span class="name">{{file.name}} subiendo</span>
+                                <span class="percent">{{file.progress}}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress" [style.width]="file.progress + '%'"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Archivos Subidos -->
+                <div *ngIf="uploadedFiles && uploadedFiles.length > 0">
+                    <div class="subtitle">
+                        <p>Archivos subidos</p>
+                    </div>
+                    <div *ngFor="let file of uploadedFiles" class="blue-rectangle">
+                        <div class="content">
+                            <mat-icon>insert_drive_file</mat-icon>
+                            <div class="details">
+                                <span class="name">{{file.name}} subido</span>
+                                <span class="size">{{file.size}}</span>
+                            </div>
+                            <mat-icon>check_circle</mat-icon>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            @if(mostrarAlerta){
+            <div class="alert">
+                El archivo se subio correctamente
+            </div>
+            }
+            @if(mostrarAlertaError){
+            <div class="alertE">
+                {{this.stringerror}}
+            </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<mat-toolbar class="mat-elevation-z3">
+    <button mat-icon-button aria-label="Example icon button with a home icon" (click)="collapsed.set(!collapsed())">
+        <mat-icon>menu</mat-icon>
+    </button>
+</mat-toolbar>
+<mat-sidenav-container>
+    <mat-sidenav #sidenav mode="side" [(opened)]="opened" [style.width]="sidenavwidth()" class="custom-sidebar">
+        <a routerLink="profile" routerLinkActive="active">
+            <div class="sidenav-header">
+                <img [width]="profilepicsize()" [height]="profilepicsize()" src="https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"/>
+            </div>
+        </a>        
+        <mat-nav-list>
+            <a mat-list-item routerLink="home" routerLinkActive="active">
+                <mat-icon>cloud</mat-icon>
+                <label>My Cloud</label>
+            </a>
+            <a mat-list-item routerLink="sharedFiles" routerLinkActive="active">
+                <mat-icon>share</mat-icon>
+                <label>Shared files</label>
+            </a>
+            <a mat-list-item routerLink="favorites" routerLinkActive="active">
+                <mat-icon>folder_shared</mat-icon>
+                <label>Folders</label>
+            </a>
+            <a mat-list-item routerLink="upload" routerLinkActive="active">
+                <mat-icon>file_upload</mat-icon>
+                <label>Upload files</label>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <mat-sidenav-content class="content" [style.width-left]="sidenavwidth()">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

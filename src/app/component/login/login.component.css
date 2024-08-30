@@ -1,0 +1,139 @@
+.center {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Ajusta esto según tus necesidades */
+}
+.container {
+  background-image: url('/assets/entrada_web.gif');
+  background-size: cover;
+  background-position: center;
+}
+.charging {
+  background-image: url('/assets/espera_web.gif');
+  background-size: cover;
+  background-position: center;
+  display: none;
+  height: 100vh;
+}
+
+.logo-section {
+  display: flex;
+  margin-left: 5%;
+}
+
+.text-welcome-section {
+  display: flex;
+  margin-left: 5%;
+}
+
+.login-text-section {
+  display: flex;
+  font-size: 200%;
+  font-weight: bold;
+  margin-left: 5%;
+  margin-bottom: 10%;
+}
+
+.email-section {
+  margin-left: 5%;
+}
+
+.password-section {
+  margin-left: 5%;
+}
+
+.button-section {
+  margin-left: 5%;
+}
+
+.help-section {
+  display: flex;
+  margin-left: 5%;
+  margin-top: 5%;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  padding: 5%;
+}
+.alert {
+  background-color: #4CAF50;
+  color: white;
+  padding: 15px;
+  text-align: center;
+}
+
+.alertE {
+  background-color: rgb(168, 30, 30);
+  color: white;
+  padding: 15px;
+}
+
+.image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-section img {
+  width: 100%;
+  height: 95%;
+}
+
+.example-container mat-form-field + mat-form-field {
+  margin-left: 8px;
+}
+
+.example-right-align {
+  text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.example-right-align {
+  -moz-appearance: textfield;
+}
+
+.custom-input {
+  background-color: #6663FE;
+  color: white;
+}
+
+.form-wrapper {
+  width: 100%;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+@media only screen and (max-width: 768px) {
+  .image-section{
+    display: none;
+  }
+  .container {
+    background-image: url('/assets/entrada_movil.gif');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    background-color: #EBF2FC;
+    padding-left:2%;
+    padding-right: 2%;
+    height: 100vh;
+  }
+  .charging {
+    background-image: url('/assets/espera_movil.gif');
+    background-size: cover;
+    background-position: center;
+    display: none;
+    height: 100vh;
+  }
+}
