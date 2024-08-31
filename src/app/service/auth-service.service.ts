@@ -4,47 +4,59 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { enviroment } from '../../environments/enviroment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthServiceService {
-
   private loginUrl = `${enviroment.API_URL}/api/v1/auth/login`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   login(username: string, password: string): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = {
       login: username,
       password: password,
-      token: "servidoresgadc12345" // Token preestablecido
+      token: 'servidoresgadc12345', // Token preestablecido
     };
     return this.http.post(this.loginUrl, body, { headers });
   }
 
   guardarDatosUsuario(datosUsuario: any): void {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       localStorage.setItem('userId', datosUsuario.usuarioID.toString()); // Convierte el ID a string para almacenarlo
       localStorage.setItem('userRole', datosUsuario.roles.nombreRol); // Asume que 'rol' está presente y es correcto
     }
   }
 
+  guardarToken(token: string): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('token', token);
+    }
+  }
+
+  obtenerToken(): string | null {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token');
+    }
+    return null;
+  }
+
   obtenerIdUsuario(): string | null {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       return localStorage.getItem('userId');
     }
     return null;
   }
 
   obtenerRolUsuario(): string | null {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       return localStorage.getItem('userRole');
     }
     return null;
   }
 
   cerrarSesion(): void {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       localStorage.removeItem('userId');
       localStorage.removeItem('userRole');
       localStorage.removeItem('expirationTime');

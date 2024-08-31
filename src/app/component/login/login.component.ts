@@ -18,10 +18,10 @@ import { HttpClientModule } from '@angular/common/http';
     MatIconModule,
     RouterModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
   mensajeBienvenido: string = 'Bienvenid@';
@@ -32,19 +32,20 @@ export class LoginComponent implements OnInit {
   hide = true;
   errorMessage: string = '';
 
+  constructor(
+    private authService: AuthServiceService,
+    private router: Router,
+  ) {}
 
-  constructor(private authService: AuthServiceService, private router: Router) {}
-
-  ngOnInit(): void {
-
-  }
-
+  ngOnInit(): void {}
 
   handleInactivity(): void {
     if (this.authService.verificarExpiracionToken()) {
       this.authService.cerrarSesion();
       this.router.navigate(['/login']);
-      alert('Tu sesión ha expirado por inactividad, por favor vuelve a iniciar sesión.');
+      alert(
+        'Tu sesión ha expirado por inactividad, por favor vuelve a iniciar sesión.',
+      );
     }
   }
 
@@ -53,6 +54,7 @@ export class LoginComponent implements OnInit {
       next: (response) => {
         if (response && response.user) {
           this.authService.guardarDatosUsuario(response.user);
+          this.authService.guardarToken(response.token);
 
           if (response.status === 500) {
             this.mostrarMensajeDeleteError();
@@ -76,7 +78,7 @@ export class LoginComponent implements OnInit {
         console.error('Error de autenticación:', error);
         this.errorMessage = 'Usuario o Contraseña incorrecta';
         this.mostrarMensajeDeleteError();
-      }
+      },
     });
   }
 

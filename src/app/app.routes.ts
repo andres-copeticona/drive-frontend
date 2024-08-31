@@ -17,41 +17,60 @@ import { PresentationComponent } from './component/presentation/presentation.com
 import { PresentationfolderComponent } from './component/presentationfolder/presentationfolder.component';
 import { ActivitycenterComponent } from './component/activitycenter/activitycenter.component';
 import { UploadreemplazarComponent } from './component/uploadreemplazar/uploadreemplazar.component';
+import { authGuard } from './config/auth/auth.guard';
 
 export const routes: Routes = [
-    //Login
-    { path: '', component: LoginComponent},
-    { path: 'detalleSello', component: DetalleselloComponent},
-    { path: 'file', component: PresentationComponent},
-    { path: 'folder', component: PresentationfolderComponent},
-    //Para el user Admin
-    { path: 'admin', component: NavigationComponent,
-        children:[
-            { path: 'home', component: HomeComponent },
-            { path: 'sharedFiles', component: FileSharingComponent },
-            { path: 'upload', component: UploadsComponent},
-            { path: 'favorites', component: FavoritesComponent },
-            { path: 'profile', component: ProfileComponent },
-            { path: 'signedfiles', component: FileViewComponent },
-            { path: 'detalleSello', component: DetalleselloComponent},
-            { path: 'file', component: PresentationComponent},
-        ]
-    },
-    //Para el user cloud
-    { path: 'cloud', component: NavigationAdminComponent,
-        children:[
-            { path: 'home', component: HomeComponent },
-            { path: 'sharedFiles', component: FileSharingComponent },
-            { path: 'upload', component: UploadsComponent},
-            { path: 'reemplazar', component: UploadreemplazarComponent},
-            { path: 'favorites', component: FavoritesComponent },
-            { path: 'profile', component: ProfileComponent },
-            { path: 'userlist', component: UserlistComponent },
-            { path: 'signedfiles', component: FileViewComponent },
-            { path: 'perfiluserselected', component: PerfiluserselectedComponent},
-            { path: 'sharedfolders', component: ShareFilesComponent},
-            { path: 'pdfview', component: ModelpdfviewComponent},
-            { path: 'activity', component: ActivitycenterComponent},
-        ]
-    },
+  //Login
+  { path: '', component: LoginComponent },
+  {
+    path: 'detalleSello',
+    component: DetalleselloComponent,
+    canActivate: [authGuard],
+  },
+  { path: 'file', component: PresentationComponent, canActivate: [authGuard] },
+  {
+    path: 'folder',
+    component: PresentationfolderComponent,
+    canActivate: [authGuard],
+  },
+  //Para el user Admin
+  {
+    path: 'admin',
+    component: NavigationComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'home', component: HomeComponent },
+      { path: 'sharedFiles', component: FileSharingComponent },
+      { path: 'upload', component: UploadsComponent },
+      { path: 'favorites', component: FavoritesComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'signedfiles', component: FileViewComponent },
+      { path: 'detalleSello', component: DetalleselloComponent },
+      { path: 'file', component: PresentationComponent },
+    ],
+  },
+  //Para el user cloud
+  {
+    path: 'cloud',
+    component: NavigationAdminComponent,
+    canActivate: [authGuard],
+    children: [
+      { path: 'home', component: HomeComponent },
+      { path: 'sharedFiles', component: FileSharingComponent },
+      { path: 'upload', component: UploadsComponent },
+      { path: 'reemplazar', component: UploadreemplazarComponent },
+      { path: 'favorites', component: FavoritesComponent },
+      { path: 'profile', component: ProfileComponent },
+      { path: 'userlist', component: UserlistComponent },
+      { path: 'signedfiles', component: FileViewComponent },
+      { path: 'perfiluserselected', component: PerfiluserselectedComponent },
+      { path: 'sharedfolders', component: ShareFilesComponent },
+      { path: 'pdfview', component: ModelpdfviewComponent },
+      { path: 'activity', component: ActivitycenterComponent },
+    ],
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
