@@ -1,8 +1,8 @@
-import { Injectable, inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { CanActivateFn, CanMatchFn, Router } from '@angular/router';
 import { AuthServiceService } from '../../service/auth-service.service';
 
-export const authGuard: CanActivateFn = () => {
+export const authGuard: CanActivateFn | CanMatchFn = () => {
   const router: Router = inject(Router);
   const authService: AuthServiceService = inject(AuthServiceService);
 
@@ -11,7 +11,6 @@ export const authGuard: CanActivateFn = () => {
   if (authService.obtenerIdUsuario()) {
     return true;
   } else {
-    router.navigate(['/login']);
-    return false;
+    return router.createUrlTree(['/login']);
   }
 };

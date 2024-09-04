@@ -1,0 +1,45 @@
+.example-container {
+    width: 400px;
+    height: 200px;
+    margin: 10px;
+    border: 1px solid #d64141;
+  }
+mat-toolbar{
+    position: relative;
+    z-index: 5;
+}
+.content{
+    padding: 1%;
+    background-color: #EBF2FC;
+    color: black;
+    overflow-y:visible;
+    
+}
+.sidebar-bottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+.custom-sidebar {
+    background-color: rgb(6, 54, 122);
+    color: white;
+  }
+
+
+mat-icon {
+    margin-right: 10px;
+}
+
+mat-sidenav-container {
+    height: calc(100vh-64px);
+}
+
+.sidenav-header{
+    padding-top: 24px;
+    text-align: center;
+
+    >img {
+        border-radius: 100%;
+        object-fit: cover;
+    }
+}

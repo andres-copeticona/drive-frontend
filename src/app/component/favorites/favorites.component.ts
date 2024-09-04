@@ -19,8 +19,8 @@ import { read } from 'fs';
 import { FolderService } from '../../service/folder.service';
 import { UsuarioService } from '../../service/usuario.service';
 import { FileService } from '../../service/file.service';
-import { TruncatePipe } from "../../truncate.pipe";
-import { TruncateDocumentNamePipe } from "../../pipes/truncate-document-name.pipe";
+import { TruncatePipe } from '../../truncate.pipe';
+import { TruncateDocumentNamePipe } from '../../pipes/truncate-document-name.pipe';
 import { ModelimgComponent } from '../modelimg/modelimg.component';
 import { ModelsharingComponent } from '../modelsharing/modelsharing.component';
 import { ModelpdfComponent } from '../modelpdf/modelpdf.component';
@@ -60,28 +60,55 @@ export interface Section {
   standalone: true,
   templateUrl: './favorites.component.html',
   styleUrl: './favorites.component.css',
-  imports: [MatFormFieldModule, MatInputModule, FormsModule, MatDividerModule, DatePipe, MatListModule, MatGridListModule, CdkContextMenuTrigger, CdkMenu, CdkMenuItem, RouterModule, AsyncPipe, MatCardModule, MatButtonModule, MatMenuModule, MatIconModule, MatTooltipModule, MatProgressBarModule, TruncatePipe, TruncateDocumentNamePipe]
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatDividerModule,
+    DatePipe,
+    MatListModule,
+    MatGridListModule,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+    RouterModule,
+    AsyncPipe,
+    MatCardModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatProgressBarModule,
+    TruncatePipe,
+    TruncateDocumentNamePipe,
+  ],
 })
 export class FavoritesComponent implements OnInit {
-
   //buscador
   searchTerm: string = '';
   filteredFolders$!: Observable<any[]>;
   filteredFoldersmobil$!: Observable<any[]>;
-
 
   searchTermsub: string = '';
   filteredFolderssub$!: Observable<any[]>;
   searchTermfiles: string = '';
   filteredFoldersfiles$!: Observable<any[]>;
 
-
   userList$!: Observable<any[]>;
   rol: any;
   backgroundColorShared = '#00A0B6'; // Color inicial shared
   backgroundColor = 'white'; // Color inicial
   constructor(
-    private renderer: Renderer2, private el: ElementRef, public usuarioService: UsuarioService, private route: ActivatedRoute, private authService: AuthServiceService, private router: Router, private fileService: FileService, public dialog: MatDialog, public folderService: FolderService) { }
+    private renderer: Renderer2,
+    private el: ElementRef,
+    public usuarioService: UsuarioService,
+    private route: ActivatedRoute,
+    private authService: AuthServiceService,
+    private router: Router,
+    private fileService: FileService,
+    public dialog: MatDialog,
+    public folderService: FolderService,
+  ) {}
   colors!: string[];
   selectedFolder!: number;
   parentSelectedFolder!: number;
@@ -114,7 +141,7 @@ export class FavoritesComponent implements OnInit {
     this.filteredFoldersmobil$ = this.folderListmobile$;
     this.userList$ = of([]);
     this.useridglobal = this.authService.obtenerIdUsuario();
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.trigger = params['number'];
       if (this.trigger == 1) {
         this.actualizarListasDelete();
@@ -124,13 +151,10 @@ export class FavoritesComponent implements OnInit {
         this.actualizarListas();
         this.trigger = 0;
       }
-
     });
     this.userId = this.authService.obtenerIdUsuario();
-    this.subfolderList$ = [
-    ];
-    this.subfolderListmobil$ = [
-    ];
+    this.subfolderList$ = [];
+    this.subfolderListmobil$ = [];
     this.colors = [];
     this.colorsshared = [];
     this.folderList$ = of([]);
@@ -146,19 +170,21 @@ export class FavoritesComponent implements OnInit {
     this.sharedSubFolders$ = of([]);
     this.listarsharedfolders(this.userId);
     this.obtenerusers();
-
   }
 
   // Método para mostrar un mensaje de éxito al eliminar un archivo
   obtenerusers() {
     const userId = this.authService.obtenerIdUsuario();
     this.usuarioService.getAllUsers().subscribe(
-      response => {
+      (response) => {
         this.userList$.subscribe(() => {
           this.userList$ = of(response.data.content);
           for (let i = 0; i < response.data.content.length; i++) {
             if (response.data.content[i].usuarioID == userId) {
-              console.log('Rol del user', response.data.content[i].roles[0].rolID);
+              console.log(
+                'Rol del user',
+                response.data.content[i].roles[0].rolID,
+              );
               this.rol = response.data.content[i].roles[0].rolID;
             }
           }
@@ -166,11 +192,11 @@ export class FavoritesComponent implements OnInit {
         // Manejar la respuesta de éxito aquí
         console.log('Registros de usuarios', response.data.content[0].nombre);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar usuarios', error);
-      }
-    )
+      },
+    );
   }
 
   // para compartir el folder
@@ -181,7 +207,7 @@ export class FavoritesComponent implements OnInit {
         id: idfolder,
         iduser: this.userId,
         idperson: idperson,
-        name: name
+        name: name,
       },
     });
   }
@@ -189,41 +215,46 @@ export class FavoritesComponent implements OnInit {
   // la lista de los documento s compartidos
   listarsharedfolders(id: any) {
     this.folderService.listSharedFolders(id).subscribe(
-      response => {
+      (response) => {
         this.sharedFolders$ = of(response.data);
         // Manejar la respuesta de éxito aquí
         console.log('Registros de sharedfolders', response, ' user:');
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar sharedfolders', error);
-      }
-    )
+      },
+    );
   }
 
   // contenido de los documentos compartidos con su contenido
   listarsharedfolderscontent(id: any) {
     if (this.selectedSharedFolder != 0) {
-      this.folderService.listSharedFolderContents(id, this.selectedSharedFolder).subscribe(
-        response => {
-          this.sharedFiles$ = of(response.data.files);
-          this.sharedSubFolders$ = of(response.data.folders);
-          // Manejar la respuesta de éxito aquí
-          console.log('Registros de sharedContentfolders', response, ' user:');
-        },
-        error => {
-          // Manejar el error aquí
-          console.error('Error al mostrar sharedContentfolders', error);
-        }
-      )
+      this.folderService
+        .listSharedFolderContents(id, this.selectedSharedFolder)
+        .subscribe(
+          (response) => {
+            this.sharedFiles$ = of(response.data.files);
+            this.sharedSubFolders$ = of(response.data.folders);
+            // Manejar la respuesta de éxito aquí
+            console.log(
+              'Registros de sharedContentfolders',
+              response,
+              ' user:',
+            );
+          },
+          (error) => {
+            // Manejar el error aquí
+            console.error('Error al mostrar sharedContentfolders', error);
+          },
+        );
     }
   }
 
   //iniciar folders para mobil
   iniciarmobil() {
-
     this.folderService.getAllFolders().subscribe(
-      response => {
+      (response) => {
         this.folderList$.subscribe(() => {
           this.folderList$ = of(response.data);
           this.folderListmobile$ = of(response.data);
@@ -233,20 +264,20 @@ export class FavoritesComponent implements OnInit {
         // Manejar la respuesta de éxito aquí
         console.log('Registros de folders', response.data, ' user:');
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar folders', error);
-      }
-    )
+      },
+    );
   }
 
   // metodo para actualizar la lista de los documentos
   actualizarListas() {
-    console.log("entro a actualizar listas");
+    console.log('entro a actualizar listas');
     this.subfolderList$ = [];
     this.subfolderListmobil$ = [];
     this.folderService.getAllFolders().subscribe(
-      response => {
+      (response) => {
         this.folderList$.subscribe(() => {
           this.folderList$ = of(response.data);
           this.filteredFolders$ = this.folderList$;
@@ -255,50 +286,56 @@ export class FavoritesComponent implements OnInit {
         // Manejar la respuesta de éxito aquí
         console.log('Registros de folders', response.data, ' user:');
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar folders', error);
-      }
-    )
+      },
+    );
     setTimeout(() => {
       this.fileService.listFilesByUserAndFolder(this.selectedFolder).subscribe(
-        response => {
+        (response) => {
           this.fileList$ = of(response.files);
           this.subfoldersList$ = of(response.folders);
           // Manejar la respuesta de éxito aquí
-          console.log('Registros de files fui a actualizar', response.files, response);
+          console.log(
+            'Registros de files fui a actualizar',
+            response.files,
+            response,
+          );
         },
-        error => {
+        (error) => {
           // Manejar el error aquí
           console.error('Error al mostrar files  fui a actualizar', error);
-        }
-
-      )
-      if(this.selectedFolder){
-        this.fileService.listFilesByUserAndFolder(this.selectedFolder).subscribe(
-          response => {
-            this.fileList$ = of(response.files);
-            this.folderListmobile$ = of(response.folders);
-            this.filteredFoldersmobil$ = this.folderListmobile$;
-            this.filteredFoldersfiles$ = this.fileList$;
-            this.filteredFolderssub$ = this.subfoldersList$;
-            // Manejar la respuesta de éxito aquí
-            console.log('Registros de files', response.files, response);
-          },
-          error => {
-            // Manejar el error aquí
-            console.error('Error al mostrar files', error);
-          }
-
-        )
-
-      }else{
+        },
+      );
+      if (this.selectedFolder) {
+        this.fileService
+          .listFilesByUserAndFolder(this.selectedFolder)
+          .subscribe(
+            (response) => {
+              this.fileList$ = of(response.files);
+              this.folderListmobile$ = of(response.folders);
+              this.filteredFoldersmobil$ = this.folderListmobile$;
+              this.filteredFoldersfiles$ = this.fileList$;
+              this.filteredFolderssub$ = this.subfoldersList$;
+              // Manejar la respuesta de éxito aquí
+              console.log('Registros de files', response.files, response);
+            },
+            (error) => {
+              // Manejar el error aquí
+              console.error('Error al mostrar files', error);
+            },
+          );
+      } else {
         this.iniciarmobil();
       }
     }, 500);
     setTimeout(() => {
       this.folderList$.subscribe((folderList) => {
-        console.log("id es:" + folderList[folderList.length - 1].id, "son:" + folderList.length);
+        console.log(
+          'id es:' + folderList[folderList.length - 1].id,
+          'son:' + folderList.length,
+        );
         for (let i = 0; i < folderList[folderList.length - 1].id; i++) {
           this.colors[i] = this.backgroundColor;
         }
@@ -311,7 +348,10 @@ export class FavoritesComponent implements OnInit {
     }, 500);
     setTimeout(() => {
       this.sharedFolders$.subscribe((folderList) => {
-        console.log("id es:" + folderList[folderList.length - 1].id, "son:" + folderList.length);
+        console.log(
+          'id es:' + folderList[folderList.length - 1].id,
+          'son:' + folderList.length,
+        );
         for (let i = 0; i < folderList[folderList.length - 1].id; i++) {
           this.colorsshared[i] = this.backgroundColorShared;
         }
@@ -321,14 +361,14 @@ export class FavoritesComponent implements OnInit {
 
   // metodo para actualizar la lista de los documentos cuando eliminamos
   actualizarListasDelete() {
-    console.log("entro a actualizar listas");
+    console.log('entro a actualizar listas');
     this.routechild = [];
     this.subfolderList$ = [];
     this.subfolderListmobil$ = [];
     this.selectedFolder = 0;
     this.folderListmobile$ = of([]);
     this.folderService.getAllFolders().subscribe(
-      response => {
+      (response) => {
         this.folderList$.subscribe(() => {
           this.folderList$ = of(response.data);
           this.folderListmobile$ = of(response.data);
@@ -336,16 +376,32 @@ export class FavoritesComponent implements OnInit {
           this.filteredFoldersmobil$ = this.folderListmobile$;
         });
         // Manejar la respuesta de éxito aquí
-        console.log('Registros de folders luego de actualizar', response.data, ' user:');
+        console.log(
+          'Registros de folders luego de actualizar',
+          response.data,
+          ' user:',
+        );
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar folders', error);
-      }
-    )
+      },
+    );
   }
   // metodo para abrir el dialogo de los documentos
-  openDialogpasswordimg(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpasswordimg(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.dialog.open(ModelpasswordComponent, {
       data: {
         id: id,
@@ -357,13 +413,25 @@ export class FavoritesComponent implements OnInit {
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "img",
-        folderId: folderId
+        categoria: 'img',
+        folderId: folderId,
       },
     });
   }
   // metodo para abrir el dialogo de los documentos
-  openDialogpassworddoc(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpassworddoc(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.dialog.open(ModelpasswordComponent, {
       data: {
         id: id,
@@ -375,15 +443,26 @@ export class FavoritesComponent implements OnInit {
         description: categoria,
         accessType: accessType,
         password: password,
-        categoria: "doc",
-        folderId: folderId
+        categoria: 'doc',
+        folderId: folderId,
       },
     });
   }
 
   // metodo para abrir el dialogo de los documentos
-  openDialogpassworddelete(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
-
+  openDialogpassworddelete(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/favorites']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -396,14 +475,26 @@ export class FavoritesComponent implements OnInit {
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "delete",
-        folderId: folderId
+        categoria: 'delete',
+        folderId: folderId,
       },
     });
   }
 
   // metodo para abrir el dialogo de los documentos
-  openDialogpasswordshare(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpasswordshare(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.dialog.open(ModelpasswordComponent, {
       data: {
         id: id,
@@ -415,8 +506,8 @@ export class FavoritesComponent implements OnInit {
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "share",
-        folderId: folderId
+        categoria: 'share',
+        folderId: folderId,
       },
     });
   }
@@ -425,8 +516,7 @@ export class FavoritesComponent implements OnInit {
   openDialogempty() {
     this.router.navigate(['/cloud/favorites']);
     this.dialog.open(ModelfolderComponent, {
-      data: {
-      },
+      data: {},
     });
   }
 
@@ -434,18 +524,21 @@ export class FavoritesComponent implements OnInit {
   downloadFolder(foldername: string) {
     const fileUrl = foldername; // URL de tu backend donde se encuentra el archivo ZIP
 
-    this.folderService.downloadFile(fileUrl).subscribe(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = foldername+'.zip'; // Nombre del archivo a descargar
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
-    }, error => {
-      console.error('Error al descargar el archivo:', error);
-    });
+    this.folderService.downloadFile(fileUrl).subscribe(
+      (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = foldername + '.zip'; // Nombre del archivo a descargar
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error('Error al descargar el archivo:', error);
+      },
+    );
   }
 
   // metodo para abrir el dialogo de los documentos
@@ -454,7 +547,7 @@ export class FavoritesComponent implements OnInit {
     this.dialog.open(ModelfolderComponent, {
       data: {
         id: this.selectedFolder,
-        name: this.foldername
+        name: this.foldername,
       },
     });
   }
@@ -465,13 +558,23 @@ export class FavoritesComponent implements OnInit {
     this.dialog.open(ModelfolderComponent, {
       data: {
         id: idfolder,
-        name: namefolder
+        name: namefolder,
       },
     });
   }
 
   // metodo para abrir el dialogo de los documentos pdf
-  openDialogpdf(id: number, name: string, img: string, date: string, privacy: string, folderId: number, accessType: string, password: string, categoria: string) {
+  openDialogpdf(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    folderId: number,
+    accessType: string,
+    password: string,
+    categoria: string,
+  ) {
     this.dialog.open(ModelpdfComponent, {
       height: '90%',
 
@@ -485,14 +588,22 @@ export class FavoritesComponent implements OnInit {
         folderId: folderId,
         accessType: accessType,
         password: password,
-        categoria: categoria
+        categoria: categoria,
       },
     });
   }
 
   // para eliminar el dialogo
-  openDialogDelete(id: number, name: string, img: string, date: string, privacy: string, folderId: number, accessType: string, password: string) {
-
+  openDialogDelete(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    folderId: number,
+    accessType: string,
+    password: string,
+  ) {
     this.router.navigate(['/cloud/favorites']);
     this.dialog.open(ModeldeleteComponent, {
       data: {
@@ -500,7 +611,7 @@ export class FavoritesComponent implements OnInit {
         name: name,
         img: img,
         date: date,
-        privacy: "folders",
+        privacy: 'folders',
         iduser: this.userId,
         folderId: folderId,
         accessType: accessType,
@@ -510,8 +621,16 @@ export class FavoritesComponent implements OnInit {
   }
 
   // para abrir el dialogo de la imagen y eliminar
-  openDialogDeleteFolder(id: number, name: string, img: string, date: string, privacy: string, folderId: number, accessType: string, password: string) {
-
+  openDialogDeleteFolder(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    folderId: number,
+    accessType: string,
+    password: string,
+  ) {
     this.router.navigate(['/cloud/favorites']);
     this.dialog.open(ModeldeleteComponent, {
       data: {
@@ -519,29 +638,41 @@ export class FavoritesComponent implements OnInit {
         name: name,
         img: img,
         date: date,
-        privacy: "folders",
+        privacy: 'folders',
         iduser: this.userId,
         folderId: folderId,
         accessType: accessType,
-        password: "folder",
+        password: 'folder',
       },
     });
   }
 
   //
-  openDialog1(id: number, name: string, img: string, date: string, privacy: string) {
+  openDialog1(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+  ) {
     this.dialog.open(ModelimgComponent, {
       data: {
         id: id,
         name: name,
         img: img,
         date: date,
-        privacy: privacy
+        privacy: privacy,
       },
     });
   }
 
-  openDialogShare(id: number, name: string, img: string, date: string, privacy: string) {
+  openDialogShare(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+  ) {
     this.dialog.open(ModelsharingComponent, {
       data: {
         id: id,
@@ -558,54 +689,76 @@ export class FavoritesComponent implements OnInit {
       next: (response) => {
         console.log('File deleted successfully: ', response);
         this.actualizarListas();
-
       },
       error: (error) => {
         console.error('Error deleting file', error);
         this.actualizarListas();
-        if (error.status == 200) { this.mostrarMensajeDeleteExito(); } else { this.mostrarMensajeDeleteError(); }
-      }
+        if (error.status == 200) {
+          this.mostrarMensajeDeleteExito();
+        } else {
+          this.mostrarMensajeDeleteError();
+        }
+      },
     });
   }
 
-  openDialogaudio(id: number, name: string, img: string, date: string, privacy: string) {
+  openDialogaudio(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+  ) {
     this.dialog.open(ModelaudioComponent, {
       data: {
         id: id,
         name: name,
         img: img,
         date: date,
-        privacy: privacy
+        privacy: privacy,
       },
     });
   }
 
-  openDialogvideo(id: number, name: string, img: string, date: string, privacy: string) {
+  openDialogvideo(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+  ) {
     this.dialog.open(ModelvideoComponent, {
       data: {
         id: id,
         name: name,
         img: img,
         date: date,
-        privacy: privacy
+        privacy: privacy,
       },
     });
   }
   imprimir(objeto1: any, objeto2: any) {
-    console.log("entro a imprimir:", objeto1, ";", objeto2);
+    console.log('entro a imprimir:', objeto1, ';', objeto2);
   }
 
   selectfolder(folder: any, name: string) {
     if (this.parentSelectedFolder) {
-      const previousRectangle = this.el.nativeElement.querySelector('#rectangle' + this.parentSelectedFolder);
+      const previousRectangle = this.el.nativeElement.querySelector(
+        '#rectangle' + this.parentSelectedFolder,
+      );
       if (previousRectangle) {
-        this.renderer.setStyle(previousRectangle, 'background-color', this.backgroundColor);
+        this.renderer.setStyle(
+          previousRectangle,
+          'background-color',
+          this.backgroundColor,
+        );
       }
     }
     // Cambiar el color del elemento con id "rectangle" a negro
     if (this.selectedFolder !== folder) {
-
-      const rectangle = this.el.nativeElement.querySelector('#rectangle' + folder);
+      const rectangle = this.el.nativeElement.querySelector(
+        '#rectangle' + folder,
+      );
       if (rectangle) {
         this.renderer.setStyle(rectangle, 'background-color', '#9db8dd');
       }
@@ -617,17 +770,22 @@ export class FavoritesComponent implements OnInit {
           this.colors[i] = this.backgroundColor;
         }
       });
-      this.colors[folder - 1] = "#b1b0f5";
+      this.colors[folder - 1] = '#b1b0f5';
       this.selectedFolder = folder;
       this.parentSelectedFolder = folder;
       this.foldername = name;
       this.parentSelectedFolderName = name;
       console.log(this.selectedFolder);
-    }else{
-
-      const rectangle = this.el.nativeElement.querySelector('#rectangle' + folder);
+    } else {
+      const rectangle = this.el.nativeElement.querySelector(
+        '#rectangle' + folder,
+      );
       if (rectangle) {
-        this.renderer.setStyle(rectangle, 'background-color', this.backgroundColor);
+        this.renderer.setStyle(
+          rectangle,
+          'background-color',
+          this.backgroundColor,
+        );
       }
       this.routechild = [];
       this.subfolderList$ = [];
@@ -637,18 +795,17 @@ export class FavoritesComponent implements OnInit {
           this.colors[i] = this.backgroundColor;
         }
       });
-      this.colors[folder - 1] = "#b1b0f5";
+      this.colors[folder - 1] = '#b1b0f5';
       this.selectedFolder = 0;
       this.parentSelectedFolder = 0;
       this.foldername = name;
       this.parentSelectedFolderName = name;
       console.log(this.selectedFolder);
-
     }
     //pidiendo shared folders
     //this.listarsharedfolderscontent(this.userId);
     this.fileService.listFilesByUserAndFolder(this.selectedFolder).subscribe(
-      response => {
+      (response) => {
         this.fileList$ = of(response.files);
         this.subfoldersList$ = of(response.folders);
         this.filteredFoldersfiles$ = this.fileList$;
@@ -656,12 +813,11 @@ export class FavoritesComponent implements OnInit {
         // Manejar la respuesta de éxito aquí
         console.log('Registros de files', response.files, response);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar files', error);
-      }
-
-    )
+      },
+    );
     this.folderList$.subscribe((folderx) => {
       for (let i = 0; i < folderx.length; i++) {
         if (folderx[i].parentFolderId == this.selectedFolder) {
@@ -671,20 +827,27 @@ export class FavoritesComponent implements OnInit {
         }
       }
     });
-
   }
   selectfolderchild(folder: any, name: string) {
     if (!this.routechild) {
       this.routechild = [];
     }
     if (this.childSelectedFolder) {
-      const previousRectangle = this.el.nativeElement.querySelector('#subrectangle' + this.childSelectedFolder);
+      const previousRectangle = this.el.nativeElement.querySelector(
+        '#subrectangle' + this.childSelectedFolder,
+      );
       if (previousRectangle) {
-        this.renderer.setStyle(previousRectangle, 'background-color', this.backgroundColor);
+        this.renderer.setStyle(
+          previousRectangle,
+          'background-color',
+          this.backgroundColor,
+        );
       }
     }
     // Cambiar el color del elemento con id "rectangle"
-    const rectangle = this.el.nativeElement.querySelector('#subrectangle' + folder);
+    const rectangle = this.el.nativeElement.querySelector(
+      '#subrectangle' + folder,
+    );
     if (rectangle) {
       this.renderer.setStyle(rectangle, 'background-color', '#9db8dd');
     }
@@ -695,14 +858,14 @@ export class FavoritesComponent implements OnInit {
         this.colors[i] = this.backgroundColor;
       }
     });
-    this.colors[folder - 1] = "#b1b0f5";
+    this.colors[folder - 1] = '#b1b0f5';
     this.selectedFolder = folder;
     this.routechild.push({ id: folder, namefolder: name });
     this.childSelectedFolder = folder;
     this.foldername = name;
     console.log(this.selectedFolder);
     this.fileService.listFilesByUserAndFolder(this.selectedFolder).subscribe(
-      response => {
+      (response) => {
         this.fileList$ = of(response.files);
         this.subfoldersList$ = of(response.folders);
         this.filteredFoldersfiles$ = this.fileList$;
@@ -710,12 +873,11 @@ export class FavoritesComponent implements OnInit {
         // Manejar la respuesta de éxito aquí
         console.log('Registros de files', response.files, response);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar files', error);
-      }
-
-    )
+      },
+    );
     this.folderList$.subscribe((folderx) => {
       for (let i = 0; i < folderx.length; i++) {
         if (folderx[i].parentFolderId == this.selectedFolder) {
@@ -725,7 +887,6 @@ export class FavoritesComponent implements OnInit {
         }
       }
     });
-
   }
 
   selectfolderchildmobile(folder: any, name: string) {
@@ -733,13 +894,21 @@ export class FavoritesComponent implements OnInit {
       this.routechild = [];
     }
     if (this.childSelectedFolder) {
-      const previousRectangle = this.el.nativeElement.querySelector('#subrectangle' + this.childSelectedFolder);
+      const previousRectangle = this.el.nativeElement.querySelector(
+        '#subrectangle' + this.childSelectedFolder,
+      );
       if (previousRectangle) {
-        this.renderer.setStyle(previousRectangle, 'background-color', this.backgroundColor);
+        this.renderer.setStyle(
+          previousRectangle,
+          'background-color',
+          this.backgroundColor,
+        );
       }
     }
     // Cambiar el color del elemento con id "rectangle"
-    const rectangle = this.el.nativeElement.querySelector('#subrectangle' + folder);
+    const rectangle = this.el.nativeElement.querySelector(
+      '#subrectangle' + folder,
+    );
     if (rectangle) {
       this.renderer.setStyle(rectangle, 'background-color', '#9db8dd');
     }
@@ -750,14 +919,14 @@ export class FavoritesComponent implements OnInit {
         this.colors[i] = this.backgroundColor;
       }
     });
-    this.colors[folder - 1] = "#b1b0f5";
+    this.colors[folder - 1] = '#b1b0f5';
     this.selectedFolder = folder;
     this.routechild.push({ id: folder, namefolder: name });
     this.childSelectedFolder = folder;
     this.foldername = name;
     console.log(this.selectedFolder);
     this.fileService.listFilesByUserAndFolder(this.selectedFolder).subscribe(
-      response => {
+      (response) => {
         this.fileList$ = of(response.files);
         this.subfoldersList$ = of(response.folders);
         this.folderListmobile$ = of(response.folders);
@@ -768,12 +937,11 @@ export class FavoritesComponent implements OnInit {
         // Manejar la respuesta de éxito aquí
         console.log('Registros de files', response.files, response);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar files', error);
-      }
-
-    )
+      },
+    );
     this.folderList$.subscribe((folderx) => {
       for (let i = 0; i < folderx.length; i++) {
         if (folderx[i].parentFolderId == this.selectedFolder) {
@@ -783,7 +951,6 @@ export class FavoritesComponent implements OnInit {
         }
       }
     });
-
   }
 
   selectfolderchildroute(folder: any, name: string) {
@@ -793,14 +960,17 @@ export class FavoritesComponent implements OnInit {
         this.colors[i] = this.backgroundColor;
       }
     });
-    this.colors[folder - 1] = "#b1b0f5";
+    this.colors[folder - 1] = '#b1b0f5';
     this.selectedFolder = folder;
     this.childSelectedFolder = folder;
     this.foldername = name;
-    this.routechild = this.routechild.slice(0, this.routechild.findIndex(x => x.id === folder) + 1);
+    this.routechild = this.routechild.slice(
+      0,
+      this.routechild.findIndex((x) => x.id === folder) + 1,
+    );
     console.log(this.selectedFolder);
     this.fileService.listFilesByUserAndFolder(this.selectedFolder).subscribe(
-      response => {
+      (response) => {
         this.fileList$ = of(response.files);
         this.subfoldersList$ = of(response.folders);
 
@@ -809,12 +979,11 @@ export class FavoritesComponent implements OnInit {
         // Manejar la respuesta de éxito aquí
         console.log('Registros de files', response.files, response);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar files', error);
-      }
-
-    )
+      },
+    );
     this.folderList$.subscribe((folderx) => {
       for (let i = 0; i < folderx.length; i++) {
         if (folderx[i].parentFolderId == this.selectedFolder) {
@@ -824,7 +993,6 @@ export class FavoritesComponent implements OnInit {
         }
       }
     });
-
   }
   selectfolderchildroutemobile(folder: any, name: string) {
     this.subfolderList$ = [];
@@ -833,14 +1001,17 @@ export class FavoritesComponent implements OnInit {
         this.colors[i] = this.backgroundColor;
       }
     });
-    this.colors[folder - 1] = "#b1b0f5";
+    this.colors[folder - 1] = '#b1b0f5';
     this.selectedFolder = folder;
     this.childSelectedFolder = folder;
     this.foldername = name;
-    this.routechild = this.routechild.slice(0, this.routechild.findIndex(x => x.id === folder) + 1);
+    this.routechild = this.routechild.slice(
+      0,
+      this.routechild.findIndex((x) => x.id === folder) + 1,
+    );
     console.log(this.selectedFolder);
     this.fileService.listFilesByUserAndFolder(this.selectedFolder).subscribe(
-      response => {
+      (response) => {
         this.fileList$ = of(response.files);
         this.subfoldersList$ = of(response.folders);
         this.folderListmobile$ = of(response.folders);
@@ -851,12 +1022,11 @@ export class FavoritesComponent implements OnInit {
         // Manejar la respuesta de éxito aquí
         console.log('Registros de files', response.files, response);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar files', error);
-      }
-
-    )
+      },
+    );
     this.folderList$.subscribe((folderx) => {
       for (let i = 0; i < folderx.length; i++) {
         if (folderx[i].parentFolderId == this.selectedFolder) {
@@ -866,9 +1036,7 @@ export class FavoritesComponent implements OnInit {
         }
       }
     });
-
   }
-
 
   selectsharedfolder(folder: any, name: string) {
     this.routesharedchild = [];
@@ -878,25 +1046,25 @@ export class FavoritesComponent implements OnInit {
         this.colorsshared[i] = this.backgroundColorShared;
       }
     });
-    this.colorsshared[folder - 1] = "#61cad8";
+    this.colorsshared[folder - 1] = '#61cad8';
     this.parentSharedSelectedFolder = folder;
     this.parentSharedSelectedFolderName = name;
     this.selectedSharedFolder = folder;
     console.log(this.selectedSharedFolder);
-    this.folderService.listSharedFolderContents(this.userId, this.selectedSharedFolder).subscribe(
-      response => {
-        this.sharedFiles$ = of(response.data.files);
-        this.sharedSubFolders$ = of(response.data.folders);
-        // Manejar la respuesta de éxito aquí
-        console.log('Registros de files', response.data.files, response);
-      },
-      error => {
-        // Manejar el error aquí
-        console.error('Error al mostrar files', error);
-      }
-
-    )
-
+    this.folderService
+      .listSharedFolderContents(this.userId, this.selectedSharedFolder)
+      .subscribe(
+        (response) => {
+          this.sharedFiles$ = of(response.data.files);
+          this.sharedSubFolders$ = of(response.data.folders);
+          // Manejar la respuesta de éxito aquí
+          console.log('Registros de files', response.data.files, response);
+        },
+        (error) => {
+          // Manejar el error aquí
+          console.error('Error al mostrar files', error);
+        },
+      );
   }
   selectsharedsubfolder(folder: any, name: string, userIdsubfolder: number) {
     this.sharedSubFoldersList$ = [];
@@ -905,113 +1073,156 @@ export class FavoritesComponent implements OnInit {
         this.colorsshared[i] = this.backgroundColorShared;
       }
     });
-    this.colorsshared[folder - 1] = "#61cad8";
+    this.colorsshared[folder - 1] = '#61cad8';
     this.selectedSharedFolder = folder;
-    this.routesharedchild.push({ id: folder, namefolder: name, userId: userIdsubfolder });
+    this.routesharedchild.push({
+      id: folder,
+      namefolder: name,
+      userId: userIdsubfolder,
+    });
     console.log(this.selectedSharedFolder);
-    this.fileService.listFilesByUserAndFolderWithId(userIdsubfolder, this.selectedSharedFolder).subscribe(
-      response => {
-        this.sharedFiles$ = of(response.files);
-        this.sharedSubFolders$ = of(response.folders);
-        // Manejar la respuesta de éxito aquí
-        console.log('Registros de files', response.files, response, "folder:", this.selectedSharedFolder, "user:", this.userId);
-      },
-      error => {
-        // Manejar el error aquí
-        console.error('Error al mostrar files', error);
-      }
-
-    )
-
+    this.fileService
+      .listFilesByUserAndFolderWithId(
+        userIdsubfolder,
+        this.selectedSharedFolder,
+      )
+      .subscribe(
+        (response) => {
+          this.sharedFiles$ = of(response.files);
+          this.sharedSubFolders$ = of(response.folders);
+          // Manejar la respuesta de éxito aquí
+          console.log(
+            'Registros de files',
+            response.files,
+            response,
+            'folder:',
+            this.selectedSharedFolder,
+            'user:',
+            this.userId,
+          );
+        },
+        (error) => {
+          // Manejar el error aquí
+          console.error('Error al mostrar files', error);
+        },
+      );
   }
-  selectsharedsubfolderroute(folder: any, name: string, userIdsubfolder: number) {
-    console.log("entro a selectsharedsubfolderroute:", userIdsubfolder);
+  selectsharedsubfolderroute(
+    folder: any,
+    name: string,
+    userIdsubfolder: number,
+  ) {
+    console.log('entro a selectsharedsubfolderroute:', userIdsubfolder);
     this.sharedSubFoldersList$ = [];
     this.sharedFolders$.subscribe(() => {
       for (let i = 0; i < this.colorsshared.length; i++) {
         this.colorsshared[i] = this.backgroundColorShared;
       }
     });
-    this.colorsshared[folder - 1] = "#61cad8";
+    this.colorsshared[folder - 1] = '#61cad8';
     this.selectedSharedFolder = folder;
-    this.routesharedchild = this.routesharedchild.slice(0, this.routesharedchild.findIndex(x => x.id === folder) + 1);
-    this.fileService.listFilesByUserAndFolderWithId(userIdsubfolder, this.selectedSharedFolder).subscribe(
-      response => {
-        this.sharedFiles$ = of(response.files);
-        this.sharedSubFolders$ = of(response.folders);
-        // Manejar la respuesta de éxito aquí
-        console.log('Registros de files', response.files, response, "folder:", this.selectedSharedFolder, "user:", this.userId);
-      },
-      error => {
-        // Manejar el error aquí
-        console.error('Error al mostrar files', error);
-      }
-
-    )
-
+    this.routesharedchild = this.routesharedchild.slice(
+      0,
+      this.routesharedchild.findIndex((x) => x.id === folder) + 1,
+    );
+    this.fileService
+      .listFilesByUserAndFolderWithId(
+        userIdsubfolder,
+        this.selectedSharedFolder,
+      )
+      .subscribe(
+        (response) => {
+          this.sharedFiles$ = of(response.files);
+          this.sharedSubFolders$ = of(response.folders);
+          // Manejar la respuesta de éxito aquí
+          console.log(
+            'Registros de files',
+            response.files,
+            response,
+            'folder:',
+            this.selectedSharedFolder,
+            'user:',
+            this.userId,
+          );
+        },
+        (error) => {
+          // Manejar el error aquí
+          console.error('Error al mostrar files', error);
+        },
+      );
   }
   enterprofile(id: number, name: string) {
-    console.log("id es:" + id);
-    this.router.navigate(['/cloud/upload'], { queryParams: { number: id, string: name } });
+    console.log('id es:' + id);
+    this.router.navigate(['/cloud/upload'], {
+      queryParams: { number: id, string: name },
+    });
   }
 
   search() {
     this.filteredFolders$ = this.folderList$.pipe(
-      map(folders =>
-        folders.filter(folder =>
-          folder.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-        )
-      )
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.name.toLowerCase().includes(this.searchTerm.toLowerCase()),
+        ),
+      ),
     );
     this.filteredFoldersmobil$ = this.folderList$.pipe(
-      map(folders =>
-        folders.filter(folder =>
-          folder.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-        )
-      )
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.name.toLowerCase().includes(this.searchTerm.toLowerCase()),
+        ),
+      ),
     );
   }
 
   searchsubfiles() {
     this.filteredFoldersfiles$ = this.fileList$.pipe(
-      map(folders =>
-        folders.filter(folder =>
-          folder.title.toLowerCase().includes(this.searchTermfiles.toLowerCase())
-        )
-      )
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.title
+            .toLowerCase()
+            .includes(this.searchTermfiles.toLowerCase()),
+        ),
+      ),
     );
     this.filteredFolderssub$ = this.subfoldersList$.pipe(
-      map(folders =>
-        folders.filter(folder =>
-          folder.name.toLowerCase().includes(this.searchTermfiles.toLowerCase())
-        )
-      )
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.name
+            .toLowerCase()
+            .includes(this.searchTermfiles.toLowerCase()),
+        ),
+      ),
     );
   }
 
   searchsubfilesmobile() {
     this.filteredFoldersfiles$ = this.fileList$.pipe(
-      map(folders =>
-        folders.filter(folder =>
-          folder.title.toLowerCase().includes(this.searchTermfiles.toLowerCase())
-        )
-      )
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.title
+            .toLowerCase()
+            .includes(this.searchTermfiles.toLowerCase()),
+        ),
+      ),
     );
     this.filteredFolders$ = this.folderList$.pipe(
-      map(folders =>
-        folders.filter(folder =>
-          folder.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-        )
-      )
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.name.toLowerCase().includes(this.searchTerm.toLowerCase()),
+        ),
+      ),
     );
-    
-      this.filteredFoldersmobil$ = this.folderListmobile$.pipe(
-        map(folders =>
-          folders.filter(folder =>
-            folder.name.toLowerCase().includes(this.searchTermfiles.toLowerCase())
-          )
-        )
-      );
+
+    this.filteredFoldersmobil$ = this.folderListmobile$.pipe(
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.name
+            .toLowerCase()
+            .includes(this.searchTermfiles.toLowerCase()),
+        ),
+      ),
+    );
   }
 
   deletefolder(nombrefolder: string) {
@@ -1025,7 +1236,7 @@ export class FavoritesComponent implements OnInit {
         console.error('Error deleting folder', error);
         this.actualizarListas();
         this.mostrarMensajeDeleteError();
-      }
+      },
     });
   }
   mostrarAlertaDelete = false;

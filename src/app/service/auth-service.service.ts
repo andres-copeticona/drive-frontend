@@ -42,6 +42,7 @@ export class AuthServiceService {
   }
 
   obtenerIdUsuario(): string | null {
+    console.log('obtenerIdUsuario');
     if (typeof window !== 'undefined') {
       return localStorage.getItem('userId');
     }

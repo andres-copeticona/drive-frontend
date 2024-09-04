@@ -1,22 +1,22 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { Observable, of } from 'rxjs';
 import { UsuarioService } from '../../service/usuario.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { set } from 'date-fns';
 
-import {MatIconModule} from '@angular/material/icon';
-import {MatDividerModule} from '@angular/material/divider';
-import {MatButtonModule} from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
 import { AsyncPipe, NgFor } from '@angular/common';
-import {MatSelectModule} from '@angular/material/select';
+import { MatSelectModule } from '@angular/material/select';
 import { FormControl, Validators } from '@angular/forms';
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 export interface UserData {
   id: number;
@@ -31,39 +31,69 @@ export interface UserData {
 @Component({
   selector: 'app-userlist',
   standalone: true,
-  imports: [MatSlideToggleModule,ReactiveFormsModule,FormsModule,MatSelectModule,AsyncPipe,MatButtonModule,MatDividerModule,MatIconModule,MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
+  imports: [
+    MatSlideToggleModule,
+    ReactiveFormsModule,
+    FormsModule,
+    MatSelectModule,
+    AsyncPipe,
+    MatButtonModule,
+    MatDividerModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './userlist.component.html',
-  styleUrl: './userlist.component.css'
+  styleUrl: './userlist.component.css',
 })
-export class UserlistComponent implements OnInit  {
+export class UserlistComponent implements OnInit {
   selected = 'option2';
   rol = new FormControl(0, [Validators.required]);
+
   slideemploy!: any[];
-  displayedColumns: string[] = ['id', 'nombre', 'celular', 'email', 'status', 'fechacreacion', 'fechaactualizacion', "edit", "rol"];
+  displayedColumns: string[] = [
+    'id',
+    'nombre',
+    'celular',
+    'email',
+    'status',
+    'fechacreacion',
+    'fechaactualizacion',
+    'edit',
+    'rol',
+  ];
   dataSource!: MatTableDataSource<UserData>;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   userList$!: Observable<any[]>;
   rolList$!: Observable<any[]>;
-  constructor(private router: Router,public usuarioService: UsuarioService) {
+
+  constructor(
+    private router: Router,
+    public usuarioService: UsuarioService,
+  ) {
     setTimeout(() => {
       this.usuarioService.getAllUsers().subscribe(
-        response => {
+        (response) => {
           this.userList$.subscribe(() => {
             this.userList$ = of(response.data.content);
           });
         },
-        error => {
+        (error) => {
           // Manejar el error aquí
           console.error('Error al mostrar usuarios', error);
-        }
-      )
+        },
+      );
       this.userList$.subscribe((data: any[]) => {
         this.dataSource = new MatTableDataSource(data);
       });
-    },1000)
+    }, 1000);
   }
+
   ngOnInit(): void {
     this.rolList$ = of([]);
     this.slideemploy = [];
@@ -73,15 +103,16 @@ export class UserlistComponent implements OnInit  {
     setTimeout(() => {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    },1000)
-
+    }, 1000);
   }
 
-  enterprofile(id: number){
-    this.router.navigate(['/cloud/perfiluserselected'], { queryParams: { number: id } });
+  enterprofile(id: number) {
+    this.router.navigate(['/cloud/perfiluserselected'], {
+      queryParams: { number: id },
+    });
   }
-  actualizarrol(id: number){
-    const newrol = this.rol.value
+  actualizarrol(id: number) {
+    const newrol = this.rol.value;
     if (newrol !== null) {
       this.usuarioService.cambiarRolUsuario(id, newrol).subscribe({
         next: (response) => {
@@ -89,7 +120,7 @@ export class UserlistComponent implements OnInit  {
           console.log('Respuesta del servidor:', response); // Para propósitos de depuración
           setTimeout(() => {
             this.cargardatos();
-            for(let i = 0; i < this.slideemploy.length; i++){
+            for (let i = 0; i < this.slideemploy.length; i++) {
               this.slideemploy[i] = false;
             }
           }, 500);
@@ -98,9 +129,9 @@ export class UserlistComponent implements OnInit  {
           // Suponiendo que la respuesta contiene directamente los datos del usuario necesarios
         },
         error: (error) => {
-          console.error(error+" Rol no cambiado: "); // Para propósitos de depuración
+          console.error(error + ' Rol no cambiado: '); // Para propósitos de depuración
           this.mostrarMensajeDeleteError();
-        }
+        },
       });
     }
   }
@@ -113,40 +144,40 @@ export class UserlistComponent implements OnInit  {
     }
   }
 
-  cargardatos(){
+  cargardatos() {
     this.usuarioService.getAllUsers().subscribe(
-      response => {
+      (response) => {
         this.userList$.subscribe(() => {
           this.userList$ = of(response.data.content);
         });
         // Manejar la respuesta de éxito aquí
         console.log('Registros de usuarios', response.data.content[0].nombre);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar usuarios', error);
-      }
-    )
+      },
+    );
     setTimeout(() => {
       this.userList$.subscribe((data: any[]) => {
         this.dataSource = new MatTableDataSource(data);
       });
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    },1000)
+    }, 1000);
     this.usuarioService.obtenerRoles().subscribe(
-      response => {
+      (response) => {
         this.rolList$.subscribe(() => {
           this.rolList$ = of(response);
         });
         // Manejar la respuesta de éxito aquí
         console.log('Registros de roles', response);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar roles', error);
-      }
-    )
+      },
+    );
   }
 
   mostrarAlerta = false;

@@ -1,633 +1,1533 @@
 <div class="container">
-    <mat-grid-list cols="4" rowHeight="49%">
-        <mat-grid-tile [colspan]="1" [rowspan]="2" [style.background]="'white'">
-            <ng-template #outer>
-                <div class="example-menu" cdkMenu>
-                  <button class="example-menu-item" cdkMenuItem (click)="openDialogempty()">Crear carpeta</button>
-                  <button class="example-menu-item" cdkMenuItem>Salir</button>
-                </div>
-              </ng-template>
+  <mat-grid-list cols="4" rowHeight="49%">
+    <mat-grid-tile [colspan]="1" [rowspan]="2" [style.background]="'white'">
+      <ng-template #outer>
+        <div class="example-menu" cdkMenu>
+          <button
+            class="example-menu-item"
+            cdkMenuItem
+            (click)="openDialogempty()"
+          >
+            Crear carpeta
+          </button>
+          <button class="example-menu-item" cdkMenuItem>Salir</button>
+        </div>
+      </ng-template>
 
-            <ng-template #inner>
-                <div class="example-menu" cdkMenu>
-                  <button class="example-menu-item" cdkMenuItem (click)="openDialog()">Crear carpeta</button>
-                  <button class="example-menu-item" cdkMenuItem (click)="enterprofile(this.selectedFolder, this.foldername)">Subir archivo</button>
-                  <button class="example-menu-item" cdkMenuItem>Salir</button>
-                </div>
-            </ng-template>
-            <mat-list [cdkContextMenuTriggerFor]="outer">
-                <div mat-subheader>
-                    @if(!selectedFolder){
-                        <button mat-fab extended style="background-color: #06367A; margin-bottom: 20px;" (click)="openDialog()">
-                            <mat-icon>create_new_folder</mat-icon>
-                            Crear carpeta
-                        </button>
+      <ng-template #inner>
+        <div class="example-menu" cdkMenu>
+          <button class="example-menu-item" cdkMenuItem (click)="openDialog()">
+            Crear carpeta
+          </button>
+          <button
+            class="example-menu-item"
+            cdkMenuItem
+            (click)="enterprofile(this.selectedFolder, this.foldername)"
+          >
+            Subir archivo
+          </button>
+          <button class="example-menu-item" cdkMenuItem>Salir</button>
+        </div>
+      </ng-template>
+      <mat-list [cdkContextMenuTriggerFor]="outer">
+        <div mat-subheader>
+          @if (!selectedFolder) {
+            <button
+              mat-fab
+              extended
+              style="background-color: #06367a; margin-bottom: 20px"
+              (click)="openDialog()"
+            >
+              <mat-icon>create_new_folder</mat-icon>
+              Crear carpeta
+            </button>
+          }
+          <mat-form-field appearance="outline">
+            <mat-label>Buscar carpeta</mat-label>
+            <input
+              matInput
+              placeholder="Ex. Folder1"
+              [(ngModel)]="searchTerm"
+              (input)="search()"
+            />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+        <mat-divider></mat-divider>
+        @if (filteredFolders$ | async; as folderList) {
+          @for (file of folderList; track file.id) {
+            <mat-list-item
+              id="rectangle{{ file.id }}"
+              [cdkContextMenuTriggerFor]="innerparent"
+              (click)="selectfolder(file.id, file.name)"
+            >
+              <div matListItemTitle style="display: flex; flex-direction: row">
+                <div style="display: flex; align-items: center" matListItemIcon>
+                  <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu"
+                    aria-label="Example icon-button with a menu"
+                  >
+                    <mat-icon class="blue-icon">folder</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu" class="matmenu1">
+                    @if (rol == 2) {
+                      <button
+                        mat-menu-item
+                        (click)="sharefolder(file.id, file.userId, file.name)"
+                      >
+                        <mat-icon class="blue-icon">share</mat-icon>
+                        <span>Compartir carpeta</span>
+                      </button>
                     }
-                    <mat-form-field appearance="outline">
-                        <mat-label>Buscar carpeta</mat-label>
-                        <input matInput placeholder="Ex. Folder1" [(ngModel)]="searchTerm" (input)="search()" >
-                        <mat-icon matSuffix>search</mat-icon>
-                    </mat-form-field>
+                    <button
+                      mat-menu-item
+                      (click)="
+                        openDialogDeleteFolder(
+                          file.id,
+                          file.name,
+                          file.minioLink,
+                          file.createdDate,
+                          file.accessType,
+                          file.folderId,
+                          file.accessType,
+                          file.password
+                        )
+                      "
+                    >
+                      <mat-icon>delete</mat-icon>
+                      <span>Eliminar carpeta</span>
+                    </button>
+                  </mat-menu>
                 </div>
-                <mat-divider></mat-divider>
-                @if(filteredFolders$ | async ; as folderList){
-                    @for(file of folderList; track file.id){
-                        <mat-list-item id="rectangle{{file.id}}" [cdkContextMenuTriggerFor]="innerparent" (click)="selectfolder(file.id, file.name)">
-
-                            <div matListItemTitle style="display: flex; flex-direction: row;">
-                                <div style="display: flex; align-items: center;" matListItemIcon>
-                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                        <mat-icon class="blue-icon">folder</mat-icon>
-                                    </button>
-                                    <mat-menu #menu="matMenu" class="matmenu1">
-                                        @if(rol == 2){
-                                            <button mat-menu-item (click)="sharefolder(file.id, file.userId, file.name)">
-                                                <mat-icon class="blue-icon">share</mat-icon>
-                                                <span>Compartir carpeta</span>
-                                            </button>
-                                        }
-                                        <button mat-menu-item (click)="openDialogDeleteFolder(file.id, file.name, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">
-                                            <mat-icon>delete</mat-icon>
-                                            <span>Eliminar carpeta</span>
-                                        </button>
-                                    </mat-menu>
-                                </div>
-                                <div style="margin-left: 30px; align-items: center; display: flex;">{{file.name | truncate:9}}</div>
-                                <span class="example-spacer"></span>
-                                <div>
-                                    @if(rol == 2){
-                                        <button mat-icon-button (click)="sharefolder(file.id, file.userId, file.name)">
-                                            <mat-icon class="blue-icon">share</mat-icon>
-                                        </button>
-                                    }
-                                </div>
-                            </div>
-                        </mat-list-item>
-                        <ng-template #innerparent>
-                            <div class="example-menu" cdkMenu>
-                              <button class="example-menu-item" cdkMenuItem (click)="openDialogparent(file.id,file.name)">Crear carpeta</button>
-                              <button class="example-menu-item" cdkMenuItem (click)="enterprofile(file.id,file.name)">Subir archivo</button>
-                              <button class="example-menu-item" cdkMenuItem (click)="downloadFolder(file.name)">Descargar carpeta</button>
-                              @if(rol == 2){
-                                <button class="example-menu-item" cdkMenuItem (click)="sharefolder(file.id, file.userId, file.name)">Compartir carpeta</button>
-                                <button class="example-menu-item" cdkMenuItem (click)="openDialogDeleteFolder(file.id, file.name, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">Eliminar carpeta</button>
-                              }
-                              <button class="example-menu-item" cdkMenuItem>Salir</button>
-                            </div>
-                          </ng-template>
-                    }@empty{
-                        <p>No hay folders registrados</p>
-                    }
+                <div
+                  style="margin-left: 30px; align-items: center; display: flex"
+                >
+                  {{ file.name | truncate: 9 }}
+                </div>
+                <span class="example-spacer"></span>
+                <div>
+                  @if (rol == 2) {
+                    <button
+                      mat-icon-button
+                      (click)="sharefolder(file.id, file.userId, file.name)"
+                    >
+                      <mat-icon class="blue-icon">share</mat-icon>
+                    </button>
+                  }
+                </div>
+              </div>
+            </mat-list-item>
+            <ng-template #innerparent>
+              <div class="example-menu" cdkMenu>
+                <button
+                  class="example-menu-item"
+                  cdkMenuItem
+                  (click)="openDialogparent(file.id, file.name)"
+                >
+                  Crear carpeta
+                </button>
+                <button
+                  class="example-menu-item"
+                  cdkMenuItem
+                  (click)="enterprofile(file.id, file.name)"
+                >
+                  Subir archivo
+                </button>
+                <button
+                  class="example-menu-item"
+                  cdkMenuItem
+                  (click)="downloadFolder(file.name)"
+                >
+                  Descargar carpeta
+                </button>
+                @if (rol == 2) {
+                  <button
+                    class="example-menu-item"
+                    cdkMenuItem
+                    (click)="sharefolder(file.id, file.userId, file.name)"
+                  >
+                    Compartir carpeta
+                  </button>
+                  <button
+                    class="example-menu-item"
+                    cdkMenuItem
+                    (click)="
+                      openDialogDeleteFolder(
+                        file.id,
+                        file.name,
+                        file.minioLink,
+                        file.createdDate,
+                        file.accessType,
+                        file.folderId,
+                        file.accessType,
+                        file.password
+                      )
+                    "
+                  >
+                    Eliminar carpeta
+                  </button>
                 }
+                <button class="example-menu-item" cdkMenuItem>Salir</button>
+              </div>
+            </ng-template>
+          } @empty {
+            <p>No hay folders registrados</p>
+          }
+        }
+      </mat-list>
+    </mat-grid-tile>
+    <mat-grid-tile [colspan]="3" [rowspan]="2" [style.background]="'white'">
+      <div class="vertical-layout">
+        <div>
+          <mat-list [cdkContextMenuTriggerFor]="inner">
+            <div mat-subheader>
+              <div class="route" [cdkContextMenuTriggerFor]="inner">
+                <div
+                  style="
+                    flex-direction: row;
+                    display: flex;
+                    overflow-x: auto;
+                    min-width: 70%;
+                  "
+                >
+                  @if (parentSelectedFolder) {
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      (click)="
+                        selectfolder(
+                          parentSelectedFolder,
+                          parentSelectedFolderName
+                        )
+                      "
+                    >
+                      {{ this.parentSelectedFolderName | truncate: 12 }}
+                    </button>
+                  }
+                  @for (file of routechild; track file.id) {
+                    <div class="flechita">
+                      <mat-icon>chevron_right</mat-icon>
+                    </div>
 
-            </mat-list>
-        </mat-grid-tile>
-        <mat-grid-tile [colspan]="3" [rowspan]="2" [style.background]="'white'">
-            <div class="vertical-layout">
-                <div>
-                    <mat-list [cdkContextMenuTriggerFor]="inner">
-                        <div mat-subheader>
-                            <div class="route" [cdkContextMenuTriggerFor]="inner">
-                                <div style="flex-direction: row; display: flex; overflow-x: auto; min-width: 70%;">
-                                    @if(parentSelectedFolder){
-                                        <button mat-raised-button color="primary" (click)="selectfolder(parentSelectedFolder, parentSelectedFolderName)">{{this.parentSelectedFolderName | truncate:12}}</button>
-                                    }
-                                    @for(file of routechild; track file.id){
-                                        <div class="flechita"><mat-icon>chevron_right</mat-icon></div>
-
-                                        <button mat-raised-button (click)="selectfolderchildroute(file.id, file.namefolder)">{{file.namefolder | truncate:12}}</button>
-                                    }
-                                </div>
-
-                                <div style="display: flex; justify-content: flex-end; width: 100%;">
-                                    <div>
-                                        <mat-form-field appearance="outline" style="width: 200px;">
-                                            <mat-label>Buscar archivos</mat-label>
-                                            <input matInput placeholder="Ex. Folder1" [(ngModel)]="searchTermfiles" (input)="searchsubfiles()" >
-                                            <mat-icon matSuffix>search</mat-icon>
-                                        </mat-form-field>
-                                    </div>
-                                </div>
-                            </div>
-                            @if(parentSelectedFolder){
-                                <button mat-fab extended style="background-color: #06367A; margin-bottom: 10px;" (click)="openDialog()">
-                                    <mat-icon>create_new_folder</mat-icon>
-                                    Crear carpeta
-                                </button>
-                                <button mat-fab extended style="background-color: #06367A; margin-bottom: 10px; margin-left: 5px;" (click)="enterprofile(this.selectedFolder, this.foldername)">
-                                    <mat-icon>note_add</mat-icon>
-                                    Nuevo archivo
-                                </button>
-                            }
-                            @if(mostrarAlertaDelete){
-                                <div class="alert">
-                                    El archivo se elimino correctamente
-                                </div>
-                              }
-                            @if(mostrarAlertaErrorDelete){
-                                <div class="alertE">
-                                    El archivo no se elimino.
-                                </div>
-                            }
-                        </div>
-                        <mat-divider></mat-divider>
-                        @if(filteredFolderssub$ && parentSelectedFolder){
-                            <div class="subtitle">Carpetas</div>
-                        }
-                        <mat-grid-list cols="4" rowHeight="50px" gutterSize="10px">
-                            @if(filteredFolderssub$ | async ; as folderList){
-                                @for(file of folderList; track file.id){
-                                    <mat-grid-tile>
-                                        <mat-list-item id="subrectangle{{file.id}}" (click)="selectfolderchild(file.id, file.name)" [cdkContextMenuTriggerFor]="innerchild">
-                                            <div matListItemTitle style="display: flex; flex-direction: row;">
-                                                <div style="display: flex; align-items: center;" matListItemIcon><mat-icon>folder</mat-icon></div>
-                                                <div style="margin-left: 30px; align-items: center; display: flex;">{{file.name | truncate:9 }}</div>
-                                                <span class="example-spacer"></span>
-                                                <div>
-                                                    @if(rol == 2){
-                                                        <button mat-icon-button (click)="sharefolder(file.id, file.userId, file.name)">
-                                                            <mat-icon class="blue-icon">share</mat-icon>
-                                                        </button>
-                                                    }
-                                                </div>
-                                            </div>
-                                        </mat-list-item>
-
-                                    </mat-grid-tile>
-                                    <ng-template #innerchild>
-                                        <div class="example-menu" cdkMenu>
-                                          <button class="example-menu-item" cdkMenuItem (click)="openDialogparent(file.id,file.name)">Crear carpeta</button>
-                                          <button class="example-menu-item" cdkMenuItem (click)="enterprofile(file.id,file.name)">Subir archivo</button>
-                                          <button class="example-menu-item" cdkMenuItem (click)="downloadFolder(file.name)">Descargar carpeta</button>
-                                          @if(rol == 2){
-                                            <button class="example-menu-item" cdkMenuItem (click)="sharefolder(file.id, file.userId, file.name)">Compartir carpeta</button>
-                                            <button class="example-menu-item" cdkMenuItem (click)="openDialogDeleteFolder(file.id, file.name, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">Eliminar carpeta</button>
-                                          }
-                                          <button class="example-menu-item" cdkMenuItem>Exit</button>
-                                        </div>
-                                    </ng-template>
-                                }
-                            }
-                        </mat-grid-list>
-                    </mat-list>
+                    <button
+                      mat-raised-button
+                      (click)="selectfolderchildroute(file.id, file.namefolder)"
+                    >
+                      {{ file.namefolder | truncate: 12 }}
+                    </button>
+                  }
                 </div>
-                <div>
-                    <mat-list [cdkContextMenuTriggerFor]="inner">
-                        @if(filteredFoldersfiles$ && parentSelectedFolder){
-                            <div class="subtitle">Archivos</div>
-                        }
-                        <mat-grid-list cols="4" rowHeight="50px" gutterSize="10px">
-                            @if(filteredFoldersfiles$ | async ; as folderList){
-                                @for(file of folderList; track file.id){
-                                    <mat-grid-tile>
-                                        <mat-list-item id="subrectangle{{file.id}}">
-                                            <div matListItemTitle style="display: flex; flex-direction: row;">
-                                                <div style="display: flex; align-items: center;" matListItemIcon>
-                                                    @if(file.title.substring(file.title.length - 3) == "png"){
-                                                        <mat-icon matListItemIcon>image</mat-icon>
-                                                    }
-                                                    @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                                        <mat-icon matListItemIcon>insert_drive_file</mat-icon>
-                                                    }
-                                                    @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                                        <mat-icon matListItemIcon>image</mat-icon>
-                                                    }
-                                                    @if(file.title.substring(file.title.length - 3) == "peg"){
-                                                        <mat-icon matListItemIcon>image</mat-icon>
-                                                    }
-                                                    @if(file.title.substring(file.title.length - 3) == "doc"){
-                                                        <mat-icon matListItemIcon>folder</mat-icon>
-                                                    }
-                                                    @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                                        <mat-icon matListItemIcon>music_note</mat-icon>
-                                                    }
-                                                    @if(file.title.substring(file.title.length - 3) == "mp4"){
-                                                        <mat-icon matListItemIcon>local_movies</mat-icon>
-                                                    }
 
-                                                </div>
-                                                <div style="margin-left: 30px; align-items: center; display: flex;">{{file.title | truncate:9 }}</div>
-                                                <span class="example-spacer"></span>
-                                                <div>
-                                                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                                    <mat-icon class="blue-icon">more_vert</mat-icon>
-                                                    </button>
-                                                  <mat-menu #menu="matMenu" class="matmenu1">
-                                                    @if(file.accessType == "publico" || file.accessType == "privado"){
-                                                        @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                                            <button mat-menu-item (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "png"){
-                                                            <button mat-menu-item (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "peg"){
-                                                            <button mat-menu-item (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                                            <button mat-menu-item (click)="openDialogpdf(file.id, file.title, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password, file.categoria)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                                            <button mat-menu-item (click)="openDialogaudio(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "mp4"){
-                                                            <button mat-menu-item (click)="openDialogvideo(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        <button mat-menu-item (click)="openDialogShare(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                          <mat-icon>share</mat-icon>
-                                                          <span>Compartir</span>
-                                                        </button>
-                                                        <a href="{{file.minioLink}}" download="{{file.title}}">
-                                                            <button mat-menu-item>
-                                                              <mat-icon>cloud_download</mat-icon>
-                                                              <span>Descargar</span>
-                                                            </button>
-                                                        </a>
-                                                        <button mat-menu-item (click)="openDialogDelete(file.id, file.title, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">
-                                                          <mat-icon>delete</mat-icon>
-                                                          <span>Eliminar</span>
-                                                        </button>
-                                                    }
-                                                    @if(file.accessType == "restringido"){
-                                                        @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                                            <button mat-menu-item (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "png"){
-                                                            <button mat-menu-item (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "peg"){
-                                                            <button mat-menu-item (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                                            <button mat-menu-item (click)="openDialogpassworddoc(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                                            <button mat-menu-item (click)="openDialogaudio(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                                <mat-icon>edit</mat-icon>
-                                                                <span>Abrir</span>
-                                                            </button>
-                                                        }
-                                                        <button mat-menu-item (click)="openDialogpasswordshare(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                          <mat-icon>share</mat-icon>
-                                                          <span>Compartir</span>
-                                                        </button>
-                                                        <button mat-menu-item (click)="openDialogpassworddelete(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                          <mat-icon>delete</mat-icon>
-                                                          <span>Eliminar</span>
-                                                        </button>
-                                                    }
-                                                  </mat-menu>
-                                                </div>
-                                            </div>
-                                        </mat-list-item>
-
-                                    </mat-grid-tile>
-                                    <ng-template #innerchild>
-                                        <div class="example-menu" cdkMenu>
-                                          <button class="example-menu-item" cdkMenuItem (click)="openDialogparent(file.id,file.name)">Crear carpeta</button>
-                                          <button class="example-menu-item" cdkMenuItem (click)="enterprofile(file.id,file.name)">Subir archivo</button>
-                                          @if(rol == 2){
-                                            <button class="example-menu-item" cdkMenuItem (click)="sharefolder(file.id, file.userId, file.name)">Compartir carpeta</button>
-                                            <button class="example-menu-item" cdkMenuItem (click)="openDialogDeleteFolder(file.id, file.name, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">Eliminar carpeta</button>
-                                          }
-                                          <button class="example-menu-item" cdkMenuItem>Exit</button>
-                                        </div>
-                                    </ng-template>
-                                }
-                            }
-                        </mat-grid-list>
-                    </mat-list>
+                <div
+                  style="display: flex; justify-content: flex-end; width: 100%"
+                >
+                  <div>
+                    <mat-form-field appearance="outline" style="width: 200px">
+                      <mat-label>Buscar archivos</mat-label>
+                      <input
+                        matInput
+                        placeholder="Ex. Folder1"
+                        [(ngModel)]="searchTermfiles"
+                        (input)="searchsubfiles()"
+                      />
+                      <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+                  </div>
                 </div>
+              </div>
+              @if (parentSelectedFolder) {
+                <button
+                  mat-fab
+                  extended
+                  style="background-color: #06367a; margin-bottom: 10px"
+                  (click)="openDialog()"
+                >
+                  <mat-icon>create_new_folder</mat-icon>
+                  Crear carpeta
+                </button>
+                <button
+                  mat-fab
+                  extended
+                  style="
+                    background-color: #06367a;
+                    margin-bottom: 10px;
+                    margin-left: 5px;
+                  "
+                  (click)="enterprofile(this.selectedFolder, this.foldername)"
+                >
+                  <mat-icon>note_add</mat-icon>
+                  Nuevo archivo
+                </button>
+              }
+              @if (mostrarAlertaDelete) {
+                <div class="alert">El archivo se elimino correctamente</div>
+              }
+              @if (mostrarAlertaErrorDelete) {
+                <div class="alertE">El archivo no se elimino.</div>
+              }
             </div>
-        </mat-grid-tile>
-    </mat-grid-list>
+            <mat-divider></mat-divider>
+            @if (filteredFolderssub$ && parentSelectedFolder) {
+              <div class="subtitle">Carpetas</div>
+            }
+            <mat-grid-list cols="4" rowHeight="50px" gutterSize="10px">
+              @if (filteredFolderssub$ | async; as folderList) {
+                @for (file of folderList; track file.id) {
+                  <mat-grid-tile>
+                    <mat-list-item
+                      id="subrectangle{{ file.id }}"
+                      (click)="selectfolderchild(file.id, file.name)"
+                      [cdkContextMenuTriggerFor]="innerchild"
+                    >
+                      <div
+                        matListItemTitle
+                        style="display: flex; flex-direction: row"
+                      >
+                        <div
+                          style="display: flex; align-items: center"
+                          matListItemIcon
+                        >
+                          <mat-icon>folder</mat-icon>
+                        </div>
+                        <div
+                          style="
+                            margin-left: 30px;
+                            align-items: center;
+                            display: flex;
+                          "
+                        >
+                          {{ file.name | truncate: 9 }}
+                        </div>
+                        <span class="example-spacer"></span>
+                        <div>
+                          @if (rol == 2) {
+                            <button
+                              mat-icon-button
+                              (click)="
+                                sharefolder(file.id, file.userId, file.name)
+                              "
+                            >
+                              <mat-icon class="blue-icon">share</mat-icon>
+                            </button>
+                          }
+                        </div>
+                      </div>
+                    </mat-list-item>
+                  </mat-grid-tile>
+                  <ng-template #innerchild>
+                    <div class="example-menu" cdkMenu>
+                      <button
+                        class="example-menu-item"
+                        cdkMenuItem
+                        (click)="openDialogparent(file.id, file.name)"
+                      >
+                        Crear carpeta
+                      </button>
+                      <button
+                        class="example-menu-item"
+                        cdkMenuItem
+                        (click)="enterprofile(file.id, file.name)"
+                      >
+                        Subir archivo
+                      </button>
+                      <button
+                        class="example-menu-item"
+                        cdkMenuItem
+                        (click)="downloadFolder(file.name)"
+                      >
+                        Descargar carpeta
+                      </button>
+                      @if (rol == 2) {
+                        <button
+                          class="example-menu-item"
+                          cdkMenuItem
+                          (click)="sharefolder(file.id, file.userId, file.name)"
+                        >
+                          Compartir carpeta
+                        </button>
+                        <button
+                          class="example-menu-item"
+                          cdkMenuItem
+                          (click)="
+                            openDialogDeleteFolder(
+                              file.id,
+                              file.name,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              file.folderId,
+                              file.accessType,
+                              file.password
+                            )
+                          "
+                        >
+                          Eliminar carpeta
+                        </button>
+                      }
+                      <button class="example-menu-item" cdkMenuItem>
+                        Exit
+                      </button>
+                    </div>
+                  </ng-template>
+                }
+              }
+            </mat-grid-list>
+          </mat-list>
+        </div>
+        <div>
+          <mat-list [cdkContextMenuTriggerFor]="inner">
+            @if (filteredFoldersfiles$ && parentSelectedFolder) {
+              <div class="subtitle">Archivos</div>
+            }
+            <mat-grid-list cols="4" rowHeight="50px" gutterSize="10px">
+              @if (filteredFoldersfiles$ | async; as folderList) {
+                @for (file of folderList; track file.id) {
+                  <mat-grid-tile>
+                    <mat-list-item id="subrectangle{{ file.id }}">
+                      <div
+                        matListItemTitle
+                        style="display: flex; flex-direction: row"
+                      >
+                        <div
+                          style="display: flex; align-items: center"
+                          matListItemIcon
+                        >
+                          @if (
+                            file.title.substring(file.title.length - 3) == "png"
+                          ) {
+                            <mat-icon matListItemIcon>image</mat-icon>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "pdf"
+                          ) {
+                            <mat-icon matListItemIcon
+                              >insert_drive_file</mat-icon
+                            >
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "jpg"
+                          ) {
+                            <mat-icon matListItemIcon>image</mat-icon>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "peg"
+                          ) {
+                            <mat-icon matListItemIcon>image</mat-icon>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "doc"
+                          ) {
+                            <mat-icon matListItemIcon>folder</mat-icon>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "mp3"
+                          ) {
+                            <mat-icon matListItemIcon>music_note</mat-icon>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "mp4"
+                          ) {
+                            <mat-icon matListItemIcon>local_movies</mat-icon>
+                          }
+                        </div>
+                        <div
+                          style="
+                            margin-left: 30px;
+                            align-items: center;
+                            display: flex;
+                          "
+                        >
+                          {{ file.title | truncate: 9 }}
+                        </div>
+                        <span class="example-spacer"></span>
+                        <div>
+                          <button
+                            mat-icon-button
+                            [matMenuTriggerFor]="menu"
+                            aria-label="Example icon-button with a menu"
+                          >
+                            <mat-icon class="blue-icon">more_vert</mat-icon>
+                          </button>
+                          <mat-menu #menu="matMenu" class="matmenu1">
+                            @if (
+                              file.accessType == "publico" ||
+                              file.accessType == "privado"
+                            ) {
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "jpg"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialog1(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "png"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialog1(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "peg"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialog1(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "pdf"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialogpdf(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType,
+                                      file.folderId,
+                                      file.accessType,
+                                      file.password,
+                                      file.categoria
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "mp3"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialogaudio(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "mp4"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialogvideo(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              <button
+                                mat-menu-item
+                                (click)="
+                                  openDialogShare(
+                                    file.id,
+                                    file.title,
+                                    file.minioLink,
+                                    file.createdDate,
+                                    file.accessType
+                                  )
+                                "
+                              >
+                                <mat-icon>share</mat-icon>
+                                <span>Compartir</span>
+                              </button>
+                              <a
+                                href="{{ file.minioLink }}"
+                                download="{{ file.title }}"
+                              >
+                                <button mat-menu-item>
+                                  <mat-icon>cloud_download</mat-icon>
+                                  <span>Descargar</span>
+                                </button>
+                              </a>
+                              <button
+                                mat-menu-item
+                                (click)="
+                                  openDialogDelete(
+                                    file.id,
+                                    file.title,
+                                    file.minioLink,
+                                    file.createdDate,
+                                    file.accessType,
+                                    file.folderId,
+                                    file.accessType,
+                                    file.password
+                                  )
+                                "
+                              >
+                                <mat-icon>delete</mat-icon>
+                                <span>Eliminar</span>
+                              </button>
+                            }
+                            @if (file.accessType == "restringido") {
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "jpg"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialogpasswordimg(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType,
+                                      this.useridglobal,
+                                      file.description,
+                                      file.accessType,
+                                      file.password,
+                                      file.categoria,
+                                      file.folderId
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "png"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialogpasswordimg(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType,
+                                      this.useridglobal,
+                                      file.description,
+                                      file.accessType,
+                                      file.password,
+                                      file.categoria,
+                                      file.folderId
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "peg"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialogpasswordimg(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType,
+                                      this.useridglobal,
+                                      file.description,
+                                      file.accessType,
+                                      file.password,
+                                      file.categoria,
+                                      file.folderId
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "pdf"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialogpassworddoc(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType,
+                                      this.useridglobal,
+                                      file.description,
+                                      file.accessType,
+                                      file.password,
+                                      file.categoria,
+                                      file.folderId
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              @if (
+                                file.title.substring(file.title.length - 3) ==
+                                "mp3"
+                              ) {
+                                <button
+                                  mat-menu-item
+                                  (click)="
+                                    openDialogaudio(
+                                      file.id,
+                                      file.title,
+                                      file.minioLink,
+                                      file.createdDate,
+                                      file.accessType
+                                    )
+                                  "
+                                >
+                                  <mat-icon>edit</mat-icon>
+                                  <span>Abrir</span>
+                                </button>
+                              }
+                              <button
+                                mat-menu-item
+                                (click)="
+                                  openDialogpasswordshare(
+                                    file.id,
+                                    file.title,
+                                    file.minioLink,
+                                    file.createdDate,
+                                    file.accessType,
+                                    this.useridglobal,
+                                    file.description,
+                                    file.accessType,
+                                    file.password,
+                                    file.categoria,
+                                    file.folderId
+                                  )
+                                "
+                              >
+                                <mat-icon>share</mat-icon>
+                                <span>Compartir</span>
+                              </button>
+                              <button
+                                mat-menu-item
+                                (click)="
+                                  openDialogpassworddelete(
+                                    file.id,
+                                    file.title,
+                                    file.minioLink,
+                                    file.createdDate,
+                                    file.accessType,
+                                    this.useridglobal,
+                                    file.description,
+                                    file.accessType,
+                                    file.password,
+                                    file.categoria,
+                                    file.folderId
+                                  )
+                                "
+                              >
+                                <mat-icon>delete</mat-icon>
+                                <span>Eliminar</span>
+                              </button>
+                            }
+                          </mat-menu>
+                        </div>
+                      </div>
+                    </mat-list-item>
+                  </mat-grid-tile>
+                  <ng-template #innerchild>
+                    <div class="example-menu" cdkMenu>
+                      <button
+                        class="example-menu-item"
+                        cdkMenuItem
+                        (click)="openDialogparent(file.id, file.name)"
+                      >
+                        Crear carpeta
+                      </button>
+                      <button
+                        class="example-menu-item"
+                        cdkMenuItem
+                        (click)="enterprofile(file.id, file.name)"
+                      >
+                        Subir archivo
+                      </button>
+                      @if (rol == 2) {
+                        <button
+                          class="example-menu-item"
+                          cdkMenuItem
+                          (click)="sharefolder(file.id, file.userId, file.name)"
+                        >
+                          Compartir carpeta
+                        </button>
+                        <button
+                          class="example-menu-item"
+                          cdkMenuItem
+                          (click)="
+                            openDialogDeleteFolder(
+                              file.id,
+                              file.name,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              file.folderId,
+                              file.accessType,
+                              file.password
+                            )
+                          "
+                        >
+                          Eliminar carpeta
+                        </button>
+                      }
+                      <button class="example-menu-item" cdkMenuItem>
+                        Exit
+                      </button>
+                    </div>
+                  </ng-template>
+                }
+              }
+            </mat-grid-list>
+          </mat-list>
+        </div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>
 <!--vista para movil-->
 <div class="containermobile">
-
-    <ng-template #outer>
-        <div class="example-menu" cdkMenu>
-            <button class="example-menu-item" cdkMenuItem (click)="openDialogempty()">Crear carpeta</button>
-            <button class="example-menu-item" cdkMenuItem>Salir</button>
-        </div>
-    </ng-template>
-
-    <ng-template #inner>
-        <div class="example-menu" cdkMenu>
-            <button class="example-menu-item" cdkMenuItem (click)="openDialog()">Crear carpeta</button>
-            <button class="example-menu-item" cdkMenuItem
-                (click)="enterprofile(this.selectedFolder, this.foldername)">Subir archivo</button>
-            <button class="example-menu-item" cdkMenuItem>Salir</button>
-        </div>
-    </ng-template>
-
-    <div class="vertical-layout">
-        <div>
-            <mat-list [cdkContextMenuTriggerFor]="inner">
-                <div mat-subheader>
-                    <div class="route" [cdkContextMenuTriggerFor]="inner">
-                        <div
-                            style="flex-direction: row; display: flex; overflow-x: auto; min-width: fit-content; overflow-y:hidden;">
-
-                            <button mat-raised-button color="primary" (click)="actualizarListasDelete()">Home</button>
-                            @for(file of routechild; track file.id){
-                            <div class="flechita"><mat-icon>chevron_right</mat-icon></div>
-
-                            <button mat-raised-button
-                                (click)="selectfolderchildroutemobile(file.id, file.namefolder)">{{file.namefolder}}</button>
-                            }
-                        </div>
-                    </div>
-
-                    <div style="display: flex; width: 100%; margin-top: 5px;">
-                        <div>
-                            <mat-form-field appearance="outline" style="width: 200px;">
-                                <mat-label>Buscar archivos</mat-label>
-                                <input matInput placeholder="Ex. Folder1" [(ngModel)]="searchTermfiles"
-                                    (input)="searchsubfilesmobile()">
-                                <mat-icon matSuffix>search</mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                    <button mat-fab extended style="background-color: #06367A; margin-bottom: 10px;"
-                        (click)="openDialog()">
-                        <mat-icon>create_new_folder</mat-icon>
-                        Crear carpeta
-                    </button>
-                    <button mat-fab extended style="background-color: #06367A; margin-bottom: 10px;"
-                        (click)="enterprofile(this.selectedFolder, this.foldername)">
-                        <mat-icon>note_add</mat-icon>
-                        Nuevo archivo
-                    </button>
-                    @if(mostrarAlertaDelete){
-                    <div class="alert">
-                        El archivo se elimino correctamente
-                    </div>
-                    }
-                    @if(mostrarAlertaErrorDelete){
-                    <div class="alertE">
-                        El archivo no se elimino.
-                    </div>
-                    }
-                </div>
-                <mat-divider></mat-divider>
-                @if(filteredFoldersmobil$){
-                <div class="subtitle">Carpetas</div>
-                }
-                <mat-grid-list cols="2" rowHeight="50px" gutterSize="10px">
-                    @if(filteredFoldersmobil$ | async ; as folderList){
-                    @for(file of folderList; track file.id){
-                    <mat-grid-tile>
-                        <mat-list-item id="subrectangle{{file.id}}"
-                            (click)="selectfolderchildmobile(file.id, file.name)"
-                            [cdkContextMenuTriggerFor]="innerchild">
-                            <div matListItemTitle style="display: flex; flex-direction: row;">
-                                <div style="display: flex; align-items: center;" matListItemIcon>
-                                    <button mat-icon-button [matMenuTriggerFor]="menu"
-                                        aria-label="Example icon-button with a menu">
-                                        <mat-icon class="blue-icon">folder</mat-icon>
-                                    </button>
-                                    <mat-menu #menu="matMenu" class="matmenu1">
-                                        @if(rol == 2){
-                                        <button mat-menu-item (click)="sharefolder(file.id, file.userId, file.name)">
-                                            <mat-icon class="blue-icon">share</mat-icon>
-                                            <span>Compartir carpeta</span>
-                                        </button>
-                                        }
-                                        <button mat-menu-item
-                                            (click)="openDialogDeleteFolder(file.id, file.name, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">
-                                            <mat-icon>delete</mat-icon>
-                                            <span>Eliminar carpeta</span>
-                                        </button>
-                                    </mat-menu>
-                                </div>
-                                <div style="margin-left: 5px; align-items: center; display: flex;">{{file.name |
-                                    truncate:9 }}</div>
-                                <span class="example-spacer"></span>
-                            </div>
-                        </mat-list-item>
-
-                    </mat-grid-tile>
-                    <ng-template #innerchild>
-                        <div class="example-menu" cdkMenu>
-                            <button class="example-menu-item" cdkMenuItem
-                                (click)="openDialogparent(file.id,file.name)">Crear carpeta</button>
-                            <button class="example-menu-item" cdkMenuItem
-                                (click)="enterprofile(file.id,file.name)">Subir archivo</button>
-                            <button class="example-menu-item" cdkMenuItem (click)="downloadFolder(file.name)">Descargar carpeta</button>
-                            @if(rol == 2){
-                            <button class="example-menu-item" cdkMenuItem
-                                (click)="sharefolder(file.id, file.userId, file.name)">Compartir carpeta</button>
-                            <button class="example-menu-item" cdkMenuItem
-                                (click)="openDialogDeleteFolder(file.id, file.name, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">Eliminar
-                                carpeta</button>
-                            }
-                            <button class="example-menu-item" cdkMenuItem>Exit</button>
-                        </div>
-                    </ng-template>
-                    }
-                    }
-                </mat-grid-list>
-            </mat-list>
-        </div>
-        <div>
-            <mat-list [cdkContextMenuTriggerFor]="inner">
-                @if(filteredFoldersfiles$){
-                <div class="subtitle">Archivos</div>
-                }
-                <mat-grid-list cols="2" rowHeight="50px" gutterSize="10px">
-                    @if(filteredFoldersfiles$ | async ; as folderList){
-                    @for(file of folderList; track file.id){
-                    <mat-grid-tile>
-                        <mat-list-item id="subrectangle{{file.id}}">
-                            <div matListItemTitle style="display: flex; flex-direction: row;">
-                                <div style="display: flex; align-items: center;" matListItemIcon>
-                                    <button mat-icon-button [matMenuTriggerFor]="menu"
-                                        aria-label="Example icon-button with a menu">
-
-                                        @if(file.title.substring(file.title.length - 3) == "png"){
-                                        <mat-icon matListItemIcon>image</mat-icon>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                        <mat-icon matListItemIcon>insert_drive_file</mat-icon>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                        <mat-icon matListItemIcon>image</mat-icon>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "peg"){
-                                        <mat-icon matListItemIcon>image</mat-icon>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "doc"){
-                                        <mat-icon matListItemIcon>folder</mat-icon>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                        <mat-icon matListItemIcon>music_note</mat-icon>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "mp4"){
-                                        <mat-icon matListItemIcon>local_movies</mat-icon>
-                                        }
-                                    </button>
-                                    <mat-menu #menu="matMenu" class="matmenu1">
-                                        @if(file.accessType == "publico" || file.accessType == "privado"){
-                                        @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                        <button mat-menu-item
-                                            (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "png"){
-                                        <button mat-menu-item
-                                            (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "peg"){
-                                        <button mat-menu-item
-                                            (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                        <button mat-menu-item
-                                            (click)="openDialogpdf(file.id, file.title, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password, file.categoria)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                        <button mat-menu-item
-                                            (click)="openDialogaudio(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "mp4"){
-                                        <button mat-menu-item
-                                            (click)="openDialogvideo(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        <button mat-menu-item
-                                            (click)="openDialogShare(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                            <mat-icon>share</mat-icon>
-                                            <span>Compartir</span>
-                                        </button>
-                                        <button mat-menu-item
-                                            (click)="openDialogDelete(file.id, file.title, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">
-                                            <mat-icon>delete</mat-icon>
-                                            <span>Eliminar</span>
-                                        </button>
-                                        }
-                                        @if(file.accessType == "restringido"){
-                                        @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                        <button mat-menu-item
-                                            (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "png"){
-                                        <button mat-menu-item
-                                            (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "peg"){
-                                        <button mat-menu-item
-                                            (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                        <button mat-menu-item
-                                            (click)="openDialogpassworddoc(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                        <button mat-menu-item
-                                            (click)="openDialogaudio(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                            <mat-icon>edit</mat-icon>
-                                            <span>Abrir</span>
-                                        </button>
-                                        }
-                                        <button mat-menu-item
-                                            (click)="openDialogpasswordshare(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                            <mat-icon>share</mat-icon>
-                                            <span>Compartir</span>
-                                        </button>
-                                        <button mat-menu-item
-                                            (click)="openDialogpassworddelete(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                            <mat-icon>delete</mat-icon>
-                                            <span>Eliminar</span>
-                                        </button>
-                                        }
-                                    </mat-menu>
-
-                                </div>
-                                <div style="margin-left: 5px; align-items: center; display: flex;">{{file.title |
-                                    truncate:9 }}</div>
-                                <span class="example-spacer"></span>
-                            </div>
-                        </mat-list-item>
-
-                    </mat-grid-tile>
-                    <ng-template #innerchild>
-                        <div class="example-menu" cdkMenu>
-                            <button class="example-menu-item" cdkMenuItem
-                                (click)="openDialogparent(file.id,file.name)">Crear carpeta</button>
-                            <button class="example-menu-item" cdkMenuItem
-                                (click)="enterprofile(file.id,file.name)">Subir archivo</button>
-                            @if(rol == 2){
-                            <button class="example-menu-item" cdkMenuItem
-                                (click)="sharefolder(file.id, file.userId, file.name)">Compartir carpeta</button>
-                            <button class="example-menu-item" cdkMenuItem
-                                (click)="openDialogDeleteFolder(file.id, file.name, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password)">Eliminar
-                                carpeta</button>
-                            }
-                            <button class="example-menu-item" cdkMenuItem>Exit</button>
-                        </div>
-                    </ng-template>
-                    }
-                    }
-                </mat-grid-list>
-            </mat-list>
-        </div>
+  <ng-template #outer>
+    <div class="example-menu" cdkMenu>
+      <button class="example-menu-item" cdkMenuItem (click)="openDialogempty()">
+        Crear carpeta
+      </button>
+      <button class="example-menu-item" cdkMenuItem>Salir</button>
     </div>
+  </ng-template>
+
+  <ng-template #inner>
+    <div class="example-menu" cdkMenu>
+      <button class="example-menu-item" cdkMenuItem (click)="openDialog()">
+        Crear carpeta
+      </button>
+      <button
+        class="example-menu-item"
+        cdkMenuItem
+        (click)="enterprofile(this.selectedFolder, this.foldername)"
+      >
+        Subir archivo
+      </button>
+      <button class="example-menu-item" cdkMenuItem>Salir</button>
+    </div>
+  </ng-template>
+
+  <div class="vertical-layout">
+    <div>
+      <mat-list [cdkContextMenuTriggerFor]="inner">
+        <div mat-subheader>
+          <div class="route" [cdkContextMenuTriggerFor]="inner">
+            <div
+              style="
+                flex-direction: row;
+                display: flex;
+                overflow-x: auto;
+                min-width: fit-content;
+                overflow-y: hidden;
+              "
+            >
+              <button
+                mat-raised-button
+                color="primary"
+                (click)="actualizarListasDelete()"
+              >
+                Home
+              </button>
+              @for (file of routechild; track file.id) {
+                <div class="flechita"><mat-icon>chevron_right</mat-icon></div>
+
+                <button
+                  mat-raised-button
+                  (click)="
+                    selectfolderchildroutemobile(file.id, file.namefolder)
+                  "
+                >
+                  {{ file.namefolder }}
+                </button>
+              }
+            </div>
+          </div>
+
+          <div style="display: flex; width: 100%; margin-top: 5px">
+            <div>
+              <mat-form-field appearance="outline" style="width: 200px">
+                <mat-label>Buscar archivos</mat-label>
+                <input
+                  matInput
+                  placeholder="Ex. Folder1"
+                  [(ngModel)]="searchTermfiles"
+                  (input)="searchsubfilesmobile()"
+                />
+                <mat-icon matSuffix>search</mat-icon>
+              </mat-form-field>
+            </div>
+          </div>
+          <button
+            mat-fab
+            extended
+            style="background-color: #06367a; margin-bottom: 10px"
+            (click)="openDialog()"
+          >
+            <mat-icon>create_new_folder</mat-icon>
+            Crear carpeta
+          </button>
+          <button
+            mat-fab
+            extended
+            style="background-color: #06367a; margin-bottom: 10px"
+            (click)="enterprofile(this.selectedFolder, this.foldername)"
+          >
+            <mat-icon>note_add</mat-icon>
+            Nuevo archivo
+          </button>
+          @if (mostrarAlertaDelete) {
+            <div class="alert">El archivo se elimino correctamente</div>
+          }
+          @if (mostrarAlertaErrorDelete) {
+            <div class="alertE">El archivo no se elimino.</div>
+          }
+        </div>
+        <mat-divider></mat-divider>
+        @if (filteredFoldersmobil$) {
+          <div class="subtitle">Carpetas</div>
+        }
+        <mat-grid-list cols="2" rowHeight="50px" gutterSize="10px">
+          @if (filteredFoldersmobil$ | async; as folderList) {
+            @for (file of folderList; track file.id) {
+              <mat-grid-tile>
+                <mat-list-item
+                  id="subrectangle{{ file.id }}"
+                  (click)="selectfolderchildmobile(file.id, file.name)"
+                  [cdkContextMenuTriggerFor]="innerchild"
+                >
+                  <div
+                    matListItemTitle
+                    style="display: flex; flex-direction: row"
+                  >
+                    <div
+                      style="display: flex; align-items: center"
+                      matListItemIcon
+                    >
+                      <button
+                        mat-icon-button
+                        [matMenuTriggerFor]="menu"
+                        aria-label="Example icon-button with a menu"
+                      >
+                        <mat-icon class="blue-icon">folder</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu" class="matmenu1">
+                        @if (rol == 2) {
+                          <button
+                            mat-menu-item
+                            (click)="
+                              sharefolder(file.id, file.userId, file.name)
+                            "
+                          >
+                            <mat-icon class="blue-icon">share</mat-icon>
+                            <span>Compartir carpeta</span>
+                          </button>
+                        }
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogDeleteFolder(
+                              file.id,
+                              file.name,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              file.folderId,
+                              file.accessType,
+                              file.password
+                            )
+                          "
+                        >
+                          <mat-icon>delete</mat-icon>
+                          <span>Eliminar carpeta</span>
+                        </button>
+                      </mat-menu>
+                    </div>
+                    <div
+                      style="
+                        margin-left: 5px;
+                        align-items: center;
+                        display: flex;
+                      "
+                    >
+                      {{ file.name | truncate: 9 }}
+                    </div>
+                    <span class="example-spacer"></span>
+                  </div>
+                </mat-list-item>
+              </mat-grid-tile>
+              <ng-template #innerchild>
+                <div class="example-menu" cdkMenu>
+                  <button
+                    class="example-menu-item"
+                    cdkMenuItem
+                    (click)="openDialogparent(file.id, file.name)"
+                  >
+                    Crear carpeta
+                  </button>
+                  <button
+                    class="example-menu-item"
+                    cdkMenuItem
+                    (click)="enterprofile(file.id, file.name)"
+                  >
+                    Subir archivo
+                  </button>
+                  <button
+                    class="example-menu-item"
+                    cdkMenuItem
+                    (click)="downloadFolder(file.name)"
+                  >
+                    Descargar carpeta
+                  </button>
+                  @if (rol == 2) {
+                    <button
+                      class="example-menu-item"
+                      cdkMenuItem
+                      (click)="sharefolder(file.id, file.userId, file.name)"
+                    >
+                      Compartir carpeta
+                    </button>
+                    <button
+                      class="example-menu-item"
+                      cdkMenuItem
+                      (click)="
+                        openDialogDeleteFolder(
+                          file.id,
+                          file.name,
+                          file.minioLink,
+                          file.createdDate,
+                          file.accessType,
+                          file.folderId,
+                          file.accessType,
+                          file.password
+                        )
+                      "
+                    >
+                      Eliminar carpeta
+                    </button>
+                  }
+                  <button class="example-menu-item" cdkMenuItem>Exit</button>
+                </div>
+              </ng-template>
+            }
+          }
+        </mat-grid-list>
+      </mat-list>
+    </div>
+    <div>
+      <mat-list [cdkContextMenuTriggerFor]="inner">
+        @if (filteredFoldersfiles$) {
+          <div class="subtitle">Archivos</div>
+        }
+        <mat-grid-list cols="2" rowHeight="50px" gutterSize="10px">
+          @if (filteredFoldersfiles$ | async; as folderList) {
+            @for (file of folderList; track file.id) {
+              <mat-grid-tile>
+                <mat-list-item id="subrectangle{{ file.id }}">
+                  <div
+                    matListItemTitle
+                    style="display: flex; flex-direction: row"
+                  >
+                    <div
+                      style="display: flex; align-items: center"
+                      matListItemIcon
+                    >
+                      <button
+                        mat-icon-button
+                        [matMenuTriggerFor]="menu"
+                        aria-label="Example icon-button with a menu"
+                      >
+                        @if (
+                          file.title.substring(file.title.length - 3) == "png"
+                        ) {
+                          <mat-icon matListItemIcon>image</mat-icon>
+                        }
+                        @if (
+                          file.title.substring(file.title.length - 3) == "pdf"
+                        ) {
+                          <mat-icon matListItemIcon>insert_drive_file</mat-icon>
+                        }
+                        @if (
+                          file.title.substring(file.title.length - 3) == "jpg"
+                        ) {
+                          <mat-icon matListItemIcon>image</mat-icon>
+                        }
+                        @if (
+                          file.title.substring(file.title.length - 3) == "peg"
+                        ) {
+                          <mat-icon matListItemIcon>image</mat-icon>
+                        }
+                        @if (
+                          file.title.substring(file.title.length - 3) == "doc"
+                        ) {
+                          <mat-icon matListItemIcon>folder</mat-icon>
+                        }
+                        @if (
+                          file.title.substring(file.title.length - 3) == "mp3"
+                        ) {
+                          <mat-icon matListItemIcon>music_note</mat-icon>
+                        }
+                        @if (
+                          file.title.substring(file.title.length - 3) == "mp4"
+                        ) {
+                          <mat-icon matListItemIcon>local_movies</mat-icon>
+                        }
+                      </button>
+                      <mat-menu #menu="matMenu" class="matmenu1">
+                        @if (
+                          file.accessType == "publico" ||
+                          file.accessType == "privado"
+                        ) {
+                          @if (
+                            file.title.substring(file.title.length - 3) == "jpg"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialog1(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "png"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialog1(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "peg"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialog1(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "pdf"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpdf(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  file.folderId,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "mp3"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogaudio(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "mp4"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogvideo(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          <button
+                            mat-menu-item
+                            (click)="
+                              openDialogShare(
+                                file.id,
+                                file.title,
+                                file.minioLink,
+                                file.createdDate,
+                                file.accessType
+                              )
+                            "
+                          >
+                            <mat-icon>share</mat-icon>
+                            <span>Compartir</span>
+                          </button>
+                          <button
+                            mat-menu-item
+                            (click)="
+                              openDialogDelete(
+                                file.id,
+                                file.title,
+                                file.minioLink,
+                                file.createdDate,
+                                file.accessType,
+                                file.folderId,
+                                file.accessType,
+                                file.password
+                              )
+                            "
+                          >
+                            <mat-icon>delete</mat-icon>
+                            <span>Eliminar</span>
+                          </button>
+                        }
+                        @if (file.accessType == "restringido") {
+                          @if (
+                            file.title.substring(file.title.length - 3) == "jpg"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpasswordimg(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  this.useridglobal,
+                                  file.description,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria,
+                                  file.folderId
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "png"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpasswordimg(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  this.useridglobal,
+                                  file.description,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria,
+                                  file.folderId
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "peg"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpasswordimg(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  this.useridglobal,
+                                  file.description,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria,
+                                  file.folderId
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "pdf"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpassworddoc(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  this.useridglobal,
+                                  file.description,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria,
+                                  file.folderId
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "mp3"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogaudio(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          <button
+                            mat-menu-item
+                            (click)="
+                              openDialogpasswordshare(
+                                file.id,
+                                file.title,
+                                file.minioLink,
+                                file.createdDate,
+                                file.accessType,
+                                this.useridglobal,
+                                file.description,
+                                file.accessType,
+                                file.password,
+                                file.categoria,
+                                file.folderId
+                              )
+                            "
+                          >
+                            <mat-icon>share</mat-icon>
+                            <span>Compartir</span>
+                          </button>
+                          <button
+                            mat-menu-item
+                            (click)="
+                              openDialogpassworddelete(
+                                file.id,
+                                file.title,
+                                file.minioLink,
+                                file.createdDate,
+                                file.accessType,
+                                this.useridglobal,
+                                file.description,
+                                file.accessType,
+                                file.password,
+                                file.categoria,
+                                file.folderId
+                              )
+                            "
+                          >
+                            <mat-icon>delete</mat-icon>
+                            <span>Eliminar</span>
+                          </button>
+                        }
+                      </mat-menu>
+                    </div>
+                    <div
+                      style="
+                        margin-left: 5px;
+                        align-items: center;
+                        display: flex;
+                      "
+                    >
+                      {{ file.title | truncate: 9 }}
+                    </div>
+                    <span class="example-spacer"></span>
+                  </div>
+                </mat-list-item>
+              </mat-grid-tile>
+              <ng-template #innerchild>
+                <div class="example-menu" cdkMenu>
+                  <button
+                    class="example-menu-item"
+                    cdkMenuItem
+                    (click)="openDialogparent(file.id, file.name)"
+                  >
+                    Crear carpeta
+                  </button>
+                  <button
+                    class="example-menu-item"
+                    cdkMenuItem
+                    (click)="enterprofile(file.id, file.name)"
+                  >
+                    Subir archivo
+                  </button>
+                  @if (rol == 2) {
+                    <button
+                      class="example-menu-item"
+                      cdkMenuItem
+                      (click)="sharefolder(file.id, file.userId, file.name)"
+                    >
+                      Compartir carpeta
+                    </button>
+                    <button
+                      class="example-menu-item"
+                      cdkMenuItem
+                      (click)="
+                        openDialogDeleteFolder(
+                          file.id,
+                          file.name,
+                          file.minioLink,
+                          file.createdDate,
+                          file.accessType,
+                          file.folderId,
+                          file.accessType,
+                          file.password
+                        )
+                      "
+                    >
+                      Eliminar carpeta
+                    </button>
+                  }
+                  <button class="example-menu-item" cdkMenuItem>Exit</button>
+                </div>
+              </ng-template>
+            }
+          }
+        </mat-grid-list>
+      </mat-list>
+    </div>
+  </div>
 </div>

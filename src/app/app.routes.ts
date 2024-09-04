@@ -3,13 +3,10 @@ import { HomeComponent } from './component/home/home.component';
 import { NavigationComponent } from './component/navigation/navigation.component';
 import { FileSharingComponent } from './component/file-sharing/file-sharing.component';
 import { UploadsComponent } from './component/uploads/uploads.component';
-import { LoginComponent } from './component/login/login.component';
 import { FavoritesComponent } from './component/favorites/favorites.component';
 import { ProfileComponent } from './component/profile/profile.component';
-import { UserlistComponent } from './component/userlist/userlist.component';
 import { NavigationAdminComponent } from './component/navigation-admin/navigation-admin.component';
 import { FileViewComponent } from './component/file-view/file-view.component';
-import { PerfiluserselectedComponent } from './component/perfiluserselected/perfiluserselected.component';
 import { DetalleselloComponent } from './component/detallesello/detallesello.component';
 import { ShareFilesComponent } from './component/share-files/share-files.component';
 import { ModelpdfviewComponent } from './component/modelpdfview/modelpdfview.component';
@@ -18,6 +15,9 @@ import { PresentationfolderComponent } from './component/presentationfolder/pres
 import { ActivitycenterComponent } from './component/activitycenter/activitycenter.component';
 import { UploadreemplazarComponent } from './component/uploadreemplazar/uploadreemplazar.component';
 import { authGuard } from './config/auth/auth.guard';
+import { LoginComponent } from '@modules/auth/components/login/login.component';
+import { UserDetailsComponent } from './modules/user/components/user-details/user-details.component';
+import { UserListComponent } from './modules/user/components/user-list/user-list.component';
 
 export const routes: Routes = [
   //Login
@@ -25,19 +25,19 @@ export const routes: Routes = [
   {
     path: 'detalleSello',
     component: DetalleselloComponent,
-    canActivate: [authGuard],
+    canMatch: [authGuard],
   },
-  { path: 'file', component: PresentationComponent, canActivate: [authGuard] },
+  { path: 'file', component: PresentationComponent, canMatch: [authGuard] },
   {
     path: 'folder',
     component: PresentationfolderComponent,
-    canActivate: [authGuard],
+    canMatch: [authGuard],
   },
   //Para el user Admin
   {
     path: 'admin',
     component: NavigationComponent,
-    canActivate: [authGuard],
+    canMatch: [authGuard],
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'sharedFiles', component: FileSharingComponent },
@@ -53,17 +53,17 @@ export const routes: Routes = [
   {
     path: 'cloud',
     component: NavigationAdminComponent,
-    canActivate: [authGuard],
+    canMatch: [authGuard],
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'sharedFiles', component: FileSharingComponent },
       { path: 'upload', component: UploadsComponent },
       { path: 'reemplazar', component: UploadreemplazarComponent },
       { path: 'favorites', component: FavoritesComponent },
-      { path: 'profile', component: ProfileComponent },
-      { path: 'userlist', component: UserlistComponent },
+      { path: 'profile', component: UserDetailsComponent },
+      { path: 'userlist', component: UserListComponent },
       { path: 'signedfiles', component: FileViewComponent },
-      { path: 'perfiluserselected', component: PerfiluserselectedComponent },
+      // { path: 'perfiluserselected', component: PerfiluserselectedComponent },
       { path: 'sharedfolders', component: ShareFilesComponent },
       { path: 'pdfview', component: ModelpdfviewComponent },
       { path: 'activity', component: ActivitycenterComponent },

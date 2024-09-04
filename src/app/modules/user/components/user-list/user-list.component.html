@@ -2,7 +2,7 @@
   <div class="title">Administra tus usuarios</div>
   <div class="table-secction">
     <mat-form-field>
-      <mat-label>Filter</mat-label>
+      <mat-label>Filtro</mat-label>
       <input
         matInput
         (keyup)="applyFilter($event)"
@@ -13,36 +13,31 @@
 
     <div class="mat-elevation-z8">
       <table mat-table [dataSource]="dataSource" matSort>
-        <!-- ID Column -->
-        <ng-container matColumnDef="id">
+        <ng-container matColumnDef="usuarioId">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
           <td mat-cell *matCellDef="let row">{{ row.usuarioID }}</td>
         </ng-container>
 
-        <!-- nombre Column -->
         <ng-container matColumnDef="nombre">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Nombre completo
           </th>
           <td mat-cell *matCellDef="let row">
-            {{ row.nombres + " " + row.paterno + " " + row.materno }}
+            {{ row.fullName }}
           </td>
         </ng-container>
 
-        <!-- celular Column -->
         <ng-container matColumnDef="celular">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Celular</th>
           <td mat-cell *matCellDef="let row">{{ row.celular }}</td>
         </ng-container>
 
-        <!-- email Column -->
-        <ng-container matColumnDef="email">
+        <ng-container matColumnDef="cargo">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
           <td mat-cell *matCellDef="let row">{{ row.cargo }}</td>
         </ng-container>
 
-        <!-- status Column -->
-        <ng-container matColumnDef="status">
+        <ng-container matColumnDef="estado">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
           <td mat-cell *matCellDef="let row">
             @if (row.status == true) {
@@ -54,19 +49,17 @@
           </td>
         </ng-container>
 
-        <!-- fechacreacion Column -->
-        <ng-container matColumnDef="fechacreacion">
+        <ng-container matColumnDef="dependencia">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>Dependencia</th>
           <td mat-cell *matCellDef="let row">{{ row.dependencia }}</td>
         </ng-container>
 
-        <!-- fechaactualizacion Column -->
-        <ng-container matColumnDef="fechaactualizacion">
+        <ng-container matColumnDef="rol">
           <th mat-header-cell *matHeaderCellDef mat-sort-header>
             Rol en sistema
           </th>
           <td mat-cell *matCellDef="let element">
-            @if (slideemploy[element.usuarioID]) {
+            @if (rolesForEdit[element.usuarioID]) {
               <mat-form-field>
                 <mat-label>{{ element.roles[0].nombreRol }} </mat-label>
                 <mat-select [(value)]="selected" [formControl]="rol">
@@ -74,27 +67,28 @@
                   <mat-option value="2">Superadministrador</mat-option>
                 </mat-select>
               </mat-form-field>
-            }
-            @if (!slideemploy[element.usuarioID]) {
+            } @else {
               {{ element.roles[0].nombreRol }}
             }
           </td>
         </ng-container>
 
-        <!-- modificarrol Column -->
-        <ng-container matColumnDef="rol">
+        <ng-container matColumnDef="edit-rol">
           <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
           <td mat-cell *matCellDef="let element">
             <div class="button-secction">
-              <mat-slide-toggle [(ngModel)]="slideemploy[element.usuarioID]">
-                > ¡Deliza para modificar rol!</mat-slide-toggle
+              <mat-slide-toggle
+                (change)="onRolEditChange($event, element.usuarioID)"
+                [ngModel]="rolesForEdit[element.usuarioID]"
+              >
+                >¡Deliza para modificar rol!</mat-slide-toggle
               >
             </div>
-            @if (slideemploy[element.usuarioID]) {
+            @if (rolesForEdit[element.usuarioID]) {
               <div class="button-secction">
                 <button
                   mat-stroked-button
-                  (click)="actualizarrol(element.usuarioID)"
+                  (click)="applyRol(element.usuarioID)"
                 >
                   Aplicar Nuevo Rol
                 </button>
@@ -103,15 +97,14 @@
           </td>
         </ng-container>
 
-        <!-- fechaactualizacion Column -->
-        <ng-container matColumnDef="edit">
+        <ng-container matColumnDef="view-details">
           <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
           <td mat-cell *matCellDef="let row">
             <div class="button-secction">
               <button
                 mat-raised-button
                 color="primary"
-                (click)="enterprofile(row.usuarioID)"
+                (click)="view(row.usuarioID)"
               >
                 Ver detalles
               </button>
@@ -122,19 +115,18 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-        <!-- Row shown when there is no matching data. -->
         <tr class="mat-row" *matNoDataRow>
           <td class="mat-cell" colspan="4">
-            No data matching the filter "{{ input.value }}"
+            Sin registros para la búsqueda: "{{ input.value }}"
           </td>
         </tr>
       </table>
 
       <mat-paginator
         [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="onPageChange($event)"
         aria-label="Select page of users"
       ></mat-paginator>
     </div>
   </div>
 </div>
-
