@@ -58,55 +58,10 @@ export class AuthService extends BaseService {
     return authInfo ? JSON.parse(authInfo) : null;
   }
 
-  getUserId(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('userId');
-    }
-    return null;
-  }
-
-  guardarDatosUsuario(datosUsuario: any): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('userId', datosUsuario.usuarioID.toString());
-      localStorage.setItem('userRole', datosUsuario.roles.nombreRol);
-    }
-  }
-
-  guardarToken(token: string): void {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('token', token);
-    }
-  }
-
-  obtenerToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('token');
-    }
-    return null;
-  }
-
-  obtenerIdUsuario(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('userId');
-    }
-    return null;
-  }
-
-  obtenerRolUsuario(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('userRole');
-    }
-    return null;
-  }
-
   logout() {
     if (typeof window === 'undefined') return;
-
+    this.removeInfo();
     this.router.navigate(['/']);
-
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('expirationTime');
   }
 
   cerrarSesion(): void {

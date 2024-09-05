@@ -39,10 +39,10 @@ export class UserDetailsComponent implements OnInit {
     });
   }
 
-  async load(paramId?: string) {
+  async load(paramId?: string | number) {
     let id = paramId;
 
-    if (!id) id = this.authService.getUserId() ?? undefined;
+    if (!id) id = this.authService.getInfo()?.userId ?? undefined;
 
     if (!id) return this.authService.logout();
 
