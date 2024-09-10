@@ -47,7 +47,20 @@ export class ListItemComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  download(): void {}
+  download(): void {
+    const service =
+      this.item().type == 'folder' ? this.folderService : this.fileService;
+
+    try {
+      service.download({
+        id: this.item().id,
+        title: this.item().name,
+      } as any);
+    } catch (error) {
+      console.error(error);
+      this.ts.error('Ocurrio un error al intentar descargar', 'Error');
+    }
+  }
 
   share(): void {}
 

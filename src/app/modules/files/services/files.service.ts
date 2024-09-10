@@ -22,7 +22,6 @@ export class FilesService extends BaseCrudService<FileModel> {
       ),
     );
   }
-
   uploadFile(bucket: string, file: File, data: any): Promise<any> {
     const formData: FormData = new FormData();
     formData.append('file', file);

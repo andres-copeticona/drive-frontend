@@ -17,4 +17,20 @@ export class FolderService extends BaseCrudService<Folder> {
       this.http.get<Response<Folder[]>>(`${this.namespace}/${id}/breadcrumb`),
     );
   }
+
+  download(data: { id: string | number; title: string }): void {
+    this.http
+      .get(`${this.namespace}/${data.id}/download`, {
+        responseType: 'blob',
+      })
+      .subscribe((res) => {
+        const url = window.URL.createObjectURL(res);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = data.title + '.zip';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+  }
 }
