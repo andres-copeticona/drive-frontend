@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   MatPaginator,
   MatPaginatorModule,
@@ -21,10 +21,10 @@ import {
   MatSlideToggleChange,
   MatSlideToggleModule,
 } from '@angular/material/slide-toggle';
-import { User } from '../../model/user.model';
 import { UserService } from '../../services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpParams } from '@angular/common/http';
+import { User } from '@app/shared/models/user.model';
 
 @Component({
   selector: 'app-user-list',
@@ -47,7 +47,7 @@ import { HttpParams } from '@angular/common/http';
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
 })
-export class UserListComponent implements OnInit, AfterViewInit {
+export class UserListComponent implements OnInit {
   selected = 'option2';
 
   rol = new FormControl(0, [Validators.required]);
@@ -88,15 +88,13 @@ export class UserListComponent implements OnInit, AfterViewInit {
     this.load();
   }
 
-  ngAfterViewInit() {}
-
   async load() {
     try {
-      //TODO: Typed response on backend for concistency
-      const res = (await this.userService.findMany({
+      const res = await this.userService.findMany({
         params: new HttpParams({ fromObject: this.filters }),
-      })) as any;
-      this.users = res?.data?.content ?? [];
+      });
+      console.log(res);
+      this.users = res?.data?.data ?? [];
       this.dataSource = new MatTableDataSource(this.users);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

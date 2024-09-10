@@ -64,14 +64,6 @@ export class NavigationAdminComponent implements OnInit {
   ngOnInit(): void {
     this.userList$ = of([]);
     this.obtenerusers();
-
-    if (localStorage.getItem('userId') || localStorage.getItem('userRole')) {
-      console.log('Usuario logueado');
-    } else {
-      console.log('Usuario no logueado');
-
-      this.router.navigate(['/']);
-    }
   }
 
   openDialogLogout() {

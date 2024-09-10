@@ -18,6 +18,8 @@ import { authGuard } from './config/auth/auth.guard';
 import { LoginComponent } from '@modules/auth/components/login/login.component';
 import { UserDetailsComponent } from './modules/user/components/user-details/user-details.component';
 import { UserListComponent } from './modules/user/components/user-list/user-list.component';
+import { FolderComponent } from './modules/files/components/folders/folders.component';
+import { LayoutComponent } from './layouts/layout/layout.component';
 
 export const routes: Routes = [
   //Login
@@ -35,13 +37,14 @@ export const routes: Routes = [
   },
   //Para el user Admin
   {
-    path: 'admin',
+    path: 'adminc',
     component: NavigationComponent,
+    canActivateChild: [authGuard],
     canMatch: [authGuard],
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'sharedFiles', component: FileSharingComponent },
-      { path: 'upload', component: UploadsComponent },
+      // { path: 'upload', component: UploadsComponent },
       { path: 'favorites', component: FavoritesComponent },
       { path: 'profile', component: ProfileComponent },
       { path: 'signedfiles', component: FileViewComponent },
@@ -52,18 +55,18 @@ export const routes: Routes = [
   //Para el user cloud
   {
     path: 'cloud',
-    component: NavigationAdminComponent,
+    component: LayoutComponent,
+    canActivateChild: [authGuard],
     canMatch: [authGuard],
     children: [
       { path: 'home', component: HomeComponent },
       { path: 'sharedFiles', component: FileSharingComponent },
-      { path: 'upload', component: UploadsComponent },
-      { path: 'reemplazar', component: UploadreemplazarComponent },
-      { path: 'favorites', component: FavoritesComponent },
+      // { path: 'upload', component: UploadsComponent },
+      // { path: 'reemplazar', component: UploadreemplazarComponent },
+      { path: 'folders', component: FolderComponent },
       { path: 'profile', component: UserDetailsComponent },
       { path: 'userlist', component: UserListComponent },
       { path: 'signedfiles', component: FileViewComponent },
-      // { path: 'perfiluserselected', component: PerfiluserselectedComponent },
       { path: 'sharedfolders', component: ShareFilesComponent },
       { path: 'pdfview', component: ModelpdfviewComponent },
       { path: 'activity', component: ActivitycenterComponent },

@@ -1,11 +1,11 @@
 import { AsyncPipe, NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
-import {MatCardModule} from '@angular/material/card';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatListModule} from '@angular/material/list';
-import {MatIconModule} from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 import {
   MatDialog,
   MAT_DIALOG_DATA,
@@ -14,24 +14,22 @@ import {
 } from '@angular/material/dialog';
 import { ModelimgComponent } from '../modelimg/modelimg.component';
 import { ModelsharingComponent } from '../modelsharing/modelsharing.component';
-import {MatProgressBarModule} from '@angular/material/progress-bar';
-import { NgxDropzoneModule } from 'ngx-dropzone';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { FileService } from '../../service/file.service';
-import { FolderService } from '../../service/folder.service'
-import { TruncatePipe } from "../../truncate.pipe";
+import { FolderService } from '../../service/folder.service';
+import { TruncatePipe } from '../../truncate.pipe';
 import { AuthServiceService } from '../../service/auth-service.service';
 import { FormControl } from '@angular/forms';
 
-
-import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ActividadService } from '../../service/actividad.service';
 import { IpserviceService } from '../../service/ipservice.service';
-import { FormatDatePipe } from "../../pipes/format-date.pipe";
-import { TruncateDocumentNamePipe } from "../../pipes/truncate-document-name.pipe";
+import { FormatDatePipe } from '../../pipes/format-date.pipe';
+import { TruncateDocumentNamePipe } from '../../pipes/truncate-document-name.pipe';
 import { ModelpdfComponent } from '../modelpdf/modelpdf.component';
 import { set } from 'date-fns';
 import { ModelpasswordComponent } from '../modelpassword/modelpassword.component';
@@ -39,13 +37,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ModeldeleteComponent } from '../modeldelete/modeldelete.component';
 import { NotificationService } from '../../service/notification.service';
 
-
 import { CommonModule } from '@angular/common'; // Importa CommonModule
 import { UsuarioService } from '../../service/usuario.service';
 
 export interface DialogData {
   idperson: string;
-  id : number;
+  id: number;
   name: string;
   img: string;
   date: string;
@@ -74,14 +71,31 @@ export interface User {
 }
 
 @Component({
-    selector: 'app-home',
-    standalone: true,
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.css',
-    imports: [CommonModule,MatListModule,ReactiveFormsModule, MatAutocompleteModule, MatFormFieldModule, MatSelectModule, MatInputModule, NgxDropzoneModule, MatProgressBarModule, FormsModule, AsyncPipe, MatCardModule, MatButtonModule, MatMenuModule, MatIconModule, TruncatePipe, FormatDatePipe, TruncateDocumentNamePipe]
+  selector: 'app-home',
+  standalone: true,
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
+  imports: [
+    CommonModule,
+    MatListModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatProgressBarModule,
+    FormsModule,
+    AsyncPipe,
+    MatCardModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    TruncatePipe,
+    FormatDatePipe,
+    TruncateDocumentNamePipe,
+  ],
 })
-export class HomeComponent implements OnInit{
-
+export class HomeComponent implements OnInit {
   //buscador
   searchTerm!: string;
   filteredFolders$!: Observable<any[]>;
@@ -105,10 +119,10 @@ export class HomeComponent implements OnInit{
   stringerror = 'Hubo un error';
   messageerror = '';
   hide = true;
-  description= new FormControl('');
-  accessType= new FormControl('');
-  password= new FormControl('');
-  folderId= new FormControl('');
+  description = new FormControl('');
+  accessType = new FormControl('');
+  password = new FormControl('');
+  folderId = new FormControl('');
   files: File[] = [];
   folders$!: Observable<any[]>;
   selectedFolderId!: string;
@@ -133,7 +147,6 @@ export class HomeComponent implements OnInit{
   userList$!: Observable<any[]>;
   fileListfiltered$!: Observable<any[]>;
 
-
   titlealert = new FormControl('');
 
   messagealert = new FormControl('');
@@ -144,8 +157,24 @@ export class HomeComponent implements OnInit{
   filteredOptions?: Observable<User[]>;
 
   categoryList$: Observable<any[]> = of([
-    {id:1, nombrex: 'Sellados', color: "#06367A", name: 'Sellado', numberOfFiles: this.cantSellado, numberOfSubCategories:this.cantSellado, icon: 'check'},
-    {id:2, nombrex: 'Nuevos', color: "#6E9887", name: 'Nuevo', numberOfFiles: this.cantNuevo, numberOfSubCategories: this.cantNuevo, icon: 'fiber_new'},
+    {
+      id: 1,
+      nombrex: 'Sellados',
+      color: '#06367A',
+      name: 'Sellado',
+      numberOfFiles: this.cantSellado,
+      numberOfSubCategories: this.cantSellado,
+      icon: 'check',
+    },
+    {
+      id: 2,
+      nombrex: 'Nuevos',
+      color: '#6E9887',
+      name: 'Nuevo',
+      numberOfFiles: this.cantNuevo,
+      numberOfSubCategories: this.cantNuevo,
+      icon: 'fiber_new',
+    },
     //{id:3, nombrex: 'A Reemplazar', color: "#E06C9F", name: 'Reemplazado', numberOfFiles: this.cantReemplazado, numberOfSubCategories: this.cantReemplazado, icon: 'autorenew'},
   ]);
   fileList$!: Observable<any[]>;
@@ -164,7 +193,8 @@ export class HomeComponent implements OnInit{
     private fileService: FileService,
     public folderService: FolderService,
     public actividadService: ActividadService,
-    public ipService: IpserviceService,public usuarioService: UsuarioService,
+    public ipService: IpserviceService,
+    public usuarioService: UsuarioService,
   ) {}
 
   backgroundColor = '#6663FE'; // Color inicial
@@ -177,13 +207,13 @@ export class HomeComponent implements OnInit{
   ngOnInit(): void {
     this.fileListfiltered$ = this.fileList$;
     this.userList$ = of([]);
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.trigger = params['number'];
-      if(this.trigger == 1){
+      if (this.trigger == 1) {
         this.actualizarListas();
-        this.trigger=0;
-      }else{
-        this.trigger=0;
+        this.trigger = 0;
+      } else {
+        this.trigger = 0;
       }
     });
     this.obtenerusers();
@@ -194,79 +224,115 @@ export class HomeComponent implements OnInit{
     this.categoryList$ = of([]);
     this.fileList$ = of([]);
     const userIdGlobal = this.authService.obtenerIdUsuario();
-    this.iduser= parseInt(userIdGlobal||"");
+    this.iduser = parseInt(userIdGlobal || '');
     this.fileService.countCategoriesByUser(this.iduser).subscribe(
-      response => {
+      (response) => {
         this.cantNuevo = response.Nuevo;
         this.cantSellado = response.Sellado;
         this.cantReemplazado = response.Reemplazado;
 
         // Manejar la respuesta de éxito aquí
-        console.log('Registros de categorias',response, response.Nuevo, response.Sellado, response.Reemplazado);
+        console.log(
+          'Registros de categorias',
+          response,
+          response.Nuevo,
+          response.Sellado,
+          response.Reemplazado,
+        );
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar categorias', error);
-      }
+      },
     );
 
     setTimeout(() => {
       this.categoryList$.subscribe((categoryList) => {
         if (categoryList.length > 0) {
           const lastCategory = categoryList[categoryList.length - 1];
-          console.log("id es:" + lastCategory.id, "son:" + categoryList.length);
+          console.log('id es:' + lastCategory.id, 'son:' + categoryList.length);
           for (let i = 0; i < categoryList.length; i++) {
             this.colors[i] = this.backgroundColor;
           }
         } else {
-          console.log("La lista de categorías está vacía");
+          console.log('La lista de categorías está vacía');
         }
       });
       this.fileService.getRecentFiles().subscribe(
-        response => {
+        (response) => {
           this.recentFilesList$ = of(response);
           // Manejar la respuesta de éxito aquí
           console.log('Registros de files', response);
         },
-        error => {
+        (error) => {
           // Manejar el error aquí
           this.recentFilesList$ = of([]);
           console.error('Error al mostrar files', error);
-        }
-      )
+        },
+      );
     }, 500);
-    this.selectedFolder = "";
+    this.selectedFolder = '';
 
     this.selectedFolderId = '';
     this.recentFilesList$ = of([
-      { id: 1, name: 'Recent File 1.mp3', format: 'jpg', size: '2.3MB', progress: 50 },
-      { id: 2, name: 'Recent File 2.png', format: 'doc', size: '1.3MB', progress: 70 },
-      { id: 3, name: 'Recent File 3.txt', format: 'mp4', size: '4.3MB', progress: 30 },
-      { id: 4, name: 'Recent File 4.mp3', format: 'mp3', size: '3.3MB', progress: 90 },
+      {
+        id: 1,
+        name: 'Recent File 1.mp3',
+        format: 'jpg',
+        size: '2.3MB',
+        progress: 50,
+      },
+      {
+        id: 2,
+        name: 'Recent File 2.png',
+        format: 'doc',
+        size: '1.3MB',
+        progress: 70,
+      },
+      {
+        id: 3,
+        name: 'Recent File 3.txt',
+        format: 'mp4',
+        size: '4.3MB',
+        progress: 30,
+      },
+      {
+        id: 4,
+        name: 'Recent File 4.mp3',
+        format: 'mp3',
+        size: '3.3MB',
+        progress: 90,
+      },
     ]);
 
     // Carga la lista de folders desde el FolderService
     const userId = this.authService.obtenerIdUsuario();
     if (userId) {
       this.useridglobal = userId;
-      this.folderService.getAllFolders().pipe(
-        map(response => response.data),
-        catchError(error => {
-          console.error('Error fetching folders:', error);
-          return of([]); // Return an empty observable in case of error
-        })
-      ).subscribe(folders => {
-        this.options = folders;
-      });
+      this.folderService
+        .getAllFolders()
+        .pipe(
+          map((response) => response.data),
+          catchError((error) => {
+            console.error('Error fetching folders:', error);
+            return of([]); // Return an empty observable in case of error
+          }),
+        )
+        .subscribe((folders) => {
+          this.options = folders;
+        });
     } else {
-      console.error('User ID is not available. Make sure the user is logged in.');
+      console.error(
+        'User ID is not available. Make sure the user is logged in.',
+      );
     }
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
-      map(value => {
+      map((value) => {
         const name = typeof value === 'string' ? value : value?.name;
-        this.selectedFolderId = typeof value === 'string' ? value : value?.id.toString() || '';
+        this.selectedFolderId =
+          typeof value === 'string' ? value : value?.id.toString() || '';
         return name ? this._filter(name as string) : this.options.slice();
       }),
     );
@@ -276,16 +342,16 @@ export class HomeComponent implements OnInit{
 
   search() {
     this.fileListfiltered$ = this.fileList$.pipe(
-      map(folders =>
-        folders.filter(folder =>
-          folder.title.toLowerCase().includes(this.searchTerm.toLowerCase())
-        )
-      )
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.title.toLowerCase().includes(this.searchTerm.toLowerCase()),
+        ),
+      ),
     );
   }
 
-  sendmessage(){
-    if(this.titlealert.value == "" || this.messagealert.value == ""){
+  sendmessage() {
+    if (this.titlealert.value == '' || this.messagealert.value == '') {
       this.messageerror = 'Todos los campos son requeridos';
       this.mostrarMensajeMessageError();
 
@@ -295,7 +361,7 @@ export class HomeComponent implements OnInit{
     const body = {
       titulo: this.titlealert.value,
       mensaje: this.messagealert.value,
-      tipo: "general"
+      tipo: 'general',
     };
     this.notificationService.sendmessage(body).subscribe({
       next: (response) => {
@@ -306,16 +372,16 @@ export class HomeComponent implements OnInit{
         this.messagealert.setValue('');
       },
       error: (error) => {
-        if(error.status == 200){
+        if (error.status == 200) {
           this.mostrarMensajeMessageExito();
           this.loadNotifications();
           this.titlealert.setValue('');
           this.messagealert.setValue('');
-        }else{
+        } else {
           console.error('Error al enviar mensaje', error);
           this.mostrarMensajeMessageError();
         }
-      }
+      },
     });
   }
 
@@ -327,7 +393,7 @@ export class HomeComponent implements OnInit{
       },
       error: (error) => {
         console.error('Error al cargar notificaciones no leídas', error);
-      }
+      },
     });
   }
   readNotifications(idnoti: any) {
@@ -339,19 +405,22 @@ export class HomeComponent implements OnInit{
       error: (error) => {
         console.error('Error al marcar leídas', error);
         this.loadNotifications();
-      }
+      },
     });
   }
 
-  obtenerusers(){
+  obtenerusers() {
     const userId = this.authService.obtenerIdUsuario();
     this.usuarioService.getAllUsers().subscribe(
-      response => {
+      (response) => {
         this.userList$.subscribe(() => {
           this.userList$ = of(response.data.content);
-          for(let i = 0; i < response.data.content.length; i++){
-            if(response.data.content[i].usuarioID == userId){
-            console.log('Rol del user', response.data.content[i].roles[0].rolID);
+          for (let i = 0; i < response.data.content.length; i++) {
+            if (response.data.content[i].usuarioID == userId) {
+              console.log(
+                'Rol del user',
+                response.data.content[i].roles[0].rolID,
+              );
               this.rol = response.data.content[i].roles[0].rolID;
             }
           }
@@ -359,11 +428,11 @@ export class HomeComponent implements OnInit{
         // Manejar la respuesta de éxito aquí
         console.log('Registros de usuarios', response.data.content[0].nombre);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar usuarios', error);
-      }
-    )
+      },
+    );
   }
 
   loadRecentFiles() {
@@ -373,87 +442,141 @@ export class HomeComponent implements OnInit{
         this.totalFiles = data.length;
         this.updatePage(1);
       },
-      error: (error) => console.error('Error al cargar archivos recientes', error)
+      error: (error) =>
+        console.error('Error al cargar archivos recientes', error),
     });
   }
 
   updatePage(pageNumber: number) {
     this.currentPage = pageNumber;
     const startIndex = (pageNumber - 1) * this.pageSize;
-    this.paginatedFiles = this.recentFiles.slice(startIndex, startIndex + this.pageSize);
+    this.paginatedFiles = this.recentFiles.slice(
+      startIndex,
+      startIndex + this.pageSize,
+    );
   }
 
-  actualizarListas(){
+  actualizarListas() {
     setTimeout(() => {
       const userIdGlobal = this.authService.obtenerIdUsuario();
-      this.iduser= parseInt(userIdGlobal||"");
+      this.iduser = parseInt(userIdGlobal || '');
       this.fileService.countCategoriesByUser(this.iduser).subscribe(
-        response => {
+        (response) => {
           this.cantNuevo = response.Nuevo;
           this.cantSellado = response.Sellado;
           this.cantReemplazado = response.Reemplazado;
 
           // Manejar la respuesta de éxito aquí
-          console.log('Registros de categorias',response, response.Nuevo, response.Sellado, response.Reemplazado);
+          console.log(
+            'Registros de categorias',
+            response,
+            response.Nuevo,
+            response.Sellado,
+            response.Reemplazado,
+          );
         },
-        error => {
+        (error) => {
           // Manejar el error aquí
           console.error('Error al mostrar categorias', error);
-        }
+        },
       );
       this.fileService.getStorageUsedByUser(this.iduser).subscribe(
-        response => {
-          console.log('Storage encontrado',response.data.CountByFileType);
-          const sum = response.data.CountByFileType.PDF + response.data.CountByFileType.Video + response.data.CountByFileType.Música + response.data.CountByFileType.Imagen;
-          this.usedStorage = parseFloat(response.data.TotalSize.slice(0, -3))/1024;
+        (response) => {
+          console.log('Storage encontrado', response.data.CountByFileType);
+          const sum =
+            response.data.CountByFileType.PDF +
+            response.data.CountByFileType.Video +
+            response.data.CountByFileType.Música +
+            response.data.CountByFileType.Imagen;
+          this.usedStorage =
+            parseFloat(response.data.TotalSize.slice(0, -3)) / 1024;
 
           // Calculate percentages based on total storage
-          this.googleDriveUsage = (((response.data.CountByFileType.PDF*100)/sum) / 100) * (this.usedStorage / this.totalStorage) * 100;
-          this.googlePhotosUsage = (((response.data.CountByFileType.Video*100)/sum) / 100) * (this.usedStorage / this.totalStorage) * 100;
-          this.gmailUsage = (((response.data.CountByFileType.Música*100)/sum) / 100) * (this.usedStorage / this.totalStorage) * 100;
-          this.otherUsage = (((response.data.CountByFileType.Imagen*100)/sum) / 100) * (this.usedStorage / this.totalStorage) * 100;
+          this.googleDriveUsage =
+            ((response.data.CountByFileType.PDF * 100) / sum / 100) *
+            (this.usedStorage / this.totalStorage) *
+            100;
+          this.googlePhotosUsage =
+            ((response.data.CountByFileType.Video * 100) / sum / 100) *
+            (this.usedStorage / this.totalStorage) *
+            100;
+          this.gmailUsage =
+            ((response.data.CountByFileType.Música * 100) / sum / 100) *
+            (this.usedStorage / this.totalStorage) *
+            100;
+          this.otherUsage =
+            ((response.data.CountByFileType.Imagen * 100) / sum / 100) *
+            (this.usedStorage / this.totalStorage) *
+            100;
         },
-        error => {
+        (error) => {
           // Manejar el error aquí
           console.error('Error al mostrar Storage', error);
-        }
+        },
       );
       setTimeout(() => {
         this.categoryList$ = of([
-    {id:1, nombrex: 'Sellados', color: "#06367A", name: 'Sellado', numberOfFiles: this.cantSellado, numberOfSubCategories:this.cantSellado, icon: 'check'},
-    {id:2, nombrex: 'Nuevos', color: "#6E9887", name: 'Nuevo', numberOfFiles: this.cantNuevo, numberOfSubCategories: this.cantNuevo, icon: 'fiber_new'},
-    //{id:3, nombrex: 'A Reemplazar', color: "#E06C9F", name: 'Reemplazado', numberOfFiles: this.cantReemplazado, numberOfSubCategories: this.cantReemplazado, icon: 'autorenew'},
-  ]);
+          {
+            id: 1,
+            nombrex: 'Sellados',
+            color: '#06367A',
+            name: 'Sellado',
+            numberOfFiles: this.cantSellado,
+            numberOfSubCategories: this.cantSellado,
+            icon: 'check',
+          },
+          {
+            id: 2,
+            nombrex: 'Nuevos',
+            color: '#6E9887',
+            name: 'Nuevo',
+            numberOfFiles: this.cantNuevo,
+            numberOfSubCategories: this.cantNuevo,
+            icon: 'fiber_new',
+          },
+          //{id:3, nombrex: 'A Reemplazar', color: "#E06C9F", name: 'Reemplazado', numberOfFiles: this.cantReemplazado, numberOfSubCategories: this.cantReemplazado, icon: 'autorenew'},
+        ]);
         this.fileService.getRecentFiles().subscribe(
-          response => {
+          (response) => {
             this.recentFilesList$ = of(response);
             // Manejar la respuesta de éxito aquí
             console.log('Registros de files', response);
           },
-          error => {
+          (error) => {
             // Manejar el error aquí
             this.recentFilesList$ = of([]);
             console.error('Error al mostrar files', error);
-          }
-        )
+          },
+        );
         this.fileService.listFilesByUCategory(this.selectedFolder).subscribe(
-          response => {
+          (response) => {
             this.fileList$ = of(response);
             // Manejar la respuesta de éxito aquí
-            console.log('Registros de files', response.title,);
+            console.log('Registros de files', response.title);
           },
-          error => {
+          (error) => {
             // Manejar el error aquí
             this.fileList$ = of([]);
             console.error('Error al mostrar files', error);
-          }
-        )
-      },500);
-    },500);
-
+          },
+        );
+      }, 500);
+    }, 500);
   }
 
-  openDialogpasswordimg(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpasswordimg(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -466,12 +589,24 @@ export class HomeComponent implements OnInit{
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "img",
-        folderId: folderId
+        categoria: 'img',
+        folderId: folderId,
       },
     });
   }
-  openDialogpassworddoc(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpassworddoc(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -484,12 +619,24 @@ export class HomeComponent implements OnInit{
         description: categoria,
         accessType: accessType,
         password: password,
-        categoria: "doc",
-        folderId: folderId
+        categoria: 'doc',
+        folderId: folderId,
       },
     });
   }
-  openDialogpassworddelete(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpassworddelete(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -502,12 +649,24 @@ export class HomeComponent implements OnInit{
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "delete",
-        folderId: folderId
+        categoria: 'delete',
+        folderId: folderId,
       },
     });
   }
-  openDialogpasswordshare(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpasswordshare(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -520,13 +679,19 @@ export class HomeComponent implements OnInit{
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "share",
-        folderId: folderId
+        categoria: 'share',
+        folderId: folderId,
       },
     });
   }
 
-  openDialog(id: number, name: string, img: string, date: string, privacy: string) {
+  openDialog(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelimgComponent, {
       data: {
@@ -534,12 +699,24 @@ export class HomeComponent implements OnInit{
         name: name,
         img: img,
         date: date,
-        privacy: privacy
+        privacy: privacy,
       },
     });
   }
 
-  openDialogpdf(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpdf(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpdfComponent, {
       height: '90%',
@@ -554,12 +731,24 @@ export class HomeComponent implements OnInit{
         accessType: accessType,
         password: password,
         categoria: categoria,
-        folderId: folderId
+        folderId: folderId,
       },
     });
   }
 
-  openDialogDelete(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogDelete(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModeldeleteComponent, {
       data: {
@@ -567,18 +756,30 @@ export class HomeComponent implements OnInit{
         name: name,
         img: img,
         date: date,
-        privacy: "home",
+        privacy: 'home',
         iduser: iduser,
         description: description,
         accessType: accessType,
         password: password,
         categoria: categoria,
-        folderId: folderId
+        folderId: folderId,
       },
     });
   }
 
-  openDialogShare(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogShare(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelsharingComponent, {
       data: {
@@ -592,20 +793,16 @@ export class HomeComponent implements OnInit{
         accessType: accessType,
         password: password,
         categoria: categoria,
-        folderId: folderId
-
+        folderId: folderId,
       },
     });
   }
 
-
-
-
   // in app.component.ts
   fileprivacys: fileprivacy[] = [
-    {valuex: 'publico', viewValue: 'Publico'},
-    {valuex: 'privado', viewValue: 'Privado'},
-    {valuex: 'restringido', viewValue: 'Restringido'},
+    { valuex: 'publico', viewValue: 'Publico' },
+    { valuex: 'privado', viewValue: 'Privado' },
+    { valuex: 'restringido', viewValue: 'Restringido' },
   ];
 
   onSelect(event: any) {
@@ -621,7 +818,9 @@ export class HomeComponent implements OnInit{
 
     const userId = this.authService.obtenerIdUsuario(); // Obtiene el userId del AuthService
     if (!userId) {
-      console.error('User ID is not available. Make sure the user is logged in.');
+      console.error(
+        'User ID is not available. Make sure the user is logged in.',
+      );
       return;
     }
 
@@ -638,10 +837,10 @@ export class HomeComponent implements OnInit{
         const ip = ipResponse.ip;
         // Registro de la actividad antes de la subida del archivo
         const actividadData = {
-          nombre: "Subida de Archivo",
+          nombre: 'Subida de Archivo',
           ip: ip,
-          tipoActividad: "Subida",
-          usuarioId: userId
+          tipoActividad: 'Subida',
+          usuarioId: userId,
         };
 
         this.actividadService.crearActividad(actividadData).subscribe({
@@ -651,9 +850,9 @@ export class HomeComponent implements OnInit{
             // Ahora, procede con la subida del archivo
             const fileToUpload = event.addedFiles[0]; // Toma el primer archivo añadido
             const data = {
-              title: "titulo",
+              title: 'titulo',
               description: this.description.value,
-              etag: "etag",
+              etag: 'etag',
               accessType: this.accessType.value,
               password: this.password.value,
               createdDate: new Date().toISOString(),
@@ -665,158 +864,180 @@ export class HomeComponent implements OnInit{
             };
 
             // Usar fileService para subir el archivo
-            this.fileService.uploadFile(this.selectedFolderId, fileToUpload, data).subscribe({
-              next: (response) => console.log('File uploaded successfully', response, this.mostrarMensajeRegistroExito(), this.actualizardatos(), this.actualizarListas()),
-              error: (error) => console.error('Error uploading file', error," data:" ,data,"this folder",this.selectedFolderId, this.mostrarMensajeRegistroExito(), this.actualizardatos(), this.actualizarListas())
-            });
+            this.fileService
+              .uploadFile(this.selectedFolderId, fileToUpload, data)
+              .subscribe({
+                next: (response) =>
+                  console.log(
+                    'File uploaded successfully',
+                    response,
+                    this.mostrarMensajeRegistroExito(),
+                    this.actualizardatos(),
+                    this.actualizarListas(),
+                  ),
+                error: (error) =>
+                  console.error(
+                    'Error uploading file',
+                    error,
+                    ' data:',
+                    data,
+                    'this folder',
+                    this.selectedFolderId,
+                    this.mostrarMensajeRegistroExito(),
+                    this.actualizardatos(),
+                    this.actualizarListas(),
+                  ),
+              });
           },
           error: (err) => {
             console.error('Error al registrar actividad', err);
             // Aquí puedes decidir si aún quieres intentar subir el archivo o no
-          }
+          },
         });
       },
       error: (err) => {
         console.error('Error obteniendo IP del usuario', err);
         // Considera cómo manejar este caso. ¿Quieres continuar con la subida del archivo sin registrar la IP?
-      }
+      },
     });
   }
 
-  actualizardatos(){
+  actualizardatos() {
     this.fileService.getRecentFiles().subscribe(
-      response => {
+      (response) => {
         this.recentFilesList$ = of(response);
         // Manejar la respuesta de éxito aquí
         console.log('Registros de files', response);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         this.recentFilesList$ = of([]);
         console.error('Error al mostrar files', error);
-      }
-    )
+      },
+    );
     this.fileService.listFilesByUCategory(this.selectedFolder).subscribe(
-      response => {
+      (response) => {
         this.fileList$ = of(response);
         // Manejar la respuesta de éxito aquí
-        console.log('Registros de files', response.title,);
+        console.log('Registros de files', response.title);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         this.fileList$ = of([]);
         console.error('Error al mostrar files', error);
-      }
-    )
+      },
+    );
   }
 
-  deletefile(id: number){
+  deletefile(id: number) {
     this.fileService.deleteFile(id).subscribe({
       next: (response) => {
         console.log('File deleted successfully: ', response);
         this.fileService.listFilesByUCategory(this.selectedFolder).subscribe(
-          response => {
+          (response) => {
             this.fileList$ = of(response);
             // Manejar la respuesta de éxito aquí
-            console.log('Registros de files', response.title,);
+            console.log('Registros de files', response.title);
           },
-          error => {
+          (error) => {
             // Manejar el error aquí
             this.fileList$ = of([]);
             console.error('Error al mostrar files', error);
-          }
-        )
+          },
+        );
         this.fileService.getRecentFiles().subscribe(
-          response => {
+          (response) => {
             this.recentFilesList$ = of(response);
             // Manejar la respuesta de éxito aquí
             console.log('Registros de files', response);
           },
-          error => {
+          (error) => {
             // Manejar el error aquí
             this.recentFilesList$ = of([]);
             console.error('Error al mostrar files', error);
-          }
-        )
+          },
+        );
         this.cargarArchivosPublicos();
-
       },
       error: (error) => {
         console.error('Error deleting file', error);
         this.fileService.listFilesByUCategory(this.selectedFolder).subscribe(
-          response => {
+          (response) => {
             this.fileList$ = of(response);
             // Manejar la respuesta de éxito aquí
-            console.log('Registros de files', response.title,);
+            console.log('Registros de files', response.title);
           },
-          error => {
+          (error) => {
             // Manejar el error aquí
             this.fileList$ = of([]);
             console.error('Error al mostrar files', error);
-          }
-        )
+          },
+        );
         this.fileService.getRecentFiles().subscribe(
-          response => {
+          (response) => {
             this.recentFilesList$ = of(response);
             // Manejar la respuesta de éxito aquí
             console.log('Registros de files', response);
           },
-          error => {
+          (error) => {
             // Manejar el error aquí
             this.recentFilesList$ = of([]);
             console.error('Error al mostrar files', error);
-          }
-        )
+          },
+        );
         this.cargarArchivosPublicos();
-        if(error.status == 200){this.mostrarMensajeDeleteExito();}else{this.mostrarMensajeDeleteError();}
-      }
+        if (error.status == 200) {
+          this.mostrarMensajeDeleteExito();
+        } else {
+          this.mostrarMensajeDeleteError();
+        }
+      },
     });
   }
-
 
   onRemove(event: any) {
     this.files.splice(this.files.indexOf(event), 1);
   }
 
   displayFn(user: User): any {
-    if(user && user.id){
+    if (user && user.id) {
       this.selectedFolderId = user.id.toString();
       console.log(this.selectedFolderId);
     }
-    return user && user.name ? user.name : "";
+    return user && user.name ? user.name : '';
   }
 
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
 
-    return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue),
+    );
   }
 
-  selectfolder(folderName: string,folderid: number) {
+  selectfolder(folderName: string, folderid: number) {
     this.searchTerm = '';
     this.categoryList$.subscribe(() => {
       for (let i = 0; i < this.colors.length; i++) {
-        this.colors[i]=this.backgroundColor;
+        this.colors[i] = this.backgroundColor;
       }
     });
-    this.colors[folderid-1]="#b1b0f5";
+    this.colors[folderid - 1] = '#b1b0f5';
     this.selectedFolder = folderName;
     console.log(this.selectedFolder);
     this.fileService.listFilesByUCategory(this.selectedFolder).subscribe(
-      response => {
+      (response) => {
         this.fileList$ = of(response);
         this.fileListfiltered$ = this.fileList$;
         // Manejar la respuesta de éxito aquí
-        console.log('Registros de files', response.title,);
+        console.log('Registros de files', response.title);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         this.fileList$ = of([]);
         console.error('Error al mostrar files', error);
-      }
-    )
-
-
+      },
+    );
   }
   mostrarAlerta = false;
   mostrarAlertaError = false;
@@ -877,12 +1098,11 @@ export class HomeComponent implements OnInit{
       },
       error: (error) => {
         console.error('Error al cargar archivos públicos', error);
-      }
+      },
     });
   }
 
   // sendOnEnter(){
   //   this.sendmessage();
   // }
-
 }

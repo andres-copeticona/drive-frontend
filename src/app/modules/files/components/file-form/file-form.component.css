@@ -1,0 +1,33 @@
+.file-upload {
+  min-width: 400px;
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.title {
+  padding: 1rem 1rem 0 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.title div {
+  display: flex;
+  align-items: center;
+}
+
+.title div span {
+  margin-left: 10px;
+  font-size: 2rem;
+}
+
+mat-form-field {
+  width: 100%;
+}

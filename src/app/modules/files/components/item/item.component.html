@@ -1,0 +1,41 @@
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="delete()">
+    <mat-icon>delete</mat-icon>
+    <span>Eliminar</span>
+  </button>
+
+  <button mat-menu-item (click)="download()">
+    <mat-icon>download</mat-icon>
+    <span>Descargar</span>
+  </button>
+
+  <button mat-menu-item (click)="share()">
+    <mat-icon>share</mat-icon>
+    <span>Compartir</span>
+  </button>
+</mat-menu>
+
+<mat-card
+  class="item-container relative"
+  [matTooltip]="item().name"
+  [matTooltipPosition]="'above'"
+>
+  <button class="reset-button" (click)="onItemClick()">
+    <mat-card-content>
+      <div class="text-center">
+        <mat-icon class="icon">{{ item().icon }}</mat-icon>
+      </div>
+      <div class="flex">
+        <span clas="item-name">
+          {{ item().name.toLowerCase() | slice: 0 : 15 }}
+          @if (item().name.length > 15) {
+            ...
+          }
+        </span>
+      </div>
+    </mat-card-content>
+  </button>
+  <button class="more-actions" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+</mat-card>

@@ -1,3 +1,58 @@
+<mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="createFolder()">
+    <mat-icon>add</mat-icon>
+    <span>Carpeta</span>
+  </button>
+  @if (currentFolder?.id) {
+    <button mat-menu-item (click)="uploadFile()">
+      <mat-icon>insert_drive_file</mat-icon>
+      <span>Archivo</span>
+    </button>
+  }
+</mat-menu>
+
 <div class="container">
-  <div>TOOL BOX</div>
+  <mat-toolbar>
+    <mat-toolbar-row class="align-center h-80 first-toolbar">
+      <div class="align-center">
+        <button mat-icon-button (click)="load()">
+          <mat-icon>replay</mat-icon>
+        </button>
+        <mat-icon class="mr-2">folder</mat-icon>
+        <span>Drive</span>
+      </div>
+      <span class="toolbar-spacer"></span>
+      <mat-form-field [floatLabel]="'auto'" appearance="outline">
+        <input matInput placeholder="Buscar" />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row class="breadcrumbs">
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>add</mat-icon>
+      </button>
+      <button mat-icon-button (click)="onBreadcrumbClick()">
+        <mat-icon>home</mat-icon>
+      </button>
+      @for (item of breadcrumbs; track item.id) {
+        <mat-icon class="breadcrumb">chevron_right</mat-icon>
+        <button class="breadcrumb" mat-button (click)="onBreadcrumbClick(item)">
+          {{ item.name }}
+        </button>
+      }
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <div class="items">
+    <div class="files-container">
+      @for (item of items; track item) {
+        <app-folder-item
+          [item]="item"
+          (onFolderClick)="openFolder($event)"
+          (refresh)="load()"
+        ></app-folder-item>
+      }
+    </div>
+  </div>
 </div>

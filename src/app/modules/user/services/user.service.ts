@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { User } from '@app/shared/models/user.model';
 import { BaseCrudService } from '@app/shared/services/base-crud.service';
-import { User } from '../model/user.model';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({

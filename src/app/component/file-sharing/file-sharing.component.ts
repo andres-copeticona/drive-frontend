@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
-import {MatCardModule} from '@angular/material/card';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatIconModule} from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 import { ShareService } from '../../service/share.service';
 import { AuthServiceService } from '../../service/auth-service.service';
-import { TruncatePipe } from "../../truncate.pipe";
-import { FormatDatePipe } from "../../pipes/format-date.pipe";
-import { TruncateDocumentNamePipe } from "../../pipes/truncate-document-name.pipe";
+import { TruncatePipe } from '../../truncate.pipe';
+import { FormatDatePipe } from '../../pipes/format-date.pipe';
+import { TruncateDocumentNamePipe } from '../../pipes/truncate-document-name.pipe';
 import { ReactiveFormsModule, FormsModule, FormControl } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,7 +17,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
-import { NgxDropzoneModule } from 'ngx-dropzone';
 import { ActividadService } from '../../service/actividad.service';
 import { FileService } from '../../service/file.service';
 import { FolderService } from '../../service/folder.service';
@@ -30,9 +29,9 @@ import { Router } from '@angular/router';
 import { ModelpasswordComponent } from '../modelpassword/modelpassword.component';
 import { ModelpdfviewComponent } from '../modelpdfview/modelpdfview.component';
 
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
 
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import {
   MAT_DIALOG_DATA,
@@ -46,19 +45,19 @@ import { ModelsharefolderComponent } from '../modelsharefolder/modelsharefolder.
 import { FolderDto } from '../../model/folder';
 import { ModelaudioComponent } from '../modelaudio/modelaudio.component';
 import { ModelvideoComponent } from '../modelvideo/modelvideo.component';
-import {CdkMenu, CdkMenuItem, CdkContextMenuTrigger} from '@angular/cdk/menu';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { ModeldeleteComponent } from '../modeldelete/modeldelete.component';
 
-import {MatDividerModule} from '@angular/material/divider';
-import {DatePipe} from '@angular/common';
+import { MatDividerModule } from '@angular/material/divider';
+import { DatePipe } from '@angular/common';
 
-import {ChangeDetectionStrategy} from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 import { Renderer2, ElementRef } from '@angular/core';
 
 export interface DialogData {
-  id : number;
+  id: number;
   name: string;
   img: string;
   date: string;
@@ -84,23 +83,40 @@ export interface User {
 }
 
 @Component({
-    selector: 'app-file-sharing',
-    standalone: true,
-    templateUrl: './file-sharing.component.html',
-    styleUrl: './file-sharing.component.css',
-    imports: [MatListModule,ReactiveFormsModule, MatAutocompleteModule, MatFormFieldModule, MatSelectModule, MatInputModule, NgxDropzoneModule, MatProgressBarModule, FormsModule, AsyncPipe, MatCardModule, MatButtonModule, MatMenuModule, MatIconModule, TruncatePipe, FormatDatePipe, TruncateDocumentNamePipe]
+  selector: 'app-file-sharing',
+  standalone: true,
+  templateUrl: './file-sharing.component.html',
+  styleUrl: './file-sharing.component.css',
+  imports: [
+    MatListModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatProgressBarModule,
+    FormsModule,
+    AsyncPipe,
+    MatCardModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    TruncatePipe,
+    FormatDatePipe,
+    TruncateDocumentNamePipe,
+  ],
 })
-export class FileSharingComponent implements OnInit{
+export class FileSharingComponent implements OnInit {
   //buscador  de archivos
   searchTerm: string = '';
   filteredFolders$!: Observable<any[]>;
 
   stringerror = 'Hubo un error';
   hide = true;
-  description= new FormControl('');
-  accessType= new FormControl('');
-  password= new FormControl('');
-  folderId= new FormControl('');
+  description = new FormControl('');
+  accessType = new FormControl('');
+  password = new FormControl('');
+  folderId = new FormControl('');
   files: File[] = [];
   folders$!: Observable<any[]>;
   selectedFolderId!: string;
@@ -128,9 +144,8 @@ export class FileSharingComponent implements OnInit{
     public folderService: FolderService,
     public actividadService: ActividadService,
     public ipService: IpserviceService,
-    private usuarioService: UsuarioService
-
-    ) {}
+    private usuarioService: UsuarioService,
+  ) {}
   backgroundColor = '#6663FE'; // Color inicial
   colors!: string[];
 
@@ -144,33 +159,41 @@ export class FileSharingComponent implements OnInit{
     this.fileList$ = of([]);
 
     setTimeout(() => {
-      const userId1 = this.authService.obtenerIdUsuario() || "";
+      const userId1 = this.authService.obtenerIdUsuario() || '';
       this.shareService.getSharedDocuments(parseInt(userId1)).subscribe(
-        response => {
+        (response) => {
           this.recentFilesList$ = of(response);
           this.filteredFolders$ = this.recentFilesList$;
           // Manejar la respuesta de éxito aquí
           console.log('Registros de shared', response);
         },
-        error => {
+        (error) => {
           // Manejar el error aquí
           this.recentFilesList$ = of([]);
           console.error('Error al mostrar shared', error);
-        }
-      )
+        },
+      );
     }, 500);
   }
   search() {
     this.filteredFolders$ = this.recentFilesList$.pipe(
-      map(folders =>
-        folders.filter(folder =>
-          folder.nombreDocumento.toLowerCase().includes(this.searchTerm.toLowerCase())
-        )
-      )
+      map((folders) =>
+        folders.filter((folder) =>
+          folder.nombreDocumento
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()),
+        ),
+      ),
     );
   }
 
-  openDialog(id: number, name: string, img: string, date: string, privacy: string) {
+  openDialog(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelimgComponent, {
       data: {
@@ -178,25 +201,37 @@ export class FileSharingComponent implements OnInit{
         name: name,
         img: img,
         date: date,
-        privacy: privacy
+        privacy: privacy,
       },
     });
   }
 
-  cargarDatosUsuario(idus: number): string{
-      let nombre: string = '';
-      this.usuarioService.getUserProfile(idus).subscribe({
-        next: (respuesta) => {
-          nombre = respuesta.data.nombres+" "+respuesta.data.paterno;
-          console.log('Respuesta recibida:', nombre); // Imprimir la respuesta recibida
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos del usuario', error);
-        }
-      });
-      return nombre;
+  cargarDatosUsuario(idus: number): string {
+    let nombre: string = '';
+    this.usuarioService.getUserProfile(idus).subscribe({
+      next: (respuesta) => {
+        nombre = respuesta.data.nombres + ' ' + respuesta.data.paterno;
+        console.log('Respuesta recibida:', nombre); // Imprimir la respuesta recibida
+      },
+      error: (error) => {
+        console.error('Error al obtener los datos del usuario', error);
+      },
+    });
+    return nombre;
   }
-  openDialogpasswordimg(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpasswordimg(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -209,12 +244,24 @@ export class FileSharingComponent implements OnInit{
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "img",
-        folderId: folderId
+        categoria: 'img',
+        folderId: folderId,
       },
     });
   }
-  openDialogpassworddoc(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpassworddoc(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -227,12 +274,24 @@ export class FileSharingComponent implements OnInit{
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "doc",
-        folderId: folderId
+        categoria: 'doc',
+        folderId: folderId,
       },
     });
   }
-  openDialogpassworddelete(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpassworddelete(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -245,12 +304,24 @@ export class FileSharingComponent implements OnInit{
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "delete",
-        folderId: folderId
+        categoria: 'delete',
+        folderId: folderId,
       },
     });
   }
-  openDialogpasswordshare(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpasswordshare(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelpasswordComponent, {
       data: {
@@ -263,13 +334,25 @@ export class FileSharingComponent implements OnInit{
         description: description,
         accessType: accessType,
         password: password,
-        categoria: "share",
-        folderId: folderId
+        categoria: 'share',
+        folderId: folderId,
       },
     });
   }
 
-  openDialogpdf(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogpdf(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/sharedFiles']);
     this.dialog.open(ModelpdfviewComponent, {
       height: '90%',
@@ -284,11 +367,23 @@ export class FileSharingComponent implements OnInit{
         accessType: accessType,
         password: password,
         categoria: categoria,
-        folderId: folderId
+        folderId: folderId,
       },
     });
   }
-  openDialogShare(id: number, name: string, img: string, date: string, privacy: string, iduser: any, description: string, accessType: string, password: string, categoria: string, folderId: string) {
+  openDialogShare(
+    id: number,
+    name: string,
+    img: string,
+    date: string,
+    privacy: string,
+    iduser: any,
+    description: string,
+    accessType: string,
+    password: string,
+    categoria: string,
+    folderId: string,
+  ) {
     this.router.navigate(['/cloud/home']);
     this.dialog.open(ModelsharingComponent, {
       data: {
@@ -302,45 +397,47 @@ export class FileSharingComponent implements OnInit{
         accessType: accessType,
         password: password,
         categoria: categoria,
-        folderId: folderId
-
+        folderId: folderId,
       },
     });
   }
-  deletefile(id: number){
+  deletefile(id: number) {
     this.fileService.deleteFile(id).subscribe({
       next: (response) => {
         console.log('File deleted successfully: ', response);
         this.fileService.listFilesByUCategory(this.selectedFolder).subscribe(
-          response => {
+          (response) => {
             this.fileList$ = of(response);
             // Manejar la respuesta de éxito aquí
-            console.log('Registros de files', response.title,);
+            console.log('Registros de files', response.title);
           },
-          error => {
+          (error) => {
             // Manejar el error aquí
             this.fileList$ = of([]);
             console.error('Error al mostrar files', error);
-          }
-        )
-        
+          },
+        );
       },
       error: (error) => {
         console.error('Error deleting file', error);
         this.fileService.listFilesByUCategory(this.selectedFolder).subscribe(
-          response => {
+          (response) => {
             this.fileList$ = of(response);
             // Manejar la respuesta de éxito aquí
-            console.log('Registros de files', response.title,);
+            console.log('Registros de files', response.title);
           },
-          error => {
+          (error) => {
             // Manejar el error aquí
             this.fileList$ = of([]);
             console.error('Error al mostrar files', error);
-          }
-        )
-        if(error.status == 200){this.mostrarMensajeDeleteExito();}else{this.mostrarMensajeDeleteError();}
-      }
+          },
+        );
+        if (error.status == 200) {
+          this.mostrarMensajeDeleteExito();
+        } else {
+          this.mostrarMensajeDeleteError();
+        }
+      },
     });
   }
   mostrarAlerta = false;

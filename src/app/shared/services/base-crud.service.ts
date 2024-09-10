@@ -2,7 +2,7 @@ import { firstValueFrom } from 'rxjs';
 import { IListResponse } from '../models/list-response';
 import { BaseService } from './base.service';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import { IResponse } from '../models/response.model';
+import { Response } from '../models/response.model';
 
 export abstract class BaseCrudService<T> extends BaseService {
   constructor(namespace: string, version: string = 'v1') {
@@ -12,9 +12,9 @@ export abstract class BaseCrudService<T> extends BaseService {
   async findMany(options?: {
     params?: HttpParams;
     headers?: HttpHeaders;
-  }): Promise<IListResponse<T>> {
+  }): Promise<Response<IListResponse<T>>> {
     return firstValueFrom(
-      this.http.get<IListResponse<T>>(`${this.namespace}/`, {
+      this.http.get<Response<IListResponse<T>>>(`${this.namespace}/`, {
         params: options?.params,
         headers: options?.headers,
       }),
@@ -27,18 +27,21 @@ export abstract class BaseCrudService<T> extends BaseService {
       params: HttpParams;
       headers: HttpHeaders;
     },
-  ): Promise<IResponse<T>> {
+  ): Promise<Response<T>> {
     return firstValueFrom(
-      this.http.get<IResponse<T>>(`${this.namespace}/${id}`, {
+      this.http.get<Response<T>>(`${this.namespace}/${id}`, {
         params: options?.params,
         headers: options?.headers,
       }),
     );
   }
 
-  async store(data: T, options?: { headers: HttpHeaders }): Promise<T> {
+  async store(
+    data: Partial<T>,
+    options?: { headers: HttpHeaders },
+  ): Promise<Response<T>> {
     return firstValueFrom(
-      this.http.post<T>(`${this.namespace}`, data, {
+      this.http.post<Response<T>>(`${this.namespace}/`, data, {
         headers: options?.headers,
       }),
     );
@@ -48,9 +51,9 @@ export abstract class BaseCrudService<T> extends BaseService {
     id: number | string,
     data: T,
     options?: { headers: HttpHeaders },
-  ): Promise<T> {
+  ): Promise<Response<T>> {
     return firstValueFrom(
-      this.http.put<T>(`${this.namespace}/${id}`, data, {
+      this.http.put<Response<T>>(`${this.namespace}/${id}`, data, {
         headers: options?.headers,
       }),
     );
@@ -59,9 +62,9 @@ export abstract class BaseCrudService<T> extends BaseService {
   async delete(
     id: number | string,
     options?: { headers: HttpHeaders },
-  ): Promise<void> {
+  ): Promise<Response<boolean>> {
     return firstValueFrom(
-      this.http.delete<void>(`${this.namespace}/${id}`, {
+      this.http.delete<Response<boolean>>(`${this.namespace}/${id}`, {
         headers: options?.headers,
       }),
     );

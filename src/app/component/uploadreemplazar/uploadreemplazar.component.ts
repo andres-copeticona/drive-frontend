@@ -7,7 +7,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Observable, catchError, last, map, of, startWith } from 'rxjs';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { NgxDropzoneModule } from 'ngx-dropzone';
 import { FileService } from '../../service/file.service';
 import { AuthServiceService } from '../../service/auth-service.service';
 import { FolderService } from '../../service/folder.service';
@@ -20,7 +19,12 @@ import {
   MatDialogActions,
 } from '@angular/material/dialog';
 
-import { FormsModule, FormControl, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import {
+  FormsModule,
+  FormControl,
+  ReactiveFormsModule,
+  FormGroup,
+} from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -52,9 +56,25 @@ interface FileUpload {
 @Component({
   selector: 'app-uploadreemplazar',
   standalone: true,
-  imports: [MatExpansionModule, ReactiveFormsModule, MatAutocompleteModule, MatFormFieldModule, MatSelectModule, MatInputModule, FormsModule, CommonModule, NgxDropzoneModule, AsyncPipe, MatCardModule, MatButtonModule, MatMenuModule, MatIconModule, MatTooltipModule, MatProgressBarModule],
+  imports: [
+    MatExpansionModule,
+    ReactiveFormsModule,
+    MatAutocompleteModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    FormsModule,
+    CommonModule,
+    AsyncPipe,
+    MatCardModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatProgressBarModule,
+  ],
   templateUrl: './uploadreemplazar.component.html',
-  styleUrl: './uploadreemplazar.component.css'
+  styleUrl: './uploadreemplazar.component.css',
 })
 export class UploadreemplazarComponent implements OnInit {
   panelOpenState = true;
@@ -81,11 +101,11 @@ export class UploadreemplazarComponent implements OnInit {
   dataid!: any;
   dataaccessType!: any;
   datapassword!: any;
-  dataiduser!: any
+  dataiduser!: any;
   datafolderId!: any;
   dataacategoria!: any;
   dataprivacy!: any;
-  datadate!: any
+  datadate!: any;
   dataimg!: any;
   dataname!: any;
 
@@ -95,19 +115,20 @@ export class UploadreemplazarComponent implements OnInit {
 
   allowedFileFormats = ['mp3', 'mp4', 'jpg', 'png', 'pdf'];
 
-  constructor(public dialog: MatDialog,
+  constructor(
+    public dialog: MatDialog,
     private route: ActivatedRoute,
     private fileService: FileService,
     private authService: AuthServiceService,
     private folderService: FolderService,
     private actividadService: ActividadService,
     private ipService: IpserviceService,
-    private router: Router
-  ) { }
+    private router: Router,
+  ) {}
 
   ngOnInit(): void {
     this.panelOpenState = true;
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params['number'] !== undefined) {
         const fileid: number = params['number'];
         this.selectedFolderIdfromFavorites = fileid;
@@ -151,30 +172,35 @@ export class UploadreemplazarComponent implements OnInit {
         const img: any = params['img'];
         this.dataimg = img;
       }
-
     });
 
     // Carga la lista de folders desde el FolderService
     const userId = this.authService.obtenerIdUsuario();
     if (userId) {
-      this.folderService.getAllFolders().pipe(
-        map(response => response.data),
-        catchError(error => {
-          console.error('Error fetching folders:', error);
-          return of([]); // Return an empty observable in case of error
-        })
-      ).subscribe(folders => {
-        this.options = folders;
-      });
+      this.folderService
+        .getAllFolders()
+        .pipe(
+          map((response) => response.data),
+          catchError((error) => {
+            console.error('Error fetching folders:', error);
+            return of([]); // Return an empty observable in case of error
+          }),
+        )
+        .subscribe((folders) => {
+          this.options = folders;
+        });
     } else {
-      console.error('User ID is not available. Make sure the user is logged in.');
+      console.error(
+        'User ID is not available. Make sure the user is logged in.',
+      );
     }
 
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
-      map(value => {
+      map((value) => {
         const name = typeof value === 'string' ? value : value?.name;
-        this.selectedFolderId = typeof value === 'string' ? value : value?.id.toString() || '';
+        this.selectedFolderId =
+          typeof value === 'string' ? value : value?.id.toString() || '';
         return name ? this._filter(name as string) : this.options.slice();
       }),
     );
@@ -185,26 +211,24 @@ export class UploadreemplazarComponent implements OnInit {
     { valuex: 'restringido', viewValue: 'Restringido' },
   ];
 
-
-  eliminarArchivo(){
+  eliminarArchivo() {
     this.fileService.deleteFile(this.selectedFolderIdfromFavorites).subscribe({
       next: (response) => {
         console.log('File deleted successfully: ', response);
-
       },
       error: (error) => {
         console.error('Error deleting file', error);
         //if(error.status == 200){this.mostrarMensajeDeleteExito();}else{this.mostrarMensajeDeleteError();}
-      }
+      },
     });
   }
 
   cargaralmacenamiento() {
     const userId = this.authService.obtenerIdUsuario();
     this.fileService.getStorageUsedByUser(parseInt(userId || '0')).subscribe(
-      response => {
+      (response) => {
         if (response.data.length < 3) {
-          throw new Error("El string debe tener al menos tres caracteres.");
+          throw new Error('El string debe tener al menos tres caracteres.');
         }
         // Quita los últimos tres caracteres
         const modifiedString = response.data.slice(0, -3);
@@ -212,16 +236,18 @@ export class UploadreemplazarComponent implements OnInit {
         const numberValue = Number(modifiedString);
         // Verifica si la conversión fue exitosa
         if (isNaN(numberValue)) {
-          throw new Error("El string modificado no se pudo convertir a un número.");
+          throw new Error(
+            'El string modificado no se pudo convertir a un número.',
+          );
         }
         this.storageUsed = numberValue;
         // Manejar la respuesta de éxito aquí
         console.log('Storage', response);
       },
-      error => {
+      (error) => {
         // Manejar el error aquí
         console.error('Error al mostrar Storage', error);
-      }
+      },
     );
   }
   onSelect(event: any) {
@@ -251,7 +277,9 @@ export class UploadreemplazarComponent implements OnInit {
 
     const userId = this.authService.obtenerIdUsuario(); // Obtiene el userId del AuthService
     if (!userId) {
-      console.error('User ID is not available. Make sure the user is logged in.');
+      console.error(
+        'User ID is not available. Make sure the user is logged in.',
+      );
       return;
     }
 
@@ -264,10 +292,10 @@ export class UploadreemplazarComponent implements OnInit {
 
         // Aquí, registra la actividad de subida de archivo
         const actividadData = {
-          nombre: "Cambio categoria",
+          nombre: 'Cambio categoria',
           ip: ip,
-          tipoActividad: "Modificacion",
-          usuarioId: userId
+          tipoActividad: 'Modificacion',
+          usuarioId: userId,
         };
 
         this.actividadService.crearActividad(actividadData).subscribe({
@@ -276,36 +304,54 @@ export class UploadreemplazarComponent implements OnInit {
 
             // Continuar con la subida del archivo después de registrar la actividad
             const data = {
-              title: "titulo",
-              description: "description",
-              etag: "etag",
+              title: 'titulo',
+              description: 'description',
+              etag: 'etag',
               accessType: this.dataaccessType,
               password: this.datapassword, // Asegura la gestión segura de esto
               createdDate: new Date().toISOString(),
               modifiedDate: new Date().toISOString(),
-              categoria: "Reemplazado",
+              categoria: 'Reemplazado',
               deleted: false,
               userId: this.dataiduser,
               folderId: this.datafolderId,
             };
 
-            this.fileService.uploadFile(this.datafolderId, fileToUpload, data).subscribe({
-              next: (response) => console.log('File uploaded successfully', response, this.mostrarMensajeRegistroExito(), this.eliminarArchivo(),
-              this.dataid = response.data.id,this.obtainlinkandname()
-            ),
-              error: (error) => console.error('Error uploading file', error, " data:", data, "this folder", this.selectedFolderId, this.mostrarMensajeRegistroExito(), this.eliminarArchivo())
-            });
+            this.fileService
+              .uploadFile(this.datafolderId, fileToUpload, data)
+              .subscribe({
+                next: (response) =>
+                  console.log(
+                    'File uploaded successfully',
+                    response,
+                    this.mostrarMensajeRegistroExito(),
+                    this.eliminarArchivo(),
+                    (this.dataid = response.data.id),
+                    this.obtainlinkandname(),
+                  ),
+                error: (error) =>
+                  console.error(
+                    'Error uploading file',
+                    error,
+                    ' data:',
+                    data,
+                    'this folder',
+                    this.selectedFolderId,
+                    this.mostrarMensajeRegistroExito(),
+                    this.eliminarArchivo(),
+                  ),
+              });
           },
-          error: (err) => console.error('Error al registrar actividad', err)
+          error: (err) => console.error('Error al registrar actividad', err),
         });
       },
       error: (err) => {
         console.error('Error obteniendo IP del usuario', err);
         // Considera cómo manejar este caso. ¿Quieres continuar con la subida del archivo sin registrar la IP?
-      }
+      },
     });
     const files: File[] = event.addedFiles;
-    files.forEach(file => {
+    files.forEach((file) => {
       const upload: FileUpload = {
         name: file.name,
         progress: 0, // Inicializa el progreso en 0
@@ -316,7 +362,7 @@ export class UploadreemplazarComponent implements OnInit {
     });
   }
 
-  obtainlinkandname(){
+  obtainlinkandname() {
     this.fileService.getFileById(this.dataid).subscribe({
       next: (response) => {
         console.log('File obtained successfully: ', response);
@@ -332,17 +378,18 @@ export class UploadreemplazarComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error obtaining file', error);
-      }
+      },
     });
   }
 
   gotofolder() {
     this.obtainlinkandname();
     setTimeout(() => {
-      this.router.navigate(['/cloud/home'], { queryParams: { number: this.selectedFolderId } });
-      this.openDialogpdf()
+      this.router.navigate(['/cloud/home'], {
+        queryParams: { number: this.selectedFolderId },
+      });
+      this.openDialogpdf();
     }, 2000);
-
   }
   openDialogpdf() {
     this.dialog.open(ModelpdfComponent, {
@@ -358,7 +405,7 @@ export class UploadreemplazarComponent implements OnInit {
         folderId: this.datafolderId,
         accessType: this.dataaccessType,
         password: this.datapassword,
-        categoria: this.dataacategoria
+        categoria: this.dataacategoria,
       },
     });
   }
@@ -372,12 +419,14 @@ export class UploadreemplazarComponent implements OnInit {
     if (user && user.id) {
       this.selectedFolderId = user.id.toString();
     }
-    return user && user.name ? user.name : "";
+    return user && user.name ? user.name : '';
   }
 
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
-    return this.options.filter(option => option.name.toLowerCase().includes(filterValue));
+    return this.options.filter((option) =>
+      option.name.toLowerCase().includes(filterValue),
+    );
   }
 
   mostrarAlerta = false;
@@ -407,7 +456,9 @@ export class UploadreemplazarComponent implements OnInit {
       } else {
         clearInterval(interval);
         this.uploadedFiles.push(upload); // Mueve el archivo a la lista de subidos
-        this.filesInProcess = this.filesInProcess.filter(item => item !== upload); // Remueve de la lista de procesamiento
+        this.filesInProcess = this.filesInProcess.filter(
+          (item) => item !== upload,
+        ); // Remueve de la lista de procesamiento
         this.gotofolder();
       }
     }, 200); // Ajusta este valor según necesites
@@ -421,5 +472,4 @@ export class UploadreemplazarComponent implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
-
 }

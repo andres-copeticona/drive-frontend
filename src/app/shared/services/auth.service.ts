@@ -3,12 +3,15 @@ import { firstValueFrom } from 'rxjs';
 import { HttpHeaders } from '@angular/common/http';
 import { BaseService } from '@shared/services/base.service';
 import { Router } from '@angular/router';
-import { addMinutes } from 'date-fns';
 import { isPlatformServer } from '@angular/common';
+import { LoginResponse } from '@app/modules/auth/models/login-response.model';
+import { Response } from '../models/response.model';
+import { SsrCookieService } from 'ngx-cookie-service-ssr';
 
 interface IAuthInfo {
   userId: number;
   token: string;
+  tokenExpiration?: Date;
   roleId: number;
 }
 
@@ -19,12 +22,13 @@ export class AuthService extends BaseService {
   private authInfoKey = 'authInfo';
 
   private router: Router = inject(Router);
+  private cookieService: SsrCookieService = inject(SsrCookieService);
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
     super('auth');
   }
 
-  login(username: string, password: string): Promise<any> {
+  login(username: string, password: string): Promise<Response<LoginResponse>> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     const body = {
       login: username,
@@ -32,7 +36,9 @@ export class AuthService extends BaseService {
       token: 'servidoresgadc12345',
     };
     return firstValueFrom(
-      this.http.post(`${this.namespace}/login`, body, { headers }),
+      this.http.post<Response<LoginResponse>>(`${this.namespace}/login`, body, {
+        headers,
+      }),
     );
   }
 
@@ -49,8 +55,9 @@ export class AuthService extends BaseService {
 
   getInfo(): IAuthInfo | null {
     if (isPlatformServer(this.platformId)) {
-      console.log('Server side');
-      return null;
+      const cookies = this.cookieService.get(this.authInfoKey);
+      if (!cookies) return null;
+      return JSON.parse(cookies);
     }
 
     const authInfo = localStorage.getItem(this.authInfoKey);
@@ -64,14 +71,6 @@ export class AuthService extends BaseService {
     this.router.navigate(['/']);
   }
 
-  cerrarSesion(): void {
-    if (typeof window !== 'undefined') {
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userRole');
-      localStorage.removeItem('expirationTime');
-    }
-  }
-
   verificarExpiracionToken(): boolean {
     const expiration = localStorage.getItem('expirationTime');
     if (expiration) {
@@ -82,23 +81,11 @@ export class AuthService extends BaseService {
   }
 
   private setCookie(authInfo: IAuthInfo) {
-    let cookieStr =
-      encodeURIComponent('CrCookie') +
-      '=' +
-      encodeURIComponent(JSON.stringify(authInfo));
-
-    const dtExpires = addMinutes(new Date(), 5);
-
-    cookieStr += ';expires=' + dtExpires.toUTCString();
-    cookieStr += ';path=/';
-    cookieStr += ';samesite=lax';
-
-    document.cookie = cookieStr;
+    let cookieStr = JSON.stringify(authInfo);
+    this.cookieService.set(this.authInfoKey, cookieStr);
   }
 
   private deleteCookie() {
-    document.cookie =
-      encodeURIComponent('CrCookie') +
-      '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/';
+    this.cookieService.delete(this.authInfoKey);
   }
 }

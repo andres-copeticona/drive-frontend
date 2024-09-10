@@ -1,0 +1,38 @@
+<div class="customdialog">
+  <mat-dialog-content>
+    <div class="title-secction">
+      <div class="icon-title">
+        <mat-icon>create_new_folder</mat-icon>
+      </div>
+      <div class="title">Crear nueva carpeta</div>
+      <div class="close" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+      </div>
+    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="save()">
+      <div class="email-secction">
+        <mat-form-field>
+          <mat-label>Nombre de la nueva carpeta</mat-label>
+          <input
+            matInput
+            class="custom-input"
+            placeholder="Nombre del folder"
+            formControlName="name"
+          />
+          @if (formControls.name.errors?.required) {
+            <mat-error>El nombre es requerido</mat-error>
+          } @else if (formControls.name.errors?.minlength) {
+            <mat-error>El nombre debe tener al menos 6 caracteres</mat-error>
+          } @else if (formControls.name.errors?.maxlength) {
+            <mat-error
+              >El nombre debe tener como máximo 30 caracteres</mat-error
+            >
+          }
+        </mat-form-field>
+      </div>
+      <div class="button-secction">
+        <button mat-raised-button type="submit">Crear carpeta</button>
+      </div>
+    </form>
+  </mat-dialog-content>
+</div>

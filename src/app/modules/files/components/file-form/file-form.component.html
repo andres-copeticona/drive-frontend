@@ -1,0 +1,47 @@
+<div class="file-upload">
+  <div class="title">
+    <div>
+      <mat-icon>insert_drive_file</mat-icon>
+      <span>Subir Archivos</span>
+    </div>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog">
+    <mat-form-field appearance="fill">
+      <mat-label>Selecciona archivos para subir</mat-label>
+      <ngx-mat-dropzone [required]="true">
+        <input
+          (change)="onSelect($event)"
+          [accept]="aceptedFiles"
+          type="file"
+          [multiple]="true"
+          [formControl]="fileControl"
+          fileInput
+        />
+      </ngx-mat-dropzone>
+      <mat-icon matSuffix color="primary">cloud_upload</mat-icon>
+      <mat-hint> Archivos aceptados: {{ aceptedFiles }} </mat-hint>
+    </mat-form-field>
+    @for (file of files; track file) {
+      <mat-chip-row (removed)="onRemove(file)">
+        {{ file?.name }}
+        <button matChipRemove>
+          <mat-icon>deleteoutline</mat-icon>
+        </button>
+      </mat-chip-row>
+    }
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-raised-button mat-dialog-close>Cancelar</button>
+    <button
+      mat-raised-button
+      [disabled]="fileControl.invalid"
+      (click)="uploadFiles()"
+    >
+      Subir
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -7,8 +7,8 @@ import { MatInputModule } from '@angular/material/input';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '@app/shared/services/auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { User } from '@modules/user/model/user.model';
 import { ActivatedRoute } from '@angular/router';
+import { User } from '@app/shared/models/user.model';
 
 @Component({
   selector: 'app-user-details',
@@ -24,7 +24,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './user-details.component.css',
 })
 export class UserDetailsComponent implements OnInit {
-  data: User = {};
+  data?: User;
 
   constructor(
     private userService: UserService,

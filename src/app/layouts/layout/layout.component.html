@@ -1,49 +1,43 @@
 <mat-toolbar class="mat-elevation-z3">
-  <button
-    mat-icon-button
-    aria-label="Example icon button with a home icon"
-    (click)="collapsed.set(!collapsed())"
-  >
+  <button mat-icon-button class="hidebar" (click)="toggleSidenav()">
     <mat-icon>menu</mat-icon>
   </button>
 </mat-toolbar>
+
 <mat-sidenav-container>
   <mat-sidenav
     #sidenav
-    mode="side"
-    [(opened)]="opened"
-    [style.width]="sidenavwidth()"
+    [mode]="isSmallScreen() ? 'over' : 'side'"
+    [opened]="opened()"
+    [style.width]="sidenavWidth()"
     class="custom-sidebar"
   >
-    <!-- <a routerLink="profile" routerLinkActive="active"> -->
-    <!--   <div class="sidenav-header"> -->
-    <!--     <img -->
-    <!--       [width]="profilepicsize()" -->
-    <!--       [height]="profilepicsize()" -->
-    <!--       src="https://images.pexels.com/photos/428364/pexels-photo-428364.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" -->
-    <!--     /> -->
-    <!--   </div> -->
-    <!-- </a> -->
     <mat-nav-list>
-      <a mat-list-item routerLink="home" routerLinkActive="active">
-        <mat-icon>cloud</mat-icon>
-        <label>My Cloud</label>
-      </a>
-      <a mat-list-item routerLink="sharedFiles" routerLinkActive="active">
-        <mat-icon>share</mat-icon>
-        <label>Shared files</label>
-      </a>
-      <a mat-list-item routerLink="favorites" routerLinkActive="active">
-        <mat-icon>folder_shared</mat-icon>
-        <label>Folders</label>
-      </a>
-      <a mat-list-item routerLink="upload" routerLinkActive="active">
-        <mat-icon>file_upload</mat-icon>
-        <label>Upload files</label>
+      @for (item of rol1Menu; track item) {
+        <a
+          mat-list-item
+          [routerLink]="'/cloud' + item.route"
+          routerLinkActive="active"
+          [matTooltip]="item.label"
+          [matTooltipPosition]="!isSmallScreen() ? 'right' : 'above'"
+          (click)="onNavItemClick()"
+        >
+          <mat-icon class="iconoblanco">{{ item.icon }}</mat-icon>
+          <label class="iconoblanco">{{ item.label }}</label>
+        </a>
+      }
+      <a
+        mat-list-item
+        [matTooltip]="'Cerrar Sesión'"
+        [matTooltipPosition]="!isSmallScreen() ? 'right' : 'above'"
+        (click)="logout()"
+      >
+        <mat-icon class="iconoblanco">logout</mat-icon>
+        <label class="iconoblanco">Cerrar Sesión</label>
       </a>
     </mat-nav-list>
   </mat-sidenav>
-  <mat-sidenav-content class="content" [style.width-left]="sidenavwidth()">
+  <mat-sidenav-content class="content" [style.marginLeft]="contentWidth()">
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

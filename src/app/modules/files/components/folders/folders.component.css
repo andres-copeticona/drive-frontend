@@ -1,85 +1,64 @@
 .container {
   display: flex;
+  flex-direction: column;
   height: calc(100vh - 64px);
-  flex-direction: column;
+  background-color: rgb(245, 245, 245);
 }
-.vertical-layout {
-  background-color: white;
-  border-radius: 10px;
-  padding: 2%;
-  flex-direction: column;
+
+.toolbar-spacer {
+  flex: 1 1 auto;
+}
+
+.align-center {
   display: flex;
-  margin-top: 2%;
-  margin-left: 3%;
-  width: 40%;
+  align-items: center;
 }
 
-.horizontal-layout {
-  display: flex;
-  flex-direction: row;
+.mr-2 {
+  margin-right: 0.5rem;
 }
 
-.title {
-  margin-left: 2%;
-  margin-right: 1%;
-  font-size: 200%;
-  font-weight: bold;
-  color: #06367a;
-}
-.subtitle {
-  font-weight: bold;
-}
-.data {
-}
-.baja {
-  margin: 1%;
-  flex-direction: row;
-  display: flex;
+.h-80 {
+  height: 80px;
 }
 
-.personal-data {
-  margin: 4%;
-  font-size: 150%;
-  font-weight: bold;
-}
-.account-data {
-  margin: 4%;
-  font-size: 150%;
-  font-weight: bold;
-}
-.label {
-  margin-left: 2%;
-  font-size: 100%;
-  font-weight: bold;
-}
-.value {
-  margin-left: 2%;
-  font-size: 100%;
-  font-weight: normal;
-  margin-bottom: 1%;
-}
-.data-secction {
-  background-color: white;
-  margin: 1%;
-  border-radius: 15px;
-}
-.button-secction {
-  margin: 2%;
+mat-form-field div:last-child {
+  display: none;
 }
 
-@media only screen and (max-width: 768px) {
-  .horizontal-layout {
+.files-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  padding: 0 1rem;
+  height: max-content;
+  gap: 1rem;
+}
+
+@media (max-width: 460px) {
+  .files-container {
+    justify-content: center;
+  }
+
+  .first-toolbar {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
   }
-  .vertical-layout {
-    background-color: white;
-    border-radius: 15px;
-    padding: 2%;
-    flex-direction: column;
-    display: flex;
-    margin-top: 3%;
-    margin-left: 3%;
-    width: 94%;
+
+  .h-80 {
+    height: 160px;
   }
+}
+
+.breadcrumbs {
+  overflow-x: auto;
+}
+
+.breadcrumb {
+  min-width: fit-content;
+}
+
+.items {
+  height: calc(100% - 80px);
+  overflow-y: auto;
 }

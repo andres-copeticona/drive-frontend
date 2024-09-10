@@ -1,45 +1,42 @@
 .example-container {
-    width: 400px;
-    height: 200px;
-    margin: 10px;
-    border: 1px solid #d64141;
-  }
-mat-toolbar{
-    position: relative;
-    z-index: 5;
+  width: 400px;
+  height: 200px;
+  margin: 10px;
+  border: 1px solid #d64141;
 }
-.content{
-    padding: 1%;
-    background-color: #EBF2FC;
-    color: black;
-    overflow-y:visible;
-    
+
+.hidebar {
+  width: 50px;
 }
-.sidebar-bottom {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+
+mat-toolbar {
+  position: relative;
+  z-index: 5;
+}
+
+.mat-elevation-z3 {
+  background-color: rgb(6, 54, 122);
+  color: white;
+}
+
+.iconoblanco {
+  color: white;
+}
+mat-sidenav-container {
+  height: calc(100vh - 64px);
+}
+
+.content {
+  padding: 1%;
+  background-color: #ebf2fc;
+  color: black;
+  overflow-y: visible;
 }
 .custom-sidebar {
-    background-color: rgb(6, 54, 122);
-    color: white;
-  }
-
+  background-color: rgb(6, 54, 122);
+  color: white;
+}
 
 mat-icon {
-    margin-right: 10px;
-}
-
-mat-sidenav-container {
-    height: calc(100vh-64px);
-}
-
-.sidenav-header{
-    padding-top: 24px;
-    text-align: center;
-
-    >img {
-        border-radius: 100%;
-        object-fit: cover;
-    }
+  margin-right: 10px;
 }

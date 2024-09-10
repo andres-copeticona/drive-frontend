@@ -43,23 +43,18 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  async onLogin(event: any) {
-    console.log(event);
+  async onLogin(_event: any) {
     try {
       const res = await this.authService.login(this.username, this.password);
+      const { data } = res;
       this.authService.saveInfo({
-        userId: res.user.id,
-        token: res.token,
-        roleId: res.user.roles[0].rolID,
+        userId: data.user.id,
+        token: data.token,
+        tokenExpiration: new Date(data.tokenExpiration),
+        roleId: data.user.role.id,
       });
       this.inactivityService.start();
-
-      //TODO: Handle different roles
-      if (res.user.roles[0].rolID === 3) {
-        this.router.navigate(['/cloud/userlist']);
-      } else {
-        this.router.navigate(['/cloud/home']);
-      }
+      this.router.navigate(['/cloud/home']);
 
       this.ts.success('Bienvenido', 'Inicio de sesión exitoso');
     } catch (error) {

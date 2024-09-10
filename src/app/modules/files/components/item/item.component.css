@@ -1,0 +1,70 @@
+.item-container {
+  aspect-ratio: 1;
+  min-width: 200px;
+  min-height: 200px;
+}
+
+.item-container:hover {
+  background-color: rgb(245, 245, 245);
+}
+
+@media (max-width: 460px) {
+  .item-container {
+    min-width: 90%;
+    min-height: 90%;
+  }
+}
+
+mat-card-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.icon {
+  font-size: 6rem;
+  width: 100px;
+  height: 100px;
+}
+
+.item-name {
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+  max-width: 50px;
+  display: inline-block;
+}
+
+.flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.reset-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 0.5rem;
+}
+
+.relative {
+  position: relative;
+}
+
+.more-actions {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+}
