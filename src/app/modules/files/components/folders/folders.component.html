@@ -23,7 +23,12 @@
       </div>
       <span class="toolbar-spacer"></span>
       <mat-form-field [floatLabel]="'auto'" appearance="outline">
-        <input matInput placeholder="Buscar" />
+        <input
+          matInput
+          placeholder="Buscar"
+          [(ngModel)]="searchTerm"
+          (input)="search()"
+        />
         <mat-icon matSuffix>search</mat-icon>
       </mat-form-field>
     </mat-toolbar-row>
@@ -46,7 +51,7 @@
 
   <div class="items">
     <div class="files-container">
-      @for (item of items; track item) {
+      @for (item of filteredItems(); track item) {
         <app-folder-item
           [item]="item"
           (onFolderClick)="openFolder($event)"

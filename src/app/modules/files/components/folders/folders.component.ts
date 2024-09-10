@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -51,11 +51,21 @@ import { FileModel } from '../../models/file.model';
 })
 export class FolderComponent implements OnInit {
   searchTerm = '';
-  search() {}
+
+  search() {
+    if (this.searchTerm === '') this.filteredItems.set(this.items);
+    else
+      this.filteredItems.set(
+        this.items.filter((i) =>
+          i.name.toLowerCase().includes(this.searchTerm.toLowerCase()),
+        ),
+      );
+  }
 
   roleId = this.authService.getInfo()?.roleId;
 
   items: ItemList[] = [];
+  filteredItems = signal<ItemList[]>([]);
 
   folders: Folder[] = [];
   files: FileModel[] = [];
@@ -107,6 +117,7 @@ export class FolderComponent implements OnInit {
 
       if (!this.currentFolder) {
         this.items = items;
+        this.filteredItems.set(this.items);
         return;
       }
 
@@ -134,6 +145,7 @@ export class FolderComponent implements OnInit {
           };
         }),
       );
+      this.filteredItems.set(this.items);
     } catch (error) {
       console.error(error);
       this.ts.error('No se pudo cargar la lista de archivos', 'Error');
@@ -172,8 +184,6 @@ export class FolderComponent implements OnInit {
     });
     this.load();
   }
-
-  async selectFolder() {}
 
   onBreadcrumbClick(folder?: Folder) {
     if (!folder) {
