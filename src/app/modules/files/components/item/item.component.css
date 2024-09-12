@@ -41,10 +41,11 @@ mat-card-content {
   display: inline-block;
 }
 
-.flex {
+.item-name-container {
+  padding-left: 0.5rem;
   display: flex;
+  gap: 0.5rem;
   align-items: center;
-  justify-content: space-between;
 }
 
 .reset-button {

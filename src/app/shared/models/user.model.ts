@@ -16,7 +16,7 @@ export interface User {
   status: boolean;
   createdAt: string;
   updatedAt: string;
-  fullname: string;
+  fullName: string;
 }
 
 export interface Role {

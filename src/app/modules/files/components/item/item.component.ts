@@ -14,6 +14,9 @@ import { FilesService } from '../../services/files.service';
 import { FolderService } from '../../services/folder.service';
 import { ToastrService } from 'ngx-toastr';
 import { PreviewComponent } from '../preview/preview.component';
+import { ACCESS_TYPES } from '@app/shared/constants/constants';
+import { CheckPasswordDialogComponent } from '@app/shared/components/check-password-dialog/check-password-dialog.component';
+import { ShareDialogComponent } from '@app/shared/components/share-dialog/share-dialog.component';
 
 @Component({
   selector: 'app-folder-item',
@@ -62,7 +65,21 @@ export class ListItemComponent implements OnInit {
     }
   }
 
-  share(): void {}
+  share(): void {
+    this.wrapWithPassword(this.showShareDialog.bind(this));
+  }
+
+  wrapWithPassword(cb: (res?: any) => void) {
+    if (this.item().accessType == ACCESS_TYPES.RESTRICTED) {
+      const ref = this.dialog.open(CheckPasswordDialogComponent, {
+        data: { id: this.item().id, service: this.fileService },
+      });
+
+      ref.afterClosed().subscribe((result) => {
+        cb(result);
+      });
+    } else cb();
+  }
 
   async delete() {
     const type = this.item().type == 'folder' ? 'la carpeta' : 'el archivo';
@@ -94,11 +111,27 @@ export class ListItemComponent implements OnInit {
   }
 
   onItemClick(): void {
-    if (this.item().type == 'folder') this.onFolderClick.emit(this.item());
-    else {
-      this.dialog.open(PreviewComponent, {
-        data: { item: this.item() },
-      });
-    }
+    if (this.item().type == 'folder')
+      return this.onFolderClick.emit(this.item());
+
+    this.wrapWithPassword(this.showDialogPreview.bind(this));
+  }
+
+  private showShareDialog(res?: boolean): void {
+    if (!res && res !== undefined) return;
+    this.dialog.open(ShareDialogComponent, {
+      data: {
+        type: this.item().type == 'folder' ? 'folder' : 'file',
+        code: this.item().code,
+        id: this.item().id,
+      },
+    });
+  }
+
+  private showDialogPreview(res?: boolean): void {
+    if (!res && res !== undefined) return;
+    this.dialog.open(PreviewComponent, {
+      data: { item: this.item() },
+    });
   }
 }

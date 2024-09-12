@@ -11,10 +11,41 @@
 
   <mat-dialog-content class="dialog">
     <mat-form-field appearance="fill">
+      <mat-label>Privacidad del archivo</mat-label>
+      <mat-select
+        [formControl]="accessType"
+        (valueChange)="onAccessTypeChange($event)"
+      >
+        @for (p of accessTypes; track p) {
+          <mat-option [value]="p">{{ p }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    @if (showPasswordField) {
+      <mat-form-field>
+        <mat-label>Contraseña</mat-label>
+        <input
+          matInput
+          [formControl]="passControl"
+          [type]="hide ? 'password' : 'text'"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="hide = !hide"
+          [attr.aria-label]="'Ocultar contraseña'"
+          [attr.aria-pressed]="hide"
+        >
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+      </mat-form-field>
+    }
+
+    <mat-form-field appearance="fill">
       <mat-label>Selecciona archivos para subir</mat-label>
       <ngx-mat-dropzone [required]="true">
         <input
-          (change)="onSelect($event)"
           [accept]="aceptedFiles"
           type="file"
           [multiple]="true"
@@ -38,7 +69,7 @@
     <button mat-raised-button mat-dialog-close>Cancelar</button>
     <button
       mat-raised-button
-      [disabled]="fileControl.invalid"
+      [disabled]="fileControl.invalid || passControl.invalid"
       (click)="uploadFiles()"
     >
       Subir

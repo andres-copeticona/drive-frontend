@@ -4,11 +4,15 @@ import { firstValueFrom } from 'rxjs';
 import { FileModel } from '../models/file.model';
 import { ResponseDto } from '@app/model/response';
 import { CreateFile } from '../models/create-file.model';
+import { BasePasswordService } from '@app/shared/services/base-password.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class FilesService extends BaseCrudService<FileModel> {
+export class FilesService
+  extends BaseCrudService<FileModel>
+  implements BasePasswordService
+{
   constructor() {
     super('files');
   }
@@ -49,5 +53,19 @@ export class FilesService extends BaseCrudService<FileModel> {
       a.click();
       document.body.removeChild(a);
     });
+  }
+
+  checkPassword(
+    password: string,
+    id?: number | string,
+  ): Promise<ResponseDto<boolean>> {
+    return firstValueFrom(
+      this.http.post<ResponseDto<boolean>>(
+        `${this.namespace}/${id}/check-password`,
+        {
+          password,
+        },
+      ),
+    );
   }
 }

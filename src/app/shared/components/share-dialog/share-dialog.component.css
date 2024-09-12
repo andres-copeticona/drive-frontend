@@ -1,0 +1,38 @@
+.dialog-container,
+.dialog-container mat-dialog-content {
+  background-color: white;
+  color: black;
+  flex-direction: column;
+  display: flex;
+  min-height: 50vh;
+}
+
+.icon-title {
+  margin: 2%;
+}
+.title {
+  margin-top: 2%;
+  font-size: 150%;
+  display: flex;
+}
+.close {
+  flex: 5;
+  display: flex;
+  justify-content: flex-end;
+}
+.title-secction {
+  flex-direction: row;
+  display: flex;
+}
+
+.content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  min-height: fit-content;
+}
+
+.link {
+  display: flex;
+  margin-top: 5px;
+}

@@ -1,6 +1,5 @@
 .preview {
-  min-width: 400px;
-  max-width: 1000px;
+  min-width: 1000px;
   min-height: 400px;
   max-height: calc(100vh - 100px);
 
@@ -8,9 +7,9 @@
   flex-direction: column;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 1000px) {
   .preview {
-    min-width: 90%;
+    min-width: 100%;
   }
 }
 

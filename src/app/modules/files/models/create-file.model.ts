@@ -1,12 +1,8 @@
-export enum AccessType {
-  PRIVATE = 'privado',
-  PUBLIC = 'publico',
-  RESTRICTED = 'restringido',
-}
+import { ACCESS_TYPES } from '@app/shared/constants/constants';
 
 export class CreateFile {
   files?: File[];
-  accessType: AccessType = AccessType.PUBLIC;
+  accessType: ACCESS_TYPES = ACCESS_TYPES.PUBLIC;
   password?: string;
   folderId?: number;
 

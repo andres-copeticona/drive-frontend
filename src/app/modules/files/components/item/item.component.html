@@ -9,10 +9,12 @@
     <span>Descargar</span>
   </button>
 
-  <button mat-menu-item (click)="share()">
-    <mat-icon>share</mat-icon>
-    <span>Compartir</span>
-  </button>
+  @if (item().accessType != "privado") {
+    <button mat-menu-item (click)="share()">
+      <mat-icon>share</mat-icon>
+      <span>Compartir</span>
+    </button>
+  }
 </mat-menu>
 
 <mat-card
@@ -25,7 +27,10 @@
       <div class="text-center">
         <mat-icon class="icon">{{ item().icon }}</mat-icon>
       </div>
-      <div class="flex">
+      <div class="item-name-container">
+        @if (item().accessType === "restringido") {
+          <mat-icon>lock</mat-icon>
+        }
         <span clas="item-name">
           {{ item().name.toLowerCase() | slice: 0 : 15 }}
           @if (item().name.length > 15) {

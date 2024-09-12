@@ -51,8 +51,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.inactivityService.onUserInactive.subscribe(() => {
+      this.inactivityService.stop();
       this.authService.logout();
-      console.log('User is inactive');
       this.ts.warning('Sesión cerrada por inactividad', 'Sesión cerrada');
     });
   }

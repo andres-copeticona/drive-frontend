@@ -23,6 +23,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { FileFormComponent } from '../file-form/file-form.component';
 import { FilesService } from '../../services/files.service';
 import { FileModel } from '../../models/file.model';
+import { ACCESS_TYPES } from '@app/shared/constants/constants';
 
 @Component({
   selector: 'app-folders',
@@ -130,21 +131,7 @@ export class FolderComponent implements OnInit {
       });
       this.files = files.data?.data ?? [];
 
-      this.items = items.concat(
-        this.files.map((f) => {
-          let icon = 'picture_as_pdf';
-          if (f.fileType.includes('image')) icon = 'image';
-          else if (f.fileType.includes('video')) icon = 'movie';
-          else if (f.fileType.includes('audio')) icon = 'graphic_eq';
-
-          return {
-            id: f.id.toString(),
-            name: f.title,
-            type: f.fileType,
-            icon,
-          };
-        }),
-      );
+      this.items = items.concat(this.files.map(this.toItem.bind(this)));
       this.filteredItems.set(this.items);
     } catch (error) {
       console.error(error);
@@ -204,12 +191,27 @@ export class FolderComponent implements OnInit {
     this.load();
   }
 
-  toItem(item: Folder): ItemList {
+  toItem(item: any): ItemList {
+    const name = item.name ?? item.title;
+    const type = item.fileType ?? 'folder';
+    const accessType = item.accessType ?? ACCESS_TYPES.PUBLIC;
+    let icon = 'folder';
+
+    if (item.fileType) {
+      icon = 'picture_as_pdf';
+      if (item.fileType.includes('image')) icon = 'image';
+      else if (item.fileType.includes('video')) icon = 'movie';
+      else if (item.fileType.includes('audio')) icon = 'graphic_eq';
+      else if (item.fileType.includes('audio')) icon = 'graphic_eq';
+    }
+
     return {
       id: item.id.toString(),
-      name: item.name,
-      type: 'folder',
-      icon: 'folder',
+      name,
+      accessType,
+      code: item.code,
+      type,
+      icon,
     };
   }
 }

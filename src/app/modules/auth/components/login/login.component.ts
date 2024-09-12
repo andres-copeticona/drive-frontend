@@ -54,7 +54,17 @@ export class LoginComponent implements OnInit {
         roleId: data.user.role.id,
       });
       this.inactivityService.start();
-      this.router.navigate(['/cloud/home']);
+
+      if (data.user.role.id === 1) {
+        this.router.navigate(['/cloud/home']);
+      } else if (data.user.role.id === 2) {
+        this.router.navigate(['/cloud/userlist']);
+      } else {
+        this.inactivityService.stop();
+        this.authService.logout();
+        this.ts.error('Error al iniciar sesión', 'Error');
+        return;
+      }
 
       this.ts.success('Bienvenido', 'Inicio de sesión exitoso');
     } catch (error) {

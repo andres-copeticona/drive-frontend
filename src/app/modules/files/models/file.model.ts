@@ -6,6 +6,7 @@ export interface FileModel {
   accessType: string;
   createdDate: string;
   modifiedDate: string;
+  code: string;
   deleted: boolean;
   userId: number;
   folderId: number;

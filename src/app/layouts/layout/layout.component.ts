@@ -48,31 +48,44 @@ export class LayoutComponent implements OnInit {
   collapsed = signal(true);
   isSmallScreen = signal(false);
 
+  get menu() {
+    if (this.authService.getInfo()?.roleId === 1) return this.rol1Menu;
+    else if (this.authService.getInfo()?.roleId === 2) return this.rol2Menu;
+    else {
+      this.authService.logout();
+      return [];
+    }
+  }
+
   rol1Menu: MenuItem[] = [
-    { icon: 'home', label: 'Inicio', route: '/home' },
-    { icon: 'settings', label: 'Perfil', route: '/profile' },
-    { icon: 'settings', label: 'Usuarios del sistema', route: '/userlist' },
-    { icon: 'folder', label: 'Archivos Compartidos', route: '/sharedFiles' },
-    { icon: 'settings', label: 'Subir Archivos', route: '/upload' },
-    { icon: 'settings', label: 'Reemplazar', route: '/reemplazar' },
-    { icon: 'settings', label: 'Carpetas', route: '/folders' },
-    { icon: 'settings', label: 'Archivos Firmados', route: '/signedfiles' },
+    { icon: 'account_circle', label: 'Perfil', route: '/profile' },
+    { icon: 'home', label: 'Página principal', route: '/home' },
+
+    { icon: 'folder_open', label: 'Carpetas', route: '/folders' },
     {
-      icon: 'settings',
+      icon: 'folder_shared',
       label: 'Carpetas Compartidas',
       route: '/sharedfolders',
     },
-    { icon: 'settings', label: 'Pdf Preview', route: '/pdfview' },
-    { icon: 'settings', label: 'Actividad', route: '/activity' },
-
-    { icon: 'settings', label: 'Sello', route: '/detalleSello' },
-    { icon: 'settings', label: 'Archivo', route: '/file' },
-    { icon: 'settings', label: 'Carpeta', route: '/folder' },
+    {
+      icon: 'contact_page',
+      label: 'Archivos Compartidos',
+      route: '/sharedFiles',
+    },
+    // { icon: 'settings', label: 'Archivos Firmados', route: '/signedfiles' },
+    // { icon: 'settings', label: 'Pdf Preview', route: '/pdfview' },
+    // { icon: 'settings', label: 'Actividad', route: '/activity' },
+    //
+    // { icon: 'settings', label: 'Sello', route: '/detalleSello' },
+    // { icon: 'settings', label: 'Archivo', route: '/file' },
+    // { icon: 'settings', label: 'Carpeta', route: '/folder' },
   ];
 
-  rol2Menu: MenuItem[] = [];
-
-  rol3Menu: MenuItem[] = [];
+  rol2Menu: MenuItem[] = [
+    { icon: 'account_circle', label: 'Perfil', route: '/profile' },
+    { icon: 'person', label: 'Usuarios del sistema', route: '/userlist' },
+    { icon: 'summarize', label: 'Reportes', route: '/activity' },
+  ];
 
   constructor(
     private breakpointObserver: BreakpointObserver,

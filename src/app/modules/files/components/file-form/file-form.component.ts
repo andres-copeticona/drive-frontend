@@ -18,6 +18,8 @@ import { Response } from '@app/shared/models/response.model';
 import { FileModel } from '../../models/file.model';
 import { FilesService } from '../../services/files.service';
 import { CreateFile } from '../../models/create-file.model';
+import { MatSelectModule } from '@angular/material/select';
+import { ACCESS_TYPES } from '@app/shared/constants/constants';
 
 @Component({
   selector: 'app-file-form',
@@ -28,6 +30,7 @@ import { CreateFile } from '../../models/create-file.model';
     DropzoneCdkModule,
     DropzoneMaterialModule,
 
+    MatSelectModule,
     MatChipsModule,
     MatDialogModule,
     MatIconModule,
@@ -41,6 +44,8 @@ import { CreateFile } from '../../models/create-file.model';
 })
 export class FileFormComponent implements OnInit {
   isLoading = false;
+  hide = true;
+  showPasswordField = false;
   aceptedFiles: string = '.jpg,.jpeg,.pdf,.mp4,.mp3';
 
   get files(): File[] {
@@ -54,16 +59,24 @@ export class FileFormComponent implements OnInit {
   ];
   fileControl = new FormControl<File[] | null>(null, this.validators);
 
+  accessTypes: string[] = [
+    ACCESS_TYPES.PUBLIC,
+    ACCESS_TYPES.PRIVATE,
+    ACCESS_TYPES.RESTRICTED,
+  ];
+
+  accessType = new FormControl<string>(ACCESS_TYPES.PRIVATE, [
+    Validators.required,
+  ]);
+
+  passControl = new FormControl<string>('');
+
   constructor(
     private fileService: FilesService,
     private ts: ToastrService,
     private ref: MatDialogRef<FileFormComponent>,
     @Inject(MAT_DIALOG_DATA) public data?: { parentId: number },
   ) {}
-
-  onSelect(event: any) {
-    console.log(event);
-  }
 
   onRemove(file: File) {
     this.fileControl?.setValue(this.files.filter((f) => f !== file) as any);
@@ -81,6 +94,8 @@ export class FileFormComponent implements OnInit {
       const createFile = new CreateFile();
       createFile.files = this.files;
       createFile.folderId = this.data?.parentId;
+      createFile.accessType = this.accessType?.value as ACCESS_TYPES;
+      createFile.password = this.passControl?.value ?? undefined;
 
       res = await this.fileService.uploadFiles(createFile);
 
@@ -90,10 +105,14 @@ export class FileFormComponent implements OnInit {
       this.ts.success('Archivos subidos correctamente');
     } catch (error) {
       console.error(error);
-      console.log(res);
       this.ts.error('Error al subir los archivos');
     }
+  }
 
-    console.log(this.fileControl.value);
+  onAccessTypeChange(type: ACCESS_TYPES) {
+    this.showPasswordField = type === ACCESS_TYPES.RESTRICTED;
+    if (this.showPasswordField)
+      this.passControl.setValidators([Validators.required]);
+    else this.passControl.clearValidators();
   }
 }
