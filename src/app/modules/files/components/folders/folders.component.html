@@ -15,6 +15,11 @@
   <mat-toolbar>
     <mat-toolbar-row class="align-center h-80 first-toolbar">
       <div class="align-center">
+        @if (currentFolder) {
+          <button mat-icon-button (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+        }
         <button mat-icon-button (click)="load()">
           <mat-icon>replay</mat-icon>
         </button>
@@ -34,6 +39,19 @@
     </mat-toolbar-row>
 
     <mat-toolbar-row class="breadcrumbs">
+      <mat-button-toggle-group
+        name="align"
+        value="inline"
+        aria-label="Alineación del contenido"
+        (change)="onChangeView($event)"
+      >
+        <mat-button-toggle value="grid">
+          <mat-icon>grid_view</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="inline">
+          <mat-icon>view_list</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
       <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon>add</mat-icon>
       </button>
@@ -49,15 +67,50 @@
     </mat-toolbar-row>
   </mat-toolbar>
 
-  <div class="items">
-    <div class="files-container">
-      @for (item of filteredItems(); track item) {
-        <app-folder-item
-          [item]="item"
-          (onFolderClick)="openFolder($event)"
-          (refresh)="load()"
-        ></app-folder-item>
+  @if (isLoading) {
+  } @else {
+    <div class="items">
+      @if (filteredFolders().length !== 0) {
+        <h3 class="pl-1">Carpetas</h3>
+
+        <div
+          class="files-container"
+          [ngClass]="{
+            'col-200': viewType() === 'grid',
+            'col-300': viewType() === 'inline',
+          }"
+        >
+          @for (item of filteredFolders(); track item) {
+            <app-folder-item
+              [item]="item"
+              [viewType]="viewType()"
+              (onFolderClick)="openFolder($event)"
+              (refresh)="load()"
+            ></app-folder-item>
+          }
+        </div>
+      }
+
+      @if (currentFolder && filteredFiles().length !== 0) {
+        <h3 class="pl-1 mt-1">Archivos</h3>
+
+        <div
+          class="files-container"
+          [ngClass]="{
+            'col-200': viewType() === 'grid',
+            'col-300': viewType() === 'inline',
+          }"
+        >
+          @for (item of filteredFiles(); track item) {
+            <app-folder-item
+              [item]="item"
+              [viewType]="viewType()"
+              (onFolderClick)="openFolder($event)"
+              (refresh)="load()"
+            ></app-folder-item>
+          }
+        </div>
       }
     </div>
-  </div>
+  }
 </div>

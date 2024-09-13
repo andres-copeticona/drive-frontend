@@ -1,4 +1,12 @@
-import { Component, EventEmitter, OnInit, Output, input } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  computed,
+  effect,
+  input,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '@app/shared/services/auth.service';
 import { CommonModule } from '@angular/common';
@@ -35,10 +43,13 @@ import { ShareDialogComponent } from '@app/shared/components/share-dialog/share-
 })
 export class ListItemComponent implements OnInit {
   item = input.required<ItemList>();
+  viewType = input<'inline' | 'grid'>('inline');
   @Output() onFolderClick = new EventEmitter<ItemList>();
   @Output() refresh = new EventEmitter<void>();
 
   roleId = this.authService.getInfo()?.roleId!;
+
+  isInline = true;
 
   constructor(
     private authService: AuthService,
@@ -46,7 +57,11 @@ export class ListItemComponent implements OnInit {
     private folderService: FolderService,
     private ts: ToastrService,
     private dialog: MatDialog,
-  ) {}
+  ) {
+    effect(() => {
+      this.isInline = this.viewType() == 'inline';
+    });
+  }
 
   ngOnInit(): void {}
 

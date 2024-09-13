@@ -1,0 +1,874 @@
+<div class="container">
+  <div class="two-thirds">
+    <div class="maintitle">Categorías</div>
+    <div class="rectangle-files">
+      @if (categoryList$ | async; as categoryList) {
+        @for (file of categoryList; track file.id) {
+          <div class="cuadrocategoria">
+            <button
+              mat-fab
+              extended
+              class="rectangulo{{ file.name }}"
+              (click)="selectfolder(file.name, file.id)"
+            >
+              <mat-icon>{{ file.icon }}</mat-icon>
+              {{ file.name }}
+            </button>
+          </div>
+        } @empty {
+          <p>No hay folders registrados</p>
+        }
+      }
+      @if (selectedFolder) {
+        <mat-form-field appearance="outline">
+          <mat-label>Buscar archivo</mat-label>
+          <input
+            matInput
+            placeholder="Ex. Archivo1"
+            [(ngModel)]="searchTerm"
+            (input)="search()"
+          />
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      }
+    </div>
+    <div class="rectangle-files">
+      @if (fileListfiltered$ | async; as fileList) {
+        @for (file of fileList; track file.id) {
+          @if (file.title.substring(file.title.length - 3) == "pdf") {
+            <div class="card-image">
+              <div class="image-secction">
+                @if (file.title.substring(file.title.length - 3) == "png") {
+                  <img
+                    src="./assets/Img.png"
+                    width="220px"
+                    height="120px"
+                    style="border-radius: 15px"
+                  />
+                }
+                @if (file.title.substring(file.title.length - 3) == "pdf") {
+                  <img
+                    src="./assets/Doc.png"
+                    width="220px"
+                    height="120px"
+                    style="border-radius: 15px"
+                  />
+                }
+                @if (file.title.substring(file.title.length - 3) == "jpg") {
+                  <img
+                    src="./assets/Img.png"
+                    width="220px"
+                    height="120px"
+                    style="border-radius: 15px"
+                  />
+                }
+                @if (file.title.substring(file.title.length - 3) == "peg") {
+                  <img
+                    src="./assets/Img.png"
+                    width="220px"
+                    height="120px"
+                    style="border-radius: 15px"
+                  />
+                }
+                @if (file.title.substring(file.title.length - 3) == "doc") {
+                  <img
+                    src="./assets/Doc.png"
+                    width="220px"
+                    height="120px"
+                    style="border-radius: 15px"
+                  />
+                }
+                @if (file.title.substring(file.title.length - 3) == "mp3") {
+                  <img
+                    src="./assets/mp3.png"
+                    width="220px"
+                    height="120px"
+                    style="border-radius: 15px"
+                  />
+                }
+                @if (file.title.substring(file.title.length - 3) == "mp4") {
+                  <img
+                    src="./assets/mp4.png"
+                    width="220px"
+                    height="120px"
+                    style="border-radius: 15px"
+                  />
+                }
+              </div>
+              <div class="name-file-section">
+                {{ file.title | truncate: 20 }}
+              </div>
+              <div class="date-section">
+                Tamaño: {{ (file.size / 1024).toFixed(3) }} mb
+
+                <span class="example-spacer"></span>
+                <div>
+                  <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu"
+                    aria-label="Example icon-button with a menu"
+                  >
+                    <mat-icon class="blue-icon">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu" class="matmenu1">
+                    @if (
+                      file.accessType == "publico" ||
+                      file.accessType == "privado"
+                    ) {
+                      @if (
+                        file.title.substring(file.title.length - 3) == "jpg"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialog(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "png"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialog(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "peg"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialog(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "pdf"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpdf(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      <button
+                        mat-menu-item
+                        (click)="
+                          openDialogShare(
+                            file.id,
+                            file.title,
+                            file.minioLink,
+                            file.createdDate,
+                            file.accessType,
+                            this.useridglobal,
+                            file.description,
+                            file.accessType,
+                            file.password,
+                            file.categoria,
+                            file.folderId
+                          )
+                        "
+                      >
+                        <mat-icon>share</mat-icon>
+                        <span>Compartir</span>
+                      </button>
+                      <button
+                        mat-menu-item
+                        (click)="
+                          openDialogDelete(
+                            file.id,
+                            file.title,
+                            file.minioLink,
+                            file.createdDate,
+                            file.accessType,
+                            this.useridglobal,
+                            file.description,
+                            file.accessType,
+                            file.password,
+                            file.categoria,
+                            file.folderId
+                          )
+                        "
+                      >
+                        <mat-icon>delete</mat-icon>
+                        <span>Eliminar</span>
+                      </button>
+                    }
+                    @if (file.accessType == "restringido") {
+                      @if (
+                        file.title.substring(file.title.length - 3) == "jpg"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "png"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "peg"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "pdf"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpassworddoc(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      <button
+                        mat-menu-item
+                        (click)="
+                          openDialogpasswordshare(
+                            file.id,
+                            file.title,
+                            file.minioLink,
+                            file.createdDate,
+                            file.accessType,
+                            this.useridglobal,
+                            file.description,
+                            file.accessType,
+                            file.password,
+                            file.categoria,
+                            file.folderId
+                          )
+                        "
+                      >
+                        <mat-icon>share</mat-icon>
+                        <span>Compartir</span>
+                      </button>
+                      <button
+                        mat-menu-item
+                        (click)="
+                          openDialogpassworddelete(
+                            file.id,
+                            file.title,
+                            file.minioLink,
+                            file.createdDate,
+                            file.accessType,
+                            this.useridglobal,
+                            file.description,
+                            file.accessType,
+                            file.password,
+                            file.categoria,
+                            file.folderId
+                          )
+                        "
+                      >
+                        <mat-icon>delete</mat-icon>
+                        <span>Eliminar</span>
+                      </button>
+                    }
+                  </mat-menu>
+                </div>
+              </div>
+            </div>
+          }
+        } @empty {
+          <p>No hay archivos registrados</p>
+        }
+      }
+    </div>
+    <div class="title">Archivos recientes</div>
+    <div class="newfilescontainer">
+      <mat-list>
+        @if (recentFilesList$ | async; as folderList) {
+          @for (file of folderList; track file.id) {
+            <mat-list-item>
+              <div
+                matListItemTitle
+                style="display: flex; flex-direction: row; align-items: center"
+              >
+                <div>
+                  @if (file.title.substring(file.title.length - 3) == "png") {
+                    <mat-icon matListItemIcon>image</mat-icon>
+                  }
+                  @if (file.title.substring(file.title.length - 3) == "pdf") {
+                    <mat-icon matListItemIcon>insert_drive_file</mat-icon>
+                  }
+                  @if (file.title.substring(file.title.length - 3) == "jpg") {
+                    <mat-icon matListItemIcon>image</mat-icon>
+                  }
+                  @if (file.title.substring(file.title.length - 3) == "peg") {
+                    <mat-icon matListItemIcon>image</mat-icon>
+                  }
+                  @if (file.title.substring(file.title.length - 3) == "doc") {
+                    <mat-icon matListItemIcon>folder</mat-icon>
+                  }
+                  @if (file.title.substring(file.title.length - 3) == "mp3") {
+                    <mat-icon matListItemIcon>music_note</mat-icon>
+                  }
+                  @if (file.title.substring(file.title.length - 3) == "mp4") {
+                    <mat-icon matListItemIcon>local_movies</mat-icon>
+                  }
+                </div>
+                <div class="nombredocumento">
+                  {{ file.title | truncate: 25 }}
+                </div>
+                <span class="file-shared">
+                  {{ (file.size / (1000 * 1000)).toFixed(3) }} mb
+                </span>
+                <span class="file-shared">
+                  {{ file.modifiedDate | date: "dd/MM/yyyy" }}
+                </span>
+                <span class="example-spacer"></span>
+                <div>
+                  <button
+                    mat-icon-button
+                    [matMenuTriggerFor]="menu"
+                    aria-label="Example icon-button with a menu"
+                  >
+                    <mat-icon class="blue-icon">more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menu="matMenu">
+                    @if (
+                      file.accessType == "publico" ||
+                      file.accessType == "privado"
+                    ) {
+                      @if (
+                        file.title.substring(file.title.length - 3) == "jpg"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialog(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "png"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialog(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "peg"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialog(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "pdf"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpdf(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+
+                      <button
+                        mat-menu-item
+                        (click)="
+                          openDialogShare(
+                            file.id,
+                            file.title,
+                            file.minioLink,
+                            file.createdDate,
+                            file.accessType,
+                            this.useridglobal,
+                            file.description,
+                            file.accessType,
+                            file.password,
+                            file.categoria,
+                            file.folderId
+                          )
+                        "
+                      >
+                        <mat-icon>share</mat-icon>
+                        <span>Compartir</span>
+                      </button>
+                      <button
+                        mat-menu-item
+                        (click)="
+                          openDialogDelete(
+                            file.id,
+                            file.title,
+                            file.minioLink,
+                            file.createdDate,
+                            file.accessType,
+                            this.useridglobal,
+                            file.description,
+                            file.accessType,
+                            file.password,
+                            file.categoria,
+                            file.folderId
+                          )
+                        "
+                      >
+                        <mat-icon>delete</mat-icon>
+                        <span>Eliminar</span>
+                      </button>
+                    }
+                    @if (file.accessType == "restringido") {
+                      @if (
+                        file.title.substring(file.title.length - 3) == "jpg"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "png"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "peg"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "pdf"
+                      ) {
+                        <button
+                          mat-menu-item
+                          (click)="
+                            openDialogpassworddoc(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          <mat-icon>edit</mat-icon>
+                          <span>Abrir</span>
+                        </button>
+                      }
+
+                      <button
+                        mat-menu-item
+                        (click)="
+                          openDialogpasswordshare(
+                            file.id,
+                            file.title,
+                            file.minioLink,
+                            file.createdDate,
+                            file.accessType,
+                            this.useridglobal,
+                            file.description,
+                            file.accessType,
+                            file.password,
+                            file.categoria,
+                            file.folderId
+                          )
+                        "
+                      >
+                        <mat-icon>share</mat-icon>
+                        <span>Compartir</span>
+                      </button>
+                      <button
+                        mat-menu-item
+                        (click)="
+                          openDialogpassworddelete(
+                            file.id,
+                            file.title,
+                            file.minioLink,
+                            file.createdDate,
+                            file.accessType,
+                            this.useridglobal,
+                            file.description,
+                            file.accessType,
+                            file.password,
+                            file.categoria,
+                            file.folderId
+                          )
+                        "
+                      >
+                        <mat-icon>delete</mat-icon>
+                        <span>Eliminar</span>
+                      </button>
+                    }
+                  </mat-menu>
+                </div>
+              </div>
+            </mat-list-item>
+          }
+        }
+      </mat-list>
+    </div>
+  </div>
+  <div class="one-third">
+    @if (rol === 2) {
+      <div class="square-up">
+        <div class="seccion2v" style="background-color: white">
+          <div class="seccion">
+            <h2>Mensaje general</h2>
+          </div>
+          <div
+            style="
+              display: flex;
+              flex-direction: column;
+              width: 100%;
+              max-height: auto;
+            "
+          >
+            <div>
+              <mat-form-field class="example-full-width">
+                <mat-label>Titulo del mensaje</mat-label>
+                <input
+                  matInput
+                  class="custom-input"
+                  placeholder="Titulo del mensaje"
+                  color="accent"
+                  [formControl]="titlealert"
+                  id="titlealert"
+                  minlength="10"
+                  maxlength="50"
+                />
+              </mat-form-field>
+            </div>
+            <div>
+              <mat-form-field class="example-full-width">
+                <mat-label>Cuerpo del mensaje</mat-label>
+                <textarea
+                  matInput
+                  class="custom-input"
+                  placeholder="Cuerpo del mensaje"
+                  color="accent"
+                  [formControl]="messagealert"
+                  id="messagealert"
+                  minlength="25"
+                  maxlength="500"
+                  (keyup.enter)="sendmessage()"
+                ></textarea>
+              </mat-form-field>
+            </div>
+            @if (mostrarAlertaMessage) {
+              <div class="alert" style="margin-bottom: 10px">
+                El mensaje correctamente
+              </div>
+            }
+            @if (mostrarAlertaMessageError) {
+              <div class="alertE" style="margin-bottom: 10px">
+                No se pudo enviar el mensaje {{ messageerror }}
+              </div>
+            }
+            <button mat-raised-button (click)="sendmessage()">
+              Enviar mensaje a todos los usuarios
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+    <div class="square-down">
+      <div class="seccion2v" style="background-color: white">
+        <div class="seccion">
+          <h2>Notificaciones</h2>
+        </div>
+        <div
+          style="
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            max-height: 300px;
+          "
+        >
+          @if (notificationList$ | async; as notificationList) {
+            @for (file of notificationList; track file.id) {
+              <div class="notificaction-square">
+                <div class="titlenottif">
+                  {{ file.titulo }} {{ file.fecha | date: "dd/MM/yyyy HH:mm" }}
+                  <span class="example-spacer"></span>
+                  <div class="">
+                    <button
+                      mat-icon-button
+                      (click)="readNotifications(file.id)"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                <div class="bodynotif">{{ file.mensaje }}</div>
+              </div>
+            } @empty {
+              <p>No hay notificaciones nuevas</p>
+            }
+          }
+        </div>
+      </div>
+    </div>
+    <div class="square-down">
+      <div class="seccion2v">
+        <div class="seccion">
+          <h2>Almacenamiento</h2>
+        </div>
+        <div class="storage-bar">
+          <div class="storage-usage">
+            <div
+              class="bar google-drive"
+              [ngStyle]="{ width: googleDriveUsage + '%' }"
+            ></div>
+            <div
+              class="bar google-photos"
+              [ngStyle]="{ width: googlePhotosUsage + '%' }"
+            ></div>
+            <div
+              class="bar gmail"
+              [ngStyle]="{ width: gmailUsage + '%' }"
+            ></div>
+            <div
+              class="bar other"
+              [ngStyle]="{ width: otherUsage + '%' }"
+            ></div>
+          </div>
+          <div class="storage-info">
+            <span
+              >{{ usedStorage ? usedStorage.toFixed(3) : "0.00" }} MB de
+              {{ totalStorage }} GB en uso</span
+            >
+            <div class="legend">
+              Documentos<span class="legend-item google-drive"></span>
+              Imagenes<span class="legend-item google-photos"></span>
+              Videos<span class="legend-item gmail"></span> Audios<span
+                class="legend-item other"
+              ></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

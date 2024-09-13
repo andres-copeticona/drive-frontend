@@ -18,21 +18,42 @@
 </mat-menu>
 
 <mat-card
-  class="item-container relative"
+  class="relative"
+  [ngClass]="{ 'item-container': !isInline, 'item-container-inline': isInline }"
   [matTooltip]="item().name"
   [matTooltipPosition]="'above'"
 >
-  <button class="reset-button" (click)="onItemClick()">
-    <mat-card-content>
-      <div class="text-center">
-        <mat-icon class="icon">{{ item().icon }}</mat-icon>
+  <button
+    class="reset-button"
+    [ngClass]="{ 'reset-button': !isInline, 'reset-button-inline': isInline }"
+    (click)="onItemClick()"
+  >
+    <mat-card-content
+      [ngClass]="{
+        'mat-card-content-block': !isInline,
+        'mat-card-content-inline': isInline,
+      }"
+    >
+      <div [ngClass]="{ 'text-center': !isInline }">
+        <mat-icon
+          [ngClass]="{
+            icon: !isInline,
+            'icon-inline': isInline,
+          }"
+          >{{ item().icon }}</mat-icon
+        >
       </div>
-      <div class="item-name-container">
+      <div
+        [ngClass]="{
+          'item-name-container': !isInline,
+          'item-name-container-inline': isInline,
+        }"
+      >
         @if (item().accessType === "restringido") {
           <mat-icon>lock</mat-icon>
         }
         <span clas="item-name">
-          {{ item().name.toLowerCase() | slice: 0 : 15 }}
+          {{ item().name.toLowerCase() | slice: 0 : (!isInline ? 15 : 30) }}
           @if (item().name.length > 15) {
             ...
           }
@@ -40,7 +61,14 @@
       </div>
     </mat-card-content>
   </button>
-  <button class="more-actions" mat-icon-button [matMenuTriggerFor]="menu">
+  <button
+    [ngClass]="{
+      'more-actions': !isInline,
+      'more-actions-inline': isInline,
+    }"
+    mat-icon-button
+    [matMenuTriggerFor]="menu"
+  >
     <mat-icon>more_vert</mat-icon>
   </button>
 </mat-card>

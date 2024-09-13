@@ -24,6 +24,11 @@ import { FileFormComponent } from '../file-form/file-form.component';
 import { FilesService } from '../../services/files.service';
 import { FileModel } from '../../models/file.model';
 import { ACCESS_TYPES } from '@app/shared/constants/constants';
+import {
+  MatButtonToggleChange,
+  MatButtonToggleModule,
+} from '@angular/material/button-toggle';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-folders',
@@ -33,6 +38,7 @@ import { ACCESS_TYPES } from '@app/shared/constants/constants';
     CdkMenu,
     CdkMenuItem,
 
+    MatButtonToggleModule,
     MatMenuModule,
     MatToolbarModule,
     MatGridListModule,
@@ -43,6 +49,7 @@ import { ACCESS_TYPES } from '@app/shared/constants/constants';
     MatFormFieldModule,
     MatInputModule,
 
+    CommonModule,
     FormsModule,
 
     ListItemComponent,
@@ -51,22 +58,31 @@ import { ACCESS_TYPES } from '@app/shared/constants/constants';
   styleUrl: './folders.component.css',
 })
 export class FolderComponent implements OnInit {
+  isLoading = false;
   searchTerm = '';
 
   search() {
-    if (this.searchTerm === '') this.filteredItems.set(this.items);
-    else
-      this.filteredItems.set(
-        this.items.filter((i) =>
-          i.name.toLowerCase().includes(this.searchTerm.toLowerCase()),
-        ),
+    if (this.searchTerm === '') {
+      this.filteredFolders.set(this.itemsFolders);
+      this.filteredFiles.set(this.itemsFiles);
+    } else {
+      const folders = this.itemsFolders.filter((i) =>
+        i.name.toLowerCase().includes(this.searchTerm.toLowerCase()),
       );
+      const items = this.itemsFiles.filter((i) =>
+        i.name.toLowerCase().includes(this.searchTerm.toLowerCase()),
+      );
+      this.filteredFiles.set(items);
+      this.filteredFolders.set(folders);
+    }
   }
 
   roleId = this.authService.getInfo()?.roleId;
 
-  items: ItemList[] = [];
-  filteredItems = signal<ItemList[]>([]);
+  itemsFolders: ItemList[] = [];
+  itemsFiles: ItemList[] = [];
+  filteredFolders = signal<ItemList[]>([]);
+  filteredFiles = signal<ItemList[]>([]);
 
   folders: Folder[] = [];
   files: FileModel[] = [];
@@ -105,6 +121,13 @@ export class FolderComponent implements OnInit {
   }
 
   async load() {
+    this.isLoading = true;
+    await this.loadFolders();
+    await this.loadFiles();
+    this.isLoading = false;
+  }
+
+  async loadFolders() {
     try {
       const res = await this.folderService.findMany({
         params: new HttpParams({
@@ -116,23 +139,26 @@ export class FolderComponent implements OnInit {
       this.folders = res.data?.data ?? [];
       const items = this.folders.map((f) => this.toItem(f));
 
-      if (!this.currentFolder) {
-        this.items = items;
-        this.filteredItems.set(this.items);
-        return;
-      }
+      this.itemsFolders = items;
+      this.filteredFolders.set(this.itemsFolders);
+    } catch (error) {
+      console.error(error);
+      this.ts.error('No se pudo cargar la lista de archivos', 'Error');
+    }
+  }
 
+  async loadFiles() {
+    try {
+      if (!this.currentFolder?.id) return;
       const files = await this.fileService.findMany({
         params: new HttpParams({
-          fromObject: {
-            parentId: this.currentFolder?.id,
-          },
+          fromObject: { parentId: this.currentFolder?.id },
         }),
       });
       this.files = files.data?.data ?? [];
 
-      this.items = items.concat(this.files.map(this.toItem.bind(this)));
-      this.filteredItems.set(this.items);
+      this.itemsFiles = this.files.map(this.toItem.bind(this));
+      this.filteredFiles.set(this.itemsFiles);
     } catch (error) {
       console.error(error);
       this.ts.error('No se pudo cargar la lista de archivos', 'Error');
@@ -191,6 +217,10 @@ export class FolderComponent implements OnInit {
     this.load();
   }
 
+  goBack() {
+    this.onBreadcrumbClick(this.breadcrumbs[this.breadcrumbs.length - 2]);
+  }
+
   toItem(item: any): ItemList {
     const name = item.name ?? item.title;
     const type = item.fileType ?? 'folder';
@@ -213,5 +243,11 @@ export class FolderComponent implements OnInit {
       type,
       icon,
     };
+  }
+
+  viewType = signal<'inline' | 'grid'>('inline');
+
+  onChangeView(event: MatButtonToggleChange) {
+    this.viewType.set(event.value);
   }
 }

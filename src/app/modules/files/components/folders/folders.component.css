@@ -14,6 +14,14 @@
   align-items: center;
 }
 
+.pl-1 {
+  padding-left: 1rem;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
 .mr-2 {
   margin-right: 0.5rem;
 }
@@ -28,10 +36,17 @@ mat-form-field div:last-child {
 
 .files-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   padding: 0 1rem;
   height: max-content;
   gap: 1rem;
+}
+
+.col-300 {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.col-200 {
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
 }
 
 @media (max-width: 460px) {
@@ -61,4 +76,5 @@ mat-form-field div:last-child {
 .items {
   height: calc(100% - 80px);
   overflow-y: auto;
+  margin-top: 1rem;
 }
