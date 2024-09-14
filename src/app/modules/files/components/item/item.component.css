@@ -50,6 +50,7 @@
 }
 
 .icon-inline {
+  margin-left: 1rem;
 }
 
 .item-name {
@@ -65,9 +66,6 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-}
-
-.item-name-container-inline {
 }
 
 .reset-button {

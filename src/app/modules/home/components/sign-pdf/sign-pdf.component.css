@@ -1,0 +1,59 @@
+.dialog {
+  padding: 1rem;
+  width: 100%;
+  height: calc(100vh - 2rem);
+  height: calc(100lvh - 2rem);
+  max-height: calc(100vh - 2rem);
+  max-height: calc(100lvh - 2rem);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.files {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.files-container {
+  height: calc(100vh - 42px - 32px - 126px - 16px);
+  overflow-y: auto;
+}
+
+.files-rows {
+  height: max-content;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.5rem;
+}
+
+.files-filters {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 1rem;
+  gap: 0.5rem;
+}
+
+.sign-form {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 1000px) {
+  .sign-form {
+    flex-direction: column;
+  }
+}
+
+.qr-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}

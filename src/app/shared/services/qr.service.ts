@@ -8,10 +8,14 @@ export class QrService {
   baseUrl = enviroment.ANGULAR_URL;
 
   getFileQr(code: string) {
-    return `${this.baseUrl}/public/file?code=${code}`;
+    return `${this.baseUrl}/public/file/${code}`;
+  }
+
+  getSignQr(code: string) {
+    return `${this.baseUrl}/public/details/${code}`;
   }
 
   getFolderQr(code: string) {
-    return `${this.baseUrl}/public/folder?code=${code}`;
+    return `${this.baseUrl}/public/folder/${code}`;
   }
 }

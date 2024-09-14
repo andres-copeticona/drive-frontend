@@ -1,9 +1,11 @@
+import { ACCESS_TYPES } from '@app/shared/constants/constants';
+
 export interface FileModel {
   id: number;
   title: string;
   description: string;
   etag: string;
-  accessType: string;
+  accessType: ACCESS_TYPES;
   createdDate: string;
   modifiedDate: string;
   code: string;
@@ -12,8 +14,9 @@ export interface FileModel {
   folderId: number;
   password: string;
   minioLink: string;
-  categoria: string;
+  category: string;
   link?: string;
+  qrId?: number;
   size: number;
   fileType: string;
 }

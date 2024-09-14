@@ -3,3 +3,13 @@ export enum ACCESS_TYPES {
   PRIVATE = 'privado',
   RESTRICTED = 'restringido',
 }
+
+export enum FILE_CATEGORY {
+  NEW = 'Nuevo',
+  SIGNED = 'Sellado',
+}
+
+export enum SORT_DIR {
+  ASC = 'asc',
+  DESC = 'desc',
+}

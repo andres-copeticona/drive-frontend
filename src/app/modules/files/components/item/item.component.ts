@@ -3,7 +3,6 @@ import {
   EventEmitter,
   OnInit,
   Output,
-  computed,
   effect,
   input,
 } from '@angular/core';
@@ -44,7 +43,10 @@ import { ShareDialogComponent } from '@app/shared/components/share-dialog/share-
 export class ListItemComponent implements OnInit {
   item = input.required<ItemList>();
   viewType = input<'inline' | 'grid'>('inline');
+  openPreview = input(true);
+  showMenu = input(true);
   @Output() onFolderClick = new EventEmitter<ItemList>();
+  @Output() onFileClick = new EventEmitter<ItemList>();
   @Output() refresh = new EventEmitter<void>();
 
   roleId = this.authService.getInfo()?.roleId!;
@@ -129,7 +131,9 @@ export class ListItemComponent implements OnInit {
     if (this.item().type == 'folder')
       return this.onFolderClick.emit(this.item());
 
-    this.wrapWithPassword(this.showDialogPreview.bind(this));
+    if (this.openPreview())
+      this.wrapWithPassword(this.showDialogPreview.bind(this));
+    else this.onFileClick.emit(this.item());
   }
 
   private showShareDialog(res?: boolean): void {

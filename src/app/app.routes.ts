@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './component/home/home.component';
 import { NavigationComponent } from './component/navigation/navigation.component';
 import { FileSharingComponent } from './component/file-sharing/file-sharing.component';
 import { UploadsComponent } from './component/uploads/uploads.component';
@@ -20,6 +19,7 @@ import { UserDetailsComponent } from './modules/user/components/user-details/use
 import { UserListComponent } from './modules/user/components/user-list/user-list.component';
 import { FolderComponent } from './modules/files/components/folders/folders.component';
 import { LayoutComponent } from './layouts/layout/layout.component';
+import { HomeComponent } from './modules/home/home.component';
 
 export const routes: Routes = [
   //Login

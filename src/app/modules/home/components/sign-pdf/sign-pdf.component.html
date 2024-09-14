@@ -1,0 +1,134 @@
+<div class="dialog">
+  <div class="header">
+    <h2>Documentos Firmados</h2>
+    <button mat-icon-button mat-dialog-close [tabIndex]="-1">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="sign-pdf">
+    <mat-tab-group dynamicHeight [(selectedIndex)]="selectedTab">
+      <mat-tab label="Buscar documentos">
+        <div class="files">
+          <div class="files-filters">
+            <mat-form-field appearance="outline">
+              <mat-label>Categoría</mat-label>
+              <mat-select
+                [(ngModel)]="categoryType"
+                (ngModelChange)="onCategoryChange()"
+              >
+                <mat-option value="Nuevo">Sin Firmar</mat-option>
+                <mat-option value="Sellado">Firmados</mat-option>
+              </mat-select>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Buscar</mat-label>
+              <input [(ngModel)]="search" (input)="onSearch()" matInput />
+            </mat-form-field>
+          </div>
+          <div class="files-container">
+            <div class="files-rows">
+              @if (filteredFiles.length !== 0) {
+                @for (file of filteredFiles; track file.id) {
+                  <app-folder-item
+                    [item]="toItem(file)"
+                    [viewType]="'grid'"
+                    [showMenu]="false"
+                    [openPreview]="false"
+                    (onFileClick)="onSelectItem(file)"
+                  ></app-folder-item>
+                }
+              } @else {
+                <p>Sin Archivos</p>
+              }
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Firmar documento" [disabled]="itemSelected === undefined">
+        <div>
+          <button
+            mat-icon-button
+            (click)="itemSelected = undefined; selectedTab = 0"
+          >
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+        </div>
+        @if (!isLoadingItem) {
+          <div class="sign-form">
+            @if (itemSelected?.category === "Nuevo") {
+              <form [formGroup]="formGroup" (submit)="signDocument()">
+                <mat-form-field [style.width]="'100%'" appearance="outline">
+                  <mat-label>Titulo</mat-label>
+                  <input formControlName="title" matInput />
+                </mat-form-field>
+
+                <mat-form-field [style.width]="'100%'" appearance="outline">
+                  <mat-label>Descripción</mat-label>
+                  <textarea formControlName="description" matInput></textarea>
+                </mat-form-field>
+
+                <button
+                  [disabled]="formGroup.invalid"
+                  type="submit"
+                  [style.width]="'100%'"
+                  mat-raised-button
+                >
+                  <mat-icon>edit_document</mat-icon>
+                  Firmar Documento
+                </button>
+              </form>
+            }
+            <div class="qr-container">
+              <button
+                [disabled]="!itemSelected?.qrId"
+                type="button"
+                [style.width]="'100%'"
+                [style.margin-bottom]="'0.5rem'"
+                mat-raised-button
+                (click)="download()"
+              >
+                <mat-icon>download</mat-icon>
+                Descargar Documento firmado
+              </button>
+              <mat-accordion>
+                <mat-expansion-panel [disabled]="!itemSelected?.qrId">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title> Código QR </mat-panel-title>
+                  </mat-expansion-panel-header>
+                  <div
+                    style="
+                      color: gray;
+                      justify-content: center;
+                      font-size: small;
+                    "
+                  >
+                    {{ qrUrl }}
+                    <button mat-icon-button matSuffix (click)="copyText()">
+                      <mat-icon>file_copy</mat-icon>
+                    </button>
+                  </div>
+                  @if (qrUrl) {
+                    <qrcode
+                      [qrdata]="qrUrl"
+                      [width]="256"
+                      [errorCorrectionLevel]="'M'"
+                    ></qrcode>
+                  }
+                </mat-expansion-panel>
+              </mat-accordion>
+            </div>
+          </div>
+          <div>
+            @if (itemSelected?.link) {
+              <ngx-extended-pdf-viewer
+                [src]="itemSelected?.link ?? ''"
+              ></ngx-extended-pdf-viewer>
+            }
+          </div>
+        }
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

@@ -5,6 +5,7 @@ import { FileModel } from '../models/file.model';
 import { ResponseDto } from '@app/model/response';
 import { CreateFile } from '../models/create-file.model';
 import { BasePasswordService } from '@app/shared/services/base-password.service';
+import { UsageStorage } from '@app/modules/home/models/usage-storage.model';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,12 @@ export class FilesService
     super('files');
   }
 
+  async getPublicByCode(code: string) {
+    return firstValueFrom(
+      this.http.get<ResponseDto<FileModel>>(this.namespace + '/public/' + code),
+    );
+  }
+
   uploadFiles(createFile: CreateFile): Promise<ResponseDto<FileModel[]>> {
     const uploadURL = `${this.namespace}/upload`;
     return firstValueFrom(
@@ -24,21 +31,6 @@ export class FilesService
         uploadURL,
         createFile.toFormData(),
       ),
-    );
-  }
-  uploadFile(bucket: string, file: File, data: any): Promise<any> {
-    const formData: FormData = new FormData();
-    formData.append('file', file);
-    formData.append('data', JSON.stringify(data));
-
-    const uploadURL = `${this.namespace}/upload/${bucket}`;
-
-    return firstValueFrom(this.http.post(uploadURL, formData));
-  }
-
-  findByFolder(folderId: number): Promise<any> {
-    return firstValueFrom(
-      this.http.get(`${this.namespace}/folder/${folderId}`),
     );
   }
 
@@ -66,6 +58,32 @@ export class FilesService
           password,
         },
       ),
+    );
+  }
+
+  getUsage(userId: number): Promise<ResponseDto<UsageStorage>> {
+    return firstValueFrom(
+      this.http.get<ResponseDto<UsageStorage>>(
+        `${this.namespace}/usage-storage`,
+        { params: { userId } },
+      ),
+    );
+  }
+
+  signFile(
+    data: FormData,
+  ): Promise<ResponseDto<{ file: FileModel; qrCode: string }>> {
+    return firstValueFrom(
+      this.http.post<ResponseDto<{ file: FileModel; qrCode: string }>>(
+        `${this.namespace}/sign`,
+        data,
+      ),
+    );
+  }
+
+  getQrCode(fileId: number): Promise<ResponseDto<string>> {
+    return firstValueFrom(
+      this.http.get<ResponseDto<string>>(`${this.namespace}/${fileId}/qr-code`),
     );
   }
 }
