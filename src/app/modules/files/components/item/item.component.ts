@@ -1,6 +1,7 @@
 import {
   Component,
   EventEmitter,
+  InputSignal,
   OnInit,
   Output,
   effect,
@@ -52,6 +53,11 @@ export class ListItemComponent implements OnInit {
   roleId = this.authService.getInfo()?.roleId!;
 
   isInline = true;
+  showMenuItems = input({
+    showDelete: true,
+    showDownload: true,
+    showShare: true,
+  });
 
   constructor(
     private authService: AuthService,

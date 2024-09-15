@@ -1,0 +1,180 @@
+<div class="container">
+  <mat-toolbar>
+    <mat-toolbar-row class="align-center h-80 first-toolbar">
+      <div class="align-center">
+        <button mat-icon-button (click)="drawer.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <mat-icon class="mr-2">folder</mat-icon>
+        <span>Carpetas compartidas</span>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  <mat-drawer-container class="drawer-container" autosize>
+    <mat-drawer opened #drawer mode="side" class="drawer-side">
+      <mat-accordion>
+        <mat-expansion-panel [expanded]="true">
+          <mat-expansion-panel-header> Filtros </mat-expansion-panel-header>
+          <mat-form-field style="width: 100%" appearance="outline">
+            <mat-select
+              (selectionChange)="searchSharedFolder()"
+              [(ngModel)]="dependencySelected"
+              placeholder="Filtro por dependencia"
+            >
+              <mat-option>Sin filtro</mat-option>
+              @for (d of dependencies; track d) {
+                <mat-option [value]="d">{{ d }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field style="width: 100%" appearance="outline">
+            <mat-select
+              (selectionChange)="searchSharedFolder()"
+              [(ngModel)]="userSelected"
+              placeholder="Filtro por usuario"
+            >
+              <mat-option value="-1">Todos</mat-option>
+              @for (user of users; track user.id) {
+                <mat-option [value]="user.id">{{ user.fullName }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field
+            style="width: 100%"
+            [floatLabel]="'auto'"
+            appearance="outline"
+          >
+            <input
+              matInput
+              placeholder="Buscar"
+              [style.width]="'100%'"
+              [(ngModel)]="searchSharedFolderTerm"
+              (input)="searchSharedFolder()"
+            />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <div class="files-list">
+        @for (sharedFolder of filteredSharedFolders(); track sharedFolder.id) {
+          <app-folder-item
+            [showMenuItems]="{
+              showDelete: false,
+              showShare: false,
+              showDownload: true,
+            }"
+            [item]="sharedFolder"
+            [viewType]="'inline'"
+            (onFolderClick)="openSharedFolder($event)"
+          ></app-folder-item>
+        }
+      </div>
+    </mat-drawer>
+
+    <div>
+      <mat-toolbar>
+        <mat-toolbar-row style="overflow: hidden">
+          <mat-button-toggle-group
+            name="align"
+            value="inline"
+            (change)="onChangeView($event)"
+          >
+            <mat-button-toggle value="grid">
+              <mat-icon>grid_view</mat-icon>
+            </mat-button-toggle>
+            <mat-button-toggle value="inline">
+              <mat-icon>view_list</mat-icon>
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          <span class="toolbar-spacer"></span>
+          <mat-form-field
+            style="height: 100%"
+            [floatLabel]="'auto'"
+            appearance="outline"
+          >
+            <input
+              matInput
+              placeholder="Buscar"
+              [(ngModel)]="searchTerm"
+              (input)="search()"
+            />
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </mat-toolbar-row>
+        <mat-toolbar-row>
+          <div class="breadcrumbs">
+            <button mat-icon-button (click)="onBreadcrumbClick()">
+              <mat-icon>home</mat-icon>
+            </button>
+            @for (item of breadcrumbs; track item.id) {
+              <mat-icon class="breadcrumb">chevron_right</mat-icon>
+              <button
+                class="breadcrumb"
+                mat-button
+                (click)="onBreadcrumbClick(item)"
+              >
+                {{ item.name }}
+              </button>
+            }
+          </div>
+        </mat-toolbar-row>
+      </mat-toolbar>
+
+      <div class="items">
+        @if (filteredFolders().length !== 0) {
+          <h3 class="pl-1">Carpetas</h3>
+
+          <div
+            class="files-container"
+            [ngClass]="{
+              'col-200': viewType() === 'grid',
+              'col-300': viewType() === 'inline',
+            }"
+          >
+            @for (item of filteredFolders(); track item) {
+              <app-folder-item
+                [showMenuItems]="{
+                  showDelete: false,
+                  showShare: false,
+                  showDownload: true,
+                }"
+                [item]="item"
+                [viewType]="viewType()"
+                (onFolderClick)="openFolder($event)"
+              ></app-folder-item>
+            }
+          </div>
+        }
+
+        @if (currentFolder && filteredFiles().length !== 0) {
+          <h3 class="pl-1 mt-1">Archivos</h3>
+
+          <div
+            class="files-container"
+            [ngClass]="{
+              'col-200': viewType() === 'grid',
+              'col-300': viewType() === 'inline',
+            }"
+          >
+            @for (item of filteredFiles(); track item) {
+              <app-folder-item
+                [showMenuItems]="{
+                  showDelete: false,
+                  showShare: false,
+                  showDownload: true,
+                }"
+                [item]="item"
+                [viewType]="viewType()"
+              ></app-folder-item>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </mat-drawer-container>
+</div>
+

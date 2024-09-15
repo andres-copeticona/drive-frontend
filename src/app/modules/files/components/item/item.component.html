@@ -1,18 +1,24 @@
 <mat-menu #menu="matMenu">
-  <button mat-menu-item (click)="delete()">
-    <mat-icon>delete</mat-icon>
-    <span>Eliminar</span>
-  </button>
+  @if (showMenuItems().showDelete) {
+    <button mat-menu-item (click)="delete()">
+      <mat-icon>delete</mat-icon>
+      <span>Eliminar</span>
+    </button>
+  }
 
-  <button mat-menu-item (click)="download()">
-    <mat-icon>download</mat-icon>
-    <span>Descargar</span>
-  </button>
+  @if (showMenuItems().showDownload) {
+    <button mat-menu-item (click)="download()">
+      <mat-icon>download</mat-icon>
+      <span>Descargar</span>
+    </button>
+  }
 
-  <button mat-menu-item (click)="share()">
-    <mat-icon>share</mat-icon>
-    <span>Compartir</span>
-  </button>
+  @if (showMenuItems().showShare) {
+    <button mat-menu-item (click)="share()">
+      <mat-icon>share</mat-icon>
+      <span>Compartir</span>
+    </button>
+  }
 </mat-menu>
 
 <mat-card

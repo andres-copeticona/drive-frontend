@@ -3,6 +3,7 @@ import { BaseCrudService } from '@app/shared/services/base-crud.service';
 import { firstValueFrom } from 'rxjs';
 import { Response } from '@app/shared/models/response.model';
 import { ShareFolder } from '../models/share-folder.model';
+import { Folder } from '../models/folder.model';
 
 @Injectable({
   providedIn: 'root',
