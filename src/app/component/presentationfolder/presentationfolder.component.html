@@ -1,230 +1,677 @@
 <div class="container">
-    <mat-grid-list cols="4" rowHeight="49%">
-        <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'white'">
-            <div class="vertical-layout">
-                <div>
-                    <mat-list>
-                        <div mat-subheader>
-                            <div class="route">
-                                <div style="flex-direction: row; display: flex; overflow-x: auto; min-width: 70%;">
-                                    <button mat-raised-button color="primary" (click)="selectfolder(parentSelectedFolder, parentSelectedFolderName)">{{this.parentSelectedFolderName | truncate:12}}</button>
-                                    @for(file of routechild; track file.id){
-                                        <div class="flechita"><mat-icon>chevron_right</mat-icon></div>
+  <mat-grid-list cols="4" rowHeight="49%">
+    <mat-grid-tile [colspan]="4" [rowspan]="2" [style.background]="'white'">
+      <div class="vertical-layout">
+        <div>
+          <mat-list>
+            <div mat-subheader>
+              <div class="route">
+                <div
+                  style="
+                    flex-direction: row;
+                    display: flex;
+                    overflow-x: auto;
+                    min-width: 70%;
+                  "
+                >
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="
+                      selectfolder(
+                        parentSelectedFolder,
+                        parentSelectedFolderName
+                      )
+                    "
+                  >
+                    {{ this.parentSelectedFolderName | truncate: 12 }}
+                  </button>
+                  @for (file of routechild; track file.id) {
+                    <div class="flechita">
+                      <mat-icon>chevron_right</mat-icon>
+                    </div>
 
-                                        <button mat-raised-button (click)="selectfolderchildroute(file.id, file.namefolder)">{{file.namefolder | truncate:12}}</button>
-                                    }
-                                </div>
-
-                                <div style="display: flex; justify-content: flex-end; width: 100%;">
-                                    <div>
-                                        <mat-form-field appearance="outline" style="width: 200px;">
-                                            <mat-label>Buscar archivos</mat-label>
-                                            <input matInput placeholder="Ex. Folder1" [(ngModel)]="searchTermfiles" (input)="searchsubfiles()" >
-                                            <mat-icon matSuffix>search</mat-icon>
-                                        </mat-form-field>
-                                    </div>
-                                </div>
-                            </div>
-                            @if(mostrarAlertaDelete){
-                                <div class="alert">
-                                    El archivo se elimino correctamente
-                                </div>
-                              }
-                            @if(mostrarAlertaErrorDelete){
-                                <div class="alertE">
-                                    El archivo no se elimino.
-                                </div>
-                            }
-                        </div>
-                        <mat-divider></mat-divider>
-                        @if(filteredFolderssub$ | async ; as folderList){
-                            @for(file of folderList; track file.id){
-                                <mat-list-item id="subrectangle{{file.id}}" (click)="selectfolderchild(file.id, file.name)" [cdkContextMenuTriggerFor]="innerchild">
-                                    <div matListItemTitle style="display: flex; flex-direction: row;">
-                                        <div style="display: flex; align-items: center;" matListItemIcon><mat-icon>folder</mat-icon></div>
-                                        <div style="margin-left: 30px; align-items: center; display: flex;">{{file.name}}</div>
-                                        <span class="example-spacer"></span>
-                                    </div>
-                                </mat-list-item>
-                                <ng-template #innerchild>
-                                    <div class="example-menu" cdkMenu>
-                                        <button class="example-menu-item" cdkMenuItem (click)="downloadFolder(file.name)">Descargar carpeta</button>                                        
-                                        <button class="example-menu-item" cdkMenuItem>Exit</button>
-                                    </div>
-                                </ng-template>
-                            }
-                        }
-                    </mat-list>
+                    <button
+                      mat-raised-button
+                      (click)="selectfolderchildroute(file.id, file.namefolder)"
+                    >
+                      {{ file.namefolder | truncate: 12 }}
+                    </button>
+                  }
                 </div>
-                <div>
-                    <mat-list>
-                        @if(filteredFoldersfiles$ | async ; as folderList){
-                            @for(file of folderList; track file.id){
-                                <mat-list-item>
-                                    <div matListItemTitle style="display: flex; flex-direction: row;">
-                                        <div>
-                                            @if(file.title.substring(file.title.length - 3) == "png"){
-                                                <mat-icon matListItemIcon>image</mat-icon>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                                <mat-icon matListItemIcon>insert_drive_file</mat-icon>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                                <mat-icon matListItemIcon>image</mat-icon>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "peg"){
-                                                <mat-icon matListItemIcon>image</mat-icon>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "doc"){
-                                                <mat-icon matListItemIcon>folder</mat-icon>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                                <mat-icon matListItemIcon>music_note</mat-icon>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "mp4"){
-                                                <mat-icon matListItemIcon>local_movies</mat-icon>
-                                            }
-                                        </div>
-                                        @if(file.accessType == "publico" || file.accessType == "privado"){
-                                            @if(file.title.substring(file.title.length - 3) == "jpg"){
 
-                                            <div style="margin-left: 30px;" (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">{{file.title}}</div>
-
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "png"){
-                                                <div style="margin-left: 30px;" (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">{{file.title}}</div>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "peg"){
-                                                <div style="margin-left: 30px;" (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">{{file.title}}</div>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                                <div style="margin-left: 30px;" (click)="openDialogpdf(file.id, file.title, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password, file.categoria)">{{file.title}}</div>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                                <div style="margin-left: 30px;" (click)="openDialogaudio(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">{{file.title}}</div>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "mp4"){
-                                                <div style="margin-left: 30px;" (click)="openDialogvideo(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">{{file.title}}</div>
-                                            }
-                                        }
-                                        @if(file.accessType == "restringido"){
-                                            @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                                <div style="margin-left: 30px;" (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">{{file.title}}</div>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "png"){
-                                                <div style="margin-left: 30px;" (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">{{file.title}}</div>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "peg"){
-                                                <div style="margin-left: 30px;" (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">{{file.title}}</div>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                                <div style="margin-left: 30px;" (click)="openDialogpassworddoc(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">{{file.title}}</div>
-                                            }
-                                            @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                                <div style="margin-left: 30px;" (click)="openDialogaudio(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">{{file.title}}</div>
-
-                                            }
-                                        }
-                                        <span class="example-spacer"></span>
-                                        <div>
-                                            <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-                                            <mat-icon class="blue-icon">more_vert</mat-icon>
-                                            </button>
-                                          <mat-menu #menu="matMenu" class="matmenu1">
-                                            @if(file.accessType == "publico" || file.accessType == "privado"){
-                                                @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                                    <button mat-menu-item (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "png"){
-                                                    <button mat-menu-item (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "peg"){
-                                                    <button mat-menu-item (click)="openDialog1(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                                    <button mat-menu-item (click)="openDialogpdf(file.id, file.title, file.minioLink , file.createdDate, file.accessType, file.folderId, file.accessType, file.password, file.categoria)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                                    <button mat-menu-item (click)="openDialogaudio(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "mp4"){
-                                                    <button mat-menu-item (click)="openDialogvideo(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                
-                                                <a href="{{file.minioLink}}" download="{{file.title}}">
-                                                    <button mat-menu-item>
-                                                      <mat-icon>cloud_download</mat-icon>
-                                                      <span>Descargar</span>
-                                                    </button>
-                                                </a>
-                                            }
-                                            @if(file.accessType == "restringido"){
-                                                @if(file.title.substring(file.title.length - 3) == "jpg"){
-                                                    <button mat-menu-item (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "png"){
-                                                    <button mat-menu-item (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "peg"){
-                                                    <button mat-menu-item (click)="openDialogpasswordimg(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "pdf"){
-                                                    <button mat-menu-item (click)="openDialogpassworddoc(file.id, file.title, file.minioLink , file.createdDate, file.accessType, this.useridglobal, file.description, file.accessType, file.password, file.categoria, file.folderId)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                @if(file.title.substring(file.title.length - 3) == "mp3"){
-                                                    <button mat-menu-item (click)="openDialogaudio(file.id, file.title, file.minioLink , file.createdDate, file.accessType)">
-                                                        <mat-icon>edit</mat-icon>
-                                                        <span>Abrir</span>
-                                                    </button>
-                                                }
-                                                
-                                                <a href="{{file.minioLink}}" download="{{file.title}}">
-                                                    <button mat-menu-item>
-                                                      <mat-icon>cloud_download</mat-icon>
-                                                      <span>Descargar</span>
-                                                    </button>
-                                                </a>
-                                            }
-                                          </mat-menu>
-                                        </div>
-                                    </div>
-
-                                </mat-list-item>
-                            }
-                        }
-                    </mat-list>
+                <div
+                  style="display: flex; justify-content: flex-end; width: 100%"
+                >
+                  <div>
+                    <mat-form-field appearance="outline" style="width: 200px">
+                      <mat-label>Buscar archivos</mat-label>
+                      <input
+                        matInput
+                        placeholder="Ex. Folder1"
+                        [(ngModel)]="searchTermfiles"
+                        (input)="searchsubfiles()"
+                      />
+                      <mat-icon matSuffix>search</mat-icon>
+                    </mat-form-field>
+                  </div>
                 </div>
+              </div>
+              @if (mostrarAlertaDelete) {
+                <div class="alert">El archivo se elimino correctamente</div>
+              }
+              @if (mostrarAlertaErrorDelete) {
+                <div class="alertE">El archivo no se elimino.</div>
+              }
             </div>
-        </mat-grid-tile>
-    </mat-grid-list>
+            <mat-divider></mat-divider>
+            @if (filteredFolderssub$ | async; as folderList) {
+              @for (file of folderList; track file.id) {
+                <mat-list-item
+                  id="subrectangle{{ file.id }}"
+                  (click)="selectfolderchild(file.id, file.name)"
+                  [cdkContextMenuTriggerFor]="innerchild"
+                >
+                  <div
+                    matListItemTitle
+                    style="display: flex; flex-direction: row"
+                  >
+                    <div
+                      style="display: flex; align-items: center"
+                      matListItemIcon
+                    >
+                      <mat-icon>folder</mat-icon>
+                    </div>
+                    <div
+                      style="
+                        margin-left: 30px;
+                        align-items: center;
+                        display: flex;
+                      "
+                    >
+                      {{ file.name }}
+                    </div>
+                    <span class="example-spacer"></span>
+                  </div>
+                </mat-list-item>
+                <ng-template #innerchild>
+                  <div class="example-menu" cdkMenu>
+                    <button
+                      class="example-menu-item"
+                      cdkMenuItem
+                      (click)="downloadFolder(file.name)"
+                    >
+                      Descargar carpeta
+                    </button>
+                    <button class="example-menu-item" cdkMenuItem>Exit</button>
+                  </div>
+                </ng-template>
+              }
+            }
+          </mat-list>
+        </div>
+        <div>
+          <mat-list>
+            @if (filteredFoldersfiles$ | async; as folderList) {
+              @for (file of folderList; track file.id) {
+                <mat-list-item>
+                  <div
+                    matListItemTitle
+                    style="display: flex; flex-direction: row"
+                  >
+                    <div>
+                      @if (
+                        file.title.substring(file.title.length - 3) == "png"
+                      ) {
+                        <mat-icon matListItemIcon>image</mat-icon>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "pdf"
+                      ) {
+                        <mat-icon matListItemIcon>insert_drive_file</mat-icon>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "jpg"
+                      ) {
+                        <mat-icon matListItemIcon>image</mat-icon>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "peg"
+                      ) {
+                        <mat-icon matListItemIcon>image</mat-icon>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "doc"
+                      ) {
+                        <mat-icon matListItemIcon>folder</mat-icon>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "mp3"
+                      ) {
+                        <mat-icon matListItemIcon>music_note</mat-icon>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "mp4"
+                      ) {
+                        <mat-icon matListItemIcon>local_movies</mat-icon>
+                      }
+                    </div>
+                    @if (
+                      file.accessType == "publico" ||
+                      file.accessType == "privado"
+                    ) {
+                      @if (
+                        file.title.substring(file.title.length - 3) == "jpg"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialog1(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "png"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialog1(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "peg"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialog1(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "pdf"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialogpdf(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              file.folderId,
+                              file.accessType,
+                              file.password,
+                              file.categoria
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "mp3"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialogaudio(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "mp4"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialogvideo(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                    }
+                    @if (file.accessType == "restringido") {
+                      @if (
+                        file.title.substring(file.title.length - 3) == "jpg"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "png"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "peg"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialogpasswordimg(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "pdf"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialogpassworddoc(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType,
+                              this.useridglobal,
+                              file.description,
+                              file.accessType,
+                              file.password,
+                              file.categoria,
+                              file.folderId
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                      @if (
+                        file.title.substring(file.title.length - 3) == "mp3"
+                      ) {
+                        <div
+                          style="margin-left: 30px"
+                          (click)="
+                            openDialogaudio(
+                              file.id,
+                              file.title,
+                              file.minioLink,
+                              file.createdDate,
+                              file.accessType
+                            )
+                          "
+                        >
+                          {{ file.title }}
+                        </div>
+                      }
+                    }
+                    <span class="example-spacer"></span>
+                    <div>
+                      <button
+                        mat-icon-button
+                        [matMenuTriggerFor]="menu"
+                        aria-label="Example icon-button with a menu"
+                      >
+                        <mat-icon class="blue-icon">more_vert</mat-icon>
+                      </button>
+                      <mat-menu #menu="matMenu" class="matmenu1">
+                        @if (
+                          file.accessType == "publico" ||
+                          file.accessType == "privado"
+                        ) {
+                          @if (
+                            file.title.substring(file.title.length - 3) == "jpg"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialog1(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "png"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialog1(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "peg"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialog1(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "pdf"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpdf(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  file.folderId,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "mp3"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogaudio(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "mp4"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogvideo(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+
+                          <a
+                            href="{{ file.minioLink }}"
+                            download="{{ file.title }}"
+                          >
+                            <button mat-menu-item>
+                              <mat-icon>cloud_download</mat-icon>
+                              <span>Descargar</span>
+                            </button>
+                          </a>
+                        }
+                        @if (file.accessType == "restringido") {
+                          @if (
+                            file.title.substring(file.title.length - 3) == "jpg"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpasswordimg(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  this.useridglobal,
+                                  file.description,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria,
+                                  file.folderId
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "png"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpasswordimg(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  this.useridglobal,
+                                  file.description,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria,
+                                  file.folderId
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "peg"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpasswordimg(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  this.useridglobal,
+                                  file.description,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria,
+                                  file.folderId
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "pdf"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogpassworddoc(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType,
+                                  this.useridglobal,
+                                  file.description,
+                                  file.accessType,
+                                  file.password,
+                                  file.categoria,
+                                  file.folderId
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+                          @if (
+                            file.title.substring(file.title.length - 3) == "mp3"
+                          ) {
+                            <button
+                              mat-menu-item
+                              (click)="
+                                openDialogaudio(
+                                  file.id,
+                                  file.title,
+                                  file.minioLink,
+                                  file.createdDate,
+                                  file.accessType
+                                )
+                              "
+                            >
+                              <mat-icon>edit</mat-icon>
+                              <span>Abrir</span>
+                            </button>
+                          }
+
+                          <a
+                            href="{{ file.minioLink }}"
+                            download="{{ file.title }}"
+                          >
+                            <button mat-menu-item>
+                              <mat-icon>cloud_download</mat-icon>
+                              <span>Descargar</span>
+                            </button>
+                          </a>
+                        }
+                      </mat-menu>
+                    </div>
+                  </div>
+                </mat-list-item>
+              }
+            }
+          </mat-list>
+        </div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
 </div>

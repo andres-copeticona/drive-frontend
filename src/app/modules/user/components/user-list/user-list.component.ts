@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   MatPaginator,
+  MatPaginatorIntl,
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
@@ -25,6 +26,7 @@ import { UserService } from '../../services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { HttpParams } from '@angular/common/http';
 import { User } from '@app/shared/models/user.model';
+import { PaginatorIntl } from '@app/shared/components/paginator-intl/paginator-intl.component';
 
 @Component({
   selector: 'app-user-list',
@@ -46,6 +48,7 @@ import { User } from '@app/shared/models/user.model';
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.css',
+  providers: [{ provide: MatPaginatorIntl, useClass: PaginatorIntl }],
 })
 export class UserListComponent implements OnInit {
   selected = 'option2';

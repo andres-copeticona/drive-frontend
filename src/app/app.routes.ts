@@ -17,6 +17,7 @@ import { FolderComponent } from './modules/files/components/folders/folders.comp
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { HomeComponent } from './modules/home/home.component';
 import { SharedFilesComponent } from './modules/shared-files/shared-files.component';
+import { ActivityCenterComponent } from './modules/activity/components/activitycenter/activitycenter.component';
 
 export const routes: Routes = [
   //Login
@@ -66,7 +67,7 @@ export const routes: Routes = [
       { path: 'signedfiles', component: FileViewComponent },
       { path: 'sharedfolders', component: ShareFilesComponent },
       { path: 'pdfview', component: ModelpdfviewComponent },
-      { path: 'activity', component: ActivitycenterComponent },
+      { path: 'activity', component: ActivityCenterComponent },
     ],
   },
   {

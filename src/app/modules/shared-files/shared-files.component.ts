@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
@@ -18,7 +18,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatListModule } from '@angular/material/list';
 
 import { FileModel } from '../files/models/file.model';
-import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import {
+  MatPaginator,
+  MatPaginatorIntl,
+  PageEvent,
+} from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ShareFile } from '../files/models/share-file.model';
 import { ShareFileService } from '../files/services/share-file.service';
@@ -30,6 +34,7 @@ import { PreviewComponent } from '../files/components/preview/preview.component'
 import { ItemList } from '../files/models/item.model';
 import { ACCESS_TYPES } from '@app/shared/constants/constants';
 import { CheckPasswordDialogComponent } from '@app/shared/components/check-password-dialog/check-password-dialog.component';
+import { PaginatorIntl } from '@app/shared/components/paginator-intl/paginator-intl.component';
 
 @Component({
   selector: 'app-shared-files',
@@ -37,6 +42,8 @@ import { CheckPasswordDialogComponent } from '@app/shared/components/check-passw
   templateUrl: './shared-files.component.html',
   styleUrl: './shared-files.component.css',
   imports: [
+    CommonModule,
+
     MatListModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
@@ -56,12 +63,19 @@ import { CheckPasswordDialogComponent } from '@app/shared/components/check-passw
     MatPaginator,
     TruncateDocumentNamePipe,
   ],
+  providers: [{ provide: MatPaginatorIntl, useClass: PaginatorIntl }],
 })
 export class SharedFilesComponent implements OnInit {
   search = '';
   files: ShareFile[] = [];
 
-  displayedColumns: string[] = ['name', 'emitter', 'receptor', 'actions'];
+  displayedColumns: string[] = [
+    'name',
+    'emitter',
+    'receptor',
+    'sharedAt',
+    'actions',
+  ];
   dataSource: MatTableDataSource<ShareFile> = new MatTableDataSource([] as any);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
