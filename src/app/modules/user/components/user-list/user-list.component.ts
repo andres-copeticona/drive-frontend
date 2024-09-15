@@ -93,11 +93,11 @@ export class UserListComponent implements OnInit {
       const res = await this.userService.findMany({
         params: new HttpParams({ fromObject: this.filters }),
       });
-      console.log(res);
       this.users = res?.data?.data ?? [];
       this.dataSource = new MatTableDataSource(this.users);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.paginator.length = res?.data?.total ?? 0;
     } catch (error) {
       console.error(error);
       this.ts.error('Error al mostrar usuarios', 'Error');
@@ -125,13 +125,13 @@ export class UserListComponent implements OnInit {
     else delete this.rolesForEdit[id];
   }
 
-  async applyRol(element: any) {
+  async applyRol(element: User) {
     try {
       const rolId = this.rol.value ?? -1;
 
       if (rolId === -1) return this.ts.error('Seleccione un rol', 'Error');
 
-      await this.userService.updateRole(element.id, element.rol);
+      await this.userService.updateRole(element.id, rolId);
       this.ts.success('Rol actualizado', 'Exito');
       return this.load();
     } catch (error) {

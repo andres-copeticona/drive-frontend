@@ -32,6 +32,7 @@ import { QRCodeModule } from 'angularx-qrcode';
 import QRCode from 'qrcode';
 import { PDFDocument } from 'pdf-lib';
 import { v4 as uuidv4 } from 'uuid';
+import { AuthService } from '@app/shared/services/auth.service';
 
 @Component({
   selector: 'app-sign-pdf',
@@ -82,6 +83,7 @@ export class SignPdfComponent implements OnInit {
     private qrService: QrService,
     private fileService: FilesService,
     private ts: ToastrService,
+    private authService: AuthService,
     public sanitizer: DomSanitizer,
   ) {}
 
@@ -113,6 +115,7 @@ export class SignPdfComponent implements OnInit {
             accessType: ACCESS_TYPES.PUBLIC,
             sortDirection: SORT_DIR.DESC,
             type: 'application/pdf',
+            createdBy: this.authService.getInfo()?.userId!,
           },
         }),
       });

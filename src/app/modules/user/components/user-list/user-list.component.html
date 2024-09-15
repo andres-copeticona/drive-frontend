@@ -64,7 +64,7 @@
                 <mat-label>{{ element.role.name }} </mat-label>
                 <mat-select [(value)]="selected" [formControl]="rol">
                   <mat-option value="1">Administrador</mat-option>
-                  <mat-option value="2">Superadministrador</mat-option>
+                  <mat-option value="2">Super Administrador</mat-option>
                 </mat-select>
               </mat-form-field>
             } @else {
@@ -86,7 +86,7 @@
             </div>
             @if (rolesForEdit[element.id]) {
               <div class="button-secction">
-                <button mat-stroked-button (click)="applyRol(element.id)">
+                <button mat-stroked-button (click)="applyRol(element)">
                   Aplicar Nuevo Rol
                 </button>
               </div>
@@ -118,7 +118,6 @@
       <mat-paginator
         [pageSizeOptions]="[5, 10, 25, 100]"
         (page)="onPageChange($event)"
-        aria-label="Select page of users"
       ></mat-paginator>
     </div>
   </div>

@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { BaseCrudService } from '@app/shared/services/base-crud.service';
 import { firstValueFrom } from 'rxjs';
 import { Response } from '@app/shared/models/response.model';
-import { ShareFolder } from '../models/share-folder.model';
+import { ShareFile } from '../models/share-file.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ShareFolderService extends BaseCrudService<ShareFolder> {
+export class ShareFileService extends BaseCrudService<ShareFile> {
   constructor() {
-    super('share-folders');
+    super('share-files');
   }
 
   async shareUser(data: {

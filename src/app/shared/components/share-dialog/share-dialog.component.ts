@@ -28,6 +28,7 @@ import { QrService } from '@app/shared/services/qr.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ShareFolderService } from '@app/modules/files/services/share-folder.service';
+import { ShareFileService } from '@app/modules/files/services/share-file.service';
 
 @Component({
   selector: 'app-share-dialog',
@@ -74,6 +75,8 @@ export class ShareDialogComponent implements OnInit {
   selectedUser?: User;
   selectedDependency!: string;
 
+  service!: ShareFolderService | ShareFileService;
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { type: 'folder' | 'file'; code: string | number; id: number },
@@ -81,10 +84,16 @@ export class ShareDialogComponent implements OnInit {
     public qrService: QrService,
     private userService: UserService,
     private shareFolderService: ShareFolderService,
+    private shareFileService: ShareFileService,
     private ts: ToastrService,
   ) {}
 
   async ngOnInit() {
+    this.service =
+      this.data.type === 'folder'
+        ? this.shareFolderService
+        : this.shareFileService;
+
     this.qrUrl =
       this.data.type === 'folder'
         ? this.qrService.getFolderQr(this.data.code as string)
@@ -137,7 +146,7 @@ export class ShareDialogComponent implements OnInit {
       });
   }
 
-  shareUser() {
+  async shareUser() {
     const value = this.userControl.value;
     if (
       this.userControl.invalid ||
@@ -148,24 +157,33 @@ export class ShareDialogComponent implements OnInit {
       return;
     }
 
-    this.shareFolderService
-      .shareUser({
+    try {
+      const res = await this.service.shareUser({
         id: this.data.id,
         receptorIds: [(value as any).id!],
-      })
-      .then(() => {
-        this.ts.success('Carpeta compartida con éxito', 'Éxito');
-        this.ref.close(true);
-      })
-      .catch((err) => {
-        console.error(err);
-        this.ts.error('Error al compartir carpeta', 'Error');
       });
+      this.ts.success(res.message, 'Éxito');
+      this.ref.close(true);
+    } catch (error: any) {
+      console.error(error);
+      const msg = error.error?.message || 'Error al compartir archivos';
+      this.ts.error(msg, 'Error');
+    }
   }
 
-  shareAll() {}
+  async shareAll() {
+    try {
+      const res = await this.service.shareAll(this.data.id);
+      this.ts.success(res.message, 'Éxito');
+      this.ref.close(true);
+    } catch (error: any) {
+      console.error(error);
+      const msg = error.error?.message || 'Error al compartir archivos';
+      this.ts.error(msg, 'Error');
+    }
+  }
 
-  shareDependency() {
+  async shareDependency() {
     const value = this.dependencyControl.value;
     if (
       this.dependencyControl.invalid ||
@@ -173,6 +191,16 @@ export class ShareDialogComponent implements OnInit {
     ) {
       this.ts.error('Por favor seleccione una dependencia', 'Error');
       return;
+    }
+
+    try {
+      const res = await this.service.shareDependency(this.data.id, value!);
+      this.ts.success(res.message, 'Éxito');
+      this.ref.close(true);
+    } catch (error: any) {
+      console.error(error);
+      const msg = error.error?.message || 'Error al compartir archivos';
+      this.ts.error(msg, 'Error');
     }
   }
 }

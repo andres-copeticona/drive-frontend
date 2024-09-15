@@ -133,6 +133,7 @@ export class FolderComponent implements OnInit {
         params: new HttpParams({
           fromObject: {
             parentId: this.currentFolder?.id ?? 0,
+            createdBy: this.authService.getInfo()?.userId?.toString() ?? '',
           },
         }),
       });

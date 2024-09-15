@@ -1,10 +1,7 @@
 import { Routes } from '@angular/router';
 import { NavigationComponent } from './component/navigation/navigation.component';
-import { FileSharingComponent } from './component/file-sharing/file-sharing.component';
-import { UploadsComponent } from './component/uploads/uploads.component';
 import { FavoritesComponent } from './component/favorites/favorites.component';
 import { ProfileComponent } from './component/profile/profile.component';
-import { NavigationAdminComponent } from './component/navigation-admin/navigation-admin.component';
 import { FileViewComponent } from './component/file-view/file-view.component';
 import { DetalleselloComponent } from './component/detallesello/detallesello.component';
 import { ShareFilesComponent } from './component/share-files/share-files.component';
@@ -12,7 +9,6 @@ import { ModelpdfviewComponent } from './component/modelpdfview/modelpdfview.com
 import { PresentationComponent } from './component/presentation/presentation.component';
 import { PresentationfolderComponent } from './component/presentationfolder/presentationfolder.component';
 import { ActivitycenterComponent } from './component/activitycenter/activitycenter.component';
-import { UploadreemplazarComponent } from './component/uploadreemplazar/uploadreemplazar.component';
 import { authGuard } from './config/auth/auth.guard';
 import { LoginComponent } from '@modules/auth/components/login/login.component';
 import { UserDetailsComponent } from './modules/user/components/user-details/user-details.component';
@@ -20,6 +16,7 @@ import { UserListComponent } from './modules/user/components/user-list/user-list
 import { FolderComponent } from './modules/files/components/folders/folders.component';
 import { LayoutComponent } from './layouts/layout/layout.component';
 import { HomeComponent } from './modules/home/home.component';
+import { SharedFilesComponent } from './modules/shared-files/shared-files.component';
 
 export const routes: Routes = [
   //Login
@@ -43,7 +40,7 @@ export const routes: Routes = [
     canMatch: [authGuard],
     children: [
       { path: 'home', component: HomeComponent },
-      { path: 'sharedFiles', component: FileSharingComponent },
+      { path: 'sharedFiles', component: SharedFilesComponent },
       // { path: 'upload', component: UploadsComponent },
       { path: 'favorites', component: FavoritesComponent },
       { path: 'profile', component: ProfileComponent },
@@ -60,7 +57,7 @@ export const routes: Routes = [
     canMatch: [authGuard],
     children: [
       { path: 'home', component: HomeComponent },
-      { path: 'sharedFiles', component: FileSharingComponent },
+      { path: 'sharedFiles', component: SharedFilesComponent },
       // { path: 'upload', component: UploadsComponent },
       // { path: 'reemplazar', component: UploadreemplazarComponent },
       { path: 'folders', component: FolderComponent },
