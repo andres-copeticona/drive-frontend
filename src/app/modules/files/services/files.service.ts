@@ -6,6 +6,8 @@ import { ResponseDto } from '@app/model/response';
 import { CreateFile } from '../models/create-file.model';
 import { BasePasswordService } from '@app/shared/services/base-password.service';
 import { UsageStorage } from '@app/modules/home/models/usage-storage.model';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { IListResponse } from '@app/shared/models/list-response';
 
 @Injectable({
   providedIn: 'root',
@@ -16,6 +18,21 @@ export class FilesService
 {
   constructor() {
     super('files');
+  }
+
+  async getPublics(options?: {
+    params?: HttpParams;
+    headers?: HttpHeaders;
+  }): Promise<ResponseDto<IListResponse<FileModel>>> {
+    return firstValueFrom(
+      this.http.get<ResponseDto<IListResponse<FileModel>>>(
+        `${this.namespace}/public`,
+        {
+          params: options?.params,
+          headers: options?.headers,
+        },
+      ),
+    );
   }
 
   async getPublicByCode(code: string) {
@@ -36,6 +53,19 @@ export class FilesService
 
   download(file: FileModel): void {
     const downloadURL = `${this.namespace}/${file.id}/download`;
+    this.http.get(downloadURL, { responseType: 'blob' }).subscribe((res) => {
+      const url = window.URL.createObjectURL(res);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.title;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    });
+  }
+
+  publicDownload(file: FileModel): void {
+    const downloadURL = `${this.namespace}/public/${file.code}/download`;
     this.http.get(downloadURL, { responseType: 'blob' }).subscribe((res) => {
       const url = window.URL.createObjectURL(res);
       const a = document.createElement('a');

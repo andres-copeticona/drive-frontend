@@ -3,6 +3,9 @@ import { BaseCrudService } from '@app/shared/services/base-crud.service';
 import { Folder } from '../models/folder.model';
 import { firstValueFrom } from 'rxjs';
 import { Response } from '@app/shared/models/response.model';
+import { ResponseDto } from '@app/model/response';
+import { HttpHeaders, HttpParams } from '@angular/common/http';
+import { IListResponse } from '@app/shared/models/list-response';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +13,21 @@ import { Response } from '@app/shared/models/response.model';
 export class FolderService extends BaseCrudService<Folder> {
   constructor() {
     super('folders');
+  }
+
+  async getPublics(options?: {
+    params?: HttpParams;
+    headers?: HttpHeaders;
+  }): Promise<Response<IListResponse<Folder>>> {
+    return firstValueFrom(
+      this.http.get<Response<IListResponse<Folder>>>(
+        `${this.namespace}/public`,
+        {
+          params: options?.params,
+          headers: options?.headers,
+        },
+      ),
+    );
   }
 
   getBreadcrumb(id: string | number): Promise<Response<Folder[]>> {
@@ -32,5 +50,11 @@ export class FolderService extends BaseCrudService<Folder> {
         a.click();
         window.URL.revokeObjectURL(url);
       });
+  }
+
+  async getPublicByCode(code: string) {
+    return firstValueFrom(
+      this.http.get<ResponseDto<Folder>>(this.namespace + '/public/' + code),
+    );
   }
 }

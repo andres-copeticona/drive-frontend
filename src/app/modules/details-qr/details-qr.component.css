@@ -1,0 +1,26 @@
+.container {
+  height: 100vh;
+  height: 100dvh;
+  width: 100vw;
+  background-color: #ebf2fc;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  background-image: url("/assets/fondo-web.jpg");
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.text-xl {
+  font-size: 1.2rem;
+}
+
+ngx-extended-pdf-viewer {
+  width: 100%;
+  max-width: 1000px;
+  height: calc(100vh - 300px);
+}

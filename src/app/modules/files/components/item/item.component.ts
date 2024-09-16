@@ -1,7 +1,6 @@
 import {
   Component,
   EventEmitter,
-  InputSignal,
   OnInit,
   Output,
   effect,
@@ -74,14 +73,20 @@ export class ListItemComponent implements OnInit {
   ngOnInit(): void {}
 
   download(): void {
-    const service =
+    const service: any =
       this.item().type == 'folder' ? this.folderService : this.fileService;
 
     try {
-      service.download({
-        id: this.item().id,
-        title: this.item().name,
-      } as any);
+      if (this.item().accessType === ACCESS_TYPES.PUBLIC)
+        service.publicDownload({
+          code: this.item().code,
+          title: this.item().name,
+        } as any);
+      else
+        service.download({
+          id: this.item().id,
+          title: this.item().name,
+        } as any);
     } catch (error) {
       console.error(error);
       this.ts.error('Ocurrio un error al intentar descargar', 'Error');

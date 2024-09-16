@@ -1,0 +1,102 @@
+<div class="container">
+  <mat-toolbar>
+    <mat-toolbar-row class="align-center h-80 first-toolbar">
+      <div class="align-center">
+        <button mat-icon-button (click)="load()">
+          <mat-icon>replay</mat-icon>
+        </button>
+        <mat-icon class="mr-2">folder</mat-icon>
+        <span>Drive</span>
+      </div>
+      <span class="toolbar-spacer"></span>
+      <mat-form-field
+        style="height: 100%; margin-top: 1rem"
+        [floatLabel]="'auto'"
+        appearance="outline"
+      >
+        <input
+          matInput
+          placeholder="Buscar"
+          [(ngModel)]="searchTerm"
+          (input)="search()"
+        />
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </mat-toolbar-row>
+
+    <mat-toolbar-row class="breadcrumbs">
+      <mat-button-toggle-group
+        name="align"
+        value="inline"
+        aria-label="Alineación del contenido"
+        (change)="onChangeView($event)"
+      >
+        <mat-button-toggle value="grid">
+          <mat-icon>grid_view</mat-icon>
+        </mat-button-toggle>
+        <mat-button-toggle value="inline">
+          <mat-icon>view_list</mat-icon>
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <button mat-icon-button (click)="onBreadcrumbClick()">
+        <mat-icon>home</mat-icon>
+      </button>
+      @for (item of breadcrumbs; track item.id) {
+        <mat-icon class="breadcrumb">chevron_right</mat-icon>
+        <button class="breadcrumb" mat-button (click)="onBreadcrumbClick(item)">
+          {{ item.name }}
+        </button>
+      }
+    </mat-toolbar-row>
+  </mat-toolbar>
+
+  @if (!isLoading) {
+    <div class="items">
+      @if (filteredFolders().length !== 0) {
+        <h3 class="pl-1">Carpetas</h3>
+
+        <div
+          class="files-container"
+          [ngClass]="{
+            'col-200': viewType() === 'grid',
+            'col-300': viewType() === 'inline',
+          }"
+        >
+          @for (item of filteredFolders(); track item) {
+            <app-folder-item
+              [item]="item"
+              [showMenu]="false"
+              [viewType]="viewType()"
+              (onFolderClick)="openFolder($event)"
+            ></app-folder-item>
+          }
+        </div>
+      }
+
+      @if (currentFolder && filteredFiles().length !== 0) {
+        <h3 class="pl-1 mt-1">Archivos</h3>
+
+        <div
+          class="files-container"
+          [ngClass]="{
+            'col-200': viewType() === 'grid',
+            'col-300': viewType() === 'inline',
+          }"
+        >
+          @for (item of filteredFiles(); track item) {
+            <app-folder-item
+              [item]="item"
+              [showMenuItems]="{
+                showDownload: true,
+                showShare: false,
+                showDelete: false,
+              }"
+              [viewType]="viewType()"
+              (onFolderClick)="openFolder($event)"
+            ></app-folder-item>
+          }
+        </div>
+      }
+    </div>
+  }
+</div>

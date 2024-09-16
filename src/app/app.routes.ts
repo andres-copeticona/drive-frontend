@@ -19,6 +19,9 @@ import { HomeComponent } from './modules/home/home.component';
 import { SharedFilesComponent } from './modules/shared-files/shared-files.component';
 import { ActivityCenterComponent } from './modules/activity/components/activitycenter/activitycenter.component';
 import { ShareFolderComponent } from './modules/shared-folders/share-folder.component';
+import { DetailsQRComponent } from './modules/details-qr/details-qr.component';
+import { PublicFileComponent } from './modules/public/file/public-file.component';
+import { PublicFolderComponent } from './modules/public/folder/public-folder.component';
 
 export const routes: Routes = [
   //Login
@@ -27,6 +30,14 @@ export const routes: Routes = [
     path: 'detalleSello',
     component: DetalleselloComponent,
     canMatch: [authGuard],
+  },
+  {
+    path: 'public',
+    children: [
+      { path: 'details/:code', component: DetailsQRComponent },
+      { path: 'file/:code/view', component: PublicFileComponent },
+      { path: 'folder/:code', component: PublicFolderComponent },
+    ],
   },
   { path: 'file', component: PresentationComponent, canMatch: [authGuard] },
   {

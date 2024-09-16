@@ -1,0 +1,32 @@
+<div class="preview">
+  <div class="title">
+    <div>
+      <span>{{ file?.title }}</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button mat-raised-button color="primary" (click)="download()">
+      Descargar
+    </button>
+  </div>
+
+  <div class="mt-2 preview-container">
+    @switch (file?.fileType) {
+      @case ("audio/mpeg") {
+        <div class="audio">
+          <audio [src]="url" controls></audio>
+        </div>
+      }
+      @case ("image/jpeg") {
+        <img class="image" [src]="url" [alt]="file?.title" />
+      }
+      @case ("video/mp4") {
+        <video class="video" [src]="url" controls></video>
+      }
+      @case ("application/pdf") {
+        <ngx-extended-pdf-viewer [src]="url"></ngx-extended-pdf-viewer>
+      }
+    }
+  </div>
+</div>

@@ -8,6 +8,7 @@ import { FileModel } from '../../models/file.model';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NgxExtendedPdfViewerModule } from 'ngx-extended-pdf-viewer';
 import { MatButtonModule } from '@angular/material/button';
+import { ACCESS_TYPES } from '@app/shared/constants/constants';
 
 @Component({
   selector: 'app-folder-preview',
@@ -41,7 +42,12 @@ export class PreviewComponent implements OnInit {
     if (!this.data?.item?.id) return;
 
     try {
-      const res = await this.fileService.findOneBy(this.data.item.id);
+      let res;
+      if (this.data?.item.accessType === ACCESS_TYPES.PUBLIC) {
+        res = await this.fileService.getPublicByCode(this.data.item.code);
+      } else {
+        res = await this.fileService.findOneBy(this.data.item.id);
+      }
       this.item = res.data;
     } catch (error) {
       console.error(error);
@@ -51,6 +57,8 @@ export class PreviewComponent implements OnInit {
 
   download() {
     if (!this.item?.id) return;
-    this.fileService.download(this.item);
+    if (this.data?.item.accessType === ACCESS_TYPES.PUBLIC) {
+      this.fileService.publicDownload(this.item);
+    } else this.fileService.download(this.item);
   }
 }

@@ -1,0 +1,27 @@
+<div class="container">
+  <img src="assets/logo.png" alt="logo" class="logo" height="230px" />
+  @if (qr) {
+    <div class="data-container">
+      <p class="text-xl">
+        <span class="bold">Emisor:</span>
+        <span> {{ qr.emitter.fullName }}</span>
+      </p>
+
+      <p class="text-xl">
+        <span class="bold">Dependencia:</span>
+        <span>{{ qr.emitter.dependence }}</span>
+      </p>
+
+      <p class="text-xl">
+        <span class="bold">{{ qr.title }}</span>
+      </p>
+      <p>{{ qr.message }}</p>
+    </div>
+
+    <ngx-extended-pdf-viewer
+      [src]="qr.file.link ?? ''"
+    ></ngx-extended-pdf-viewer>
+  } @else {
+    <p>{{ errorMessage }}</p>
+  }
+</div>
