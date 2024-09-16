@@ -69,7 +69,9 @@
     <button mat-raised-button mat-dialog-close>Cancelar</button>
     <button
       mat-raised-button
-      [disabled]="fileControl.invalid || passControl.invalid"
+      [disabled]="
+        fileControl.invalid || (passControl.invalid && showPasswordField)
+      "
       (click)="uploadFiles()"
     >
       Subir

@@ -78,6 +78,7 @@ export class SignPdfComponent implements OnInit {
   });
 
   qrUrl?: string;
+  qrCode?: string;
 
   constructor(
     private qrService: QrService,
@@ -97,6 +98,7 @@ export class SignPdfComponent implements OnInit {
     if (!this.itemSelected?.qrId) return;
     try {
       const res = await this.fileService.getQrCode(this.itemSelected.qrId);
+      this.qrCode = res.data;
       this.qrUrl = this.qrService.getSignQr(res.data);
     } catch (error: any) {
       const msg =
@@ -149,6 +151,7 @@ export class SignPdfComponent implements OnInit {
   }
 
   async onSelectItem(file: FileModel) {
+    this.qrCode = undefined;
     this.itemSelected = file;
     this.selectedTab = 1;
     try {
@@ -192,7 +195,7 @@ export class SignPdfComponent implements OnInit {
   async signDocument() {
     if (this.formGroup.invalid) return;
 
-    const qrCode = uuidv4();
+    const qrCode = this.qrCode ?? uuidv4();
     const file = await this.addQrToPdf(this.qrService.getSignQr(qrCode));
 
     if (!file || !this.itemSelected) {
@@ -210,10 +213,12 @@ export class SignPdfComponent implements OnInit {
     try {
       const res = await this.fileService.signFile(data);
       this.itemSelected = res.data.file;
+      this.qrCode = res.data.qrCode;
       this.qrUrl = this.qrService.getSignQr(res.data.qrCode);
 
       this.ts.success(res.message, 'Éxito');
       this.loadFiles();
+      this.formGroup.reset();
     } catch (error: any) {
       console.error(error);
       const msg =

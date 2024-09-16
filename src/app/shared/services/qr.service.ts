@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ResponseDto } from '@app/model/response';
 import { QrCodeData } from '@app/modules/details-qr/models/qr-code-data';
 import { firstValueFrom } from 'rxjs';
 import { enviroment } from 'src/environments/enviroment';
+import { IListResponse } from '../models/list-response';
+import { Response } from '../models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +15,24 @@ export class QrService {
 
   constructor(private http: HttpClient) {}
 
+  async findMany(options?: {
+    params?: HttpParams;
+    headers?: HttpHeaders;
+  }): Promise<Response<IListResponse<QrCodeData>>> {
+    return firstValueFrom(
+      this.http.get<Response<IListResponse<QrCodeData>>>(
+        `${this.apiUrl}/v1/qr/`,
+        {
+          params: options?.params,
+          headers: options?.headers,
+        },
+      ),
+    );
+  }
+
   async getQrData(code: string) {
     return firstValueFrom(
-      this.http.get<ResponseDto<QrCodeData>>(
+      this.http.get<Response<QrCodeData>>(
         `${this.apiUrl}/v1/qr/public/${code}`,
       ),
     );

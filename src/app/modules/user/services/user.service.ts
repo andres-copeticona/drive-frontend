@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ResponseDto } from '@app/model/response';
+import { Response } from '@app/shared/models/response.model';
 import { User } from '@app/shared/models/user.model';
 import { BaseCrudService } from '@app/shared/services/base-crud.service';
 import { firstValueFrom } from 'rxjs';
@@ -21,9 +21,9 @@ export class UserService extends BaseCrudService<User> {
     );
   }
 
-  async getDependencies(): Promise<ResponseDto<string[]>> {
+  async getDependencies(): Promise<Response<string[]>> {
     return firstValueFrom(
-      this.http.get<ResponseDto<string[]>>(`${this.namespace}/dependencies`),
+      this.http.get<Response<string[]>>(`${this.namespace}/dependencies`),
     );
   }
 }

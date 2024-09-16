@@ -57,29 +57,27 @@
         </div>
         @if (!isLoadingItem) {
           <div class="sign-form">
-            @if (itemSelected?.category === "Nuevo") {
-              <form [formGroup]="formGroup" (submit)="signDocument()">
-                <mat-form-field [style.width]="'100%'" appearance="outline">
-                  <mat-label>Titulo</mat-label>
-                  <input formControlName="title" matInput />
-                </mat-form-field>
+            <form [formGroup]="formGroup" (submit)="signDocument()">
+              <mat-form-field [style.width]="'100%'" appearance="outline">
+                <mat-label>Titulo</mat-label>
+                <input formControlName="title" matInput />
+              </mat-form-field>
 
-                <mat-form-field [style.width]="'100%'" appearance="outline">
-                  <mat-label>Descripción</mat-label>
-                  <textarea formControlName="description" matInput></textarea>
-                </mat-form-field>
+              <mat-form-field [style.width]="'100%'" appearance="outline">
+                <mat-label>Descripción</mat-label>
+                <textarea formControlName="description" matInput></textarea>
+              </mat-form-field>
 
-                <button
-                  [disabled]="formGroup.invalid"
-                  type="submit"
-                  [style.width]="'100%'"
-                  mat-raised-button
-                >
-                  <mat-icon>edit_document</mat-icon>
-                  Firmar Documento
-                </button>
-              </form>
-            }
+              <button
+                [disabled]="formGroup.invalid"
+                type="submit"
+                [style.width]="'100%'"
+                mat-raised-button
+              >
+                <mat-icon>edit_document</mat-icon>
+                Firmar Documento
+              </button>
+            </form>
             <div class="qr-container">
               <button
                 [disabled]="!itemSelected?.qrId"

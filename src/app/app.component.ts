@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { signal } from '@angular/core';
 import { MatListModule } from '@angular/material/list';
-import { NavigationComponent } from './component/navigation/navigation.component';
 import { HttpClientModule } from '@angular/common/http';
 import { InactivityService } from './shared/services/inactivity.service';
 import { AuthService } from './shared/services/auth.service';
@@ -28,7 +27,6 @@ export type MenuItem = {
     MatIconModule,
     MatSidenavModule,
     MatListModule,
-    NavigationComponent,
     HttpClientModule,
   ],
   templateUrl: './app.component.html',

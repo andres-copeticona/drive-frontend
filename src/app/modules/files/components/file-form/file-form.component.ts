@@ -113,6 +113,6 @@ export class FileFormComponent implements OnInit {
     this.showPasswordField = type === ACCESS_TYPES.RESTRICTED;
     if (this.showPasswordField)
       this.passControl.setValidators([Validators.required]);
-    else this.passControl.clearValidators();
+    else this.passControl.removeValidators([Validators.required]);
   }
 }

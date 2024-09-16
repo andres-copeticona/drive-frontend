@@ -29,11 +29,14 @@ import { ToastrService } from 'ngx-toastr';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ShareFolderService } from '@app/modules/files/services/share-folder.service';
 import { ShareFileService } from '@app/modules/files/services/share-file.service';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FolderService } from '@app/modules/files/services/folder.service';
 
 @Component({
   selector: 'app-share-dialog',
   standalone: true,
   imports: [
+    MatSlideToggleModule,
     MatExpansionModule,
     MatCardModule,
     MatMenuModule,
@@ -79,10 +82,16 @@ export class ShareDialogComponent implements OnInit {
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
-    public data: { type: 'folder' | 'file'; code: string | number; id: number },
+    public data: {
+      type: 'folder' | 'file';
+      code: string | number;
+      id: number;
+      accessType: string;
+    },
     private ref: MatDialogRef<ShareDialogComponent>,
     public qrService: QrService,
     private userService: UserService,
+    private folderService: FolderService,
     private shareFolderService: ShareFolderService,
     private shareFileService: ShareFileService,
     private ts: ToastrService,
@@ -201,6 +210,18 @@ export class ShareDialogComponent implements OnInit {
       console.error(error);
       const msg = error.error?.message || 'Error al compartir archivos';
       this.ts.error(msg, 'Error');
+    }
+  }
+
+  async onPrivacityChange() {
+    if (this.data.type !== 'folder') return;
+    try {
+      const res = await this.folderService.togglePrivacity(this.data.id);
+      this.data.accessType = res.data;
+      this.ts.success('Privacidad cambiada', 'Éxito');
+    } catch (error) {
+      console.error(error);
+      this.ts.error('Error al cambiar la privacidad de la carpeta', 'Error');
     }
   }
 }

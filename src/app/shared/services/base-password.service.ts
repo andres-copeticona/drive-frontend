@@ -1,8 +1,8 @@
-import { ResponseDto } from '@app/model/response';
+import { Response } from '../models/response.model';
 
 export interface BasePasswordService {
   checkPassword(
     password: string,
     id?: number | string,
-  ): Promise<ResponseDto<boolean>>;
+  ): Promise<Response<boolean>>;
 }

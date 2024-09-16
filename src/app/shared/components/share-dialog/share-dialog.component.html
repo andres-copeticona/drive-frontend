@@ -75,13 +75,24 @@
       </mat-tab>
     </mat-tab-group>
 
+    @if (data.type == "folder") {
+      <div>
+        <mat-slide-toggle
+          (change)="onPrivacityChange()"
+          [checked]="data.accessType === 'publico'"
+          >Privacidad del archivo: {{ data.accessType }}</mat-slide-toggle
+        >
+      </div>
+    }
     <div class="link">
       <mat-accordion>
-        <mat-expansion-panel (opened)="showQr = true" (closed)="showQr = false">
+        <mat-expansion-panel
+          [disabled]="data.accessType !== 'publico'"
+          (opened)="showQr = true"
+          (closed)="showQr = false"
+        >
           <mat-expansion-panel-header>
-            <mat-panel-title>
-              Compartir QR para descargar archivo
-            </mat-panel-title>
+            <mat-panel-title> Compartir QR público </mat-panel-title>
           </mat-expansion-panel-header>
           <div style="color: gray; justify-content: center; font-size: small">
             {{ qrUrl }}
@@ -99,4 +110,3 @@
     </div>
   </mat-dialog-content>
 </div>
-

@@ -5,7 +5,7 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
-import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,6 +27,8 @@ import { ToastrService } from 'ngx-toastr';
 import { HttpParams } from '@angular/common/http';
 import { User } from '@app/shared/models/user.model';
 import { PaginatorIntl } from '@app/shared/components/paginator-intl/paginator-intl.component';
+import { SORT_DIR } from '@app/shared/constants/constants';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
@@ -68,24 +70,33 @@ export class UserListComponent implements OnInit {
     'edit-rol',
     'view-details',
   ];
-  dataSource!: MatTableDataSource<User>;
+  dataSource: MatTableDataSource<User> = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
 
+  filterControl = new FormControl('');
   users: User[] = [];
 
   filters = {
     searchTerm: '',
     page: 0,
     size: 5,
+    sortDirection: SORT_DIR.DESC,
   };
 
   constructor(
     private userService: UserService,
     private router: Router,
     private ts: ToastrService,
-  ) {}
+  ) {
+    this.filterControl.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((value) => {
+        this.filters.searchTerm = value!;
+        this.paginator.firstPage();
+        this.load();
+      });
+  }
 
   ngOnInit(): void {
     this.load();
@@ -97,9 +108,7 @@ export class UserListComponent implements OnInit {
         params: new HttpParams({ fromObject: this.filters }),
       });
       this.users = res?.data?.data ?? [];
-      this.dataSource = new MatTableDataSource(this.users);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource.data = this.users;
       this.paginator.length = res?.data?.total ?? 0;
     } catch (error) {
       console.error(error);
@@ -116,11 +125,8 @@ export class UserListComponent implements OnInit {
   applyFilter(event: KeyboardEvent) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.filters.searchTerm = filterValue.trim().toLowerCase();
+    this.paginator.firstPage();
     this.load();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
   }
 
   onRolEditChange(event: MatSlideToggleChange, id: number) {

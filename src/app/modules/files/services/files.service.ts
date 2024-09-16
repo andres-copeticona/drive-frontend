@@ -2,12 +2,12 @@ import { Injectable } from '@angular/core';
 import { BaseCrudService } from '@app/shared/services/base-crud.service';
 import { firstValueFrom } from 'rxjs';
 import { FileModel } from '../models/file.model';
-import { ResponseDto } from '@app/model/response';
 import { CreateFile } from '../models/create-file.model';
 import { BasePasswordService } from '@app/shared/services/base-password.service';
 import { UsageStorage } from '@app/modules/home/models/usage-storage.model';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { IListResponse } from '@app/shared/models/list-response';
+import { Response } from '@app/shared/models/response.model';
 
 @Injectable({
   providedIn: 'root',
@@ -23,9 +23,9 @@ export class FilesService
   async getPublics(options?: {
     params?: HttpParams;
     headers?: HttpHeaders;
-  }): Promise<ResponseDto<IListResponse<FileModel>>> {
+  }): Promise<Response<IListResponse<FileModel>>> {
     return firstValueFrom(
-      this.http.get<ResponseDto<IListResponse<FileModel>>>(
+      this.http.get<Response<IListResponse<FileModel>>>(
         `${this.namespace}/public`,
         {
           params: options?.params,
@@ -37,17 +37,14 @@ export class FilesService
 
   async getPublicByCode(code: string) {
     return firstValueFrom(
-      this.http.get<ResponseDto<FileModel>>(this.namespace + '/public/' + code),
+      this.http.get<Response<FileModel>>(this.namespace + '/public/' + code),
     );
   }
 
-  uploadFiles(createFile: CreateFile): Promise<ResponseDto<FileModel[]>> {
+  uploadFiles(createFile: CreateFile): Promise<Response<FileModel[]>> {
     const uploadURL = `${this.namespace}/upload`;
     return firstValueFrom(
-      this.http.post<ResponseDto<FileModel[]>>(
-        uploadURL,
-        createFile.toFormData(),
-      ),
+      this.http.post<Response<FileModel[]>>(uploadURL, createFile.toFormData()),
     );
   }
 
@@ -80,9 +77,9 @@ export class FilesService
   checkPassword(
     password: string,
     id?: number | string,
-  ): Promise<ResponseDto<boolean>> {
+  ): Promise<Response<boolean>> {
     return firstValueFrom(
-      this.http.post<ResponseDto<boolean>>(
+      this.http.post<Response<boolean>>(
         `${this.namespace}/${id}/check-password`,
         {
           password,
@@ -91,29 +88,28 @@ export class FilesService
     );
   }
 
-  getUsage(userId: number): Promise<ResponseDto<UsageStorage>> {
+  getUsage(userId: number): Promise<Response<UsageStorage>> {
     return firstValueFrom(
-      this.http.get<ResponseDto<UsageStorage>>(
-        `${this.namespace}/usage-storage`,
-        { params: { userId } },
-      ),
+      this.http.get<Response<UsageStorage>>(`${this.namespace}/usage-storage`, {
+        params: { userId },
+      }),
     );
   }
 
   signFile(
     data: FormData,
-  ): Promise<ResponseDto<{ file: FileModel; qrCode: string }>> {
+  ): Promise<Response<{ file: FileModel; qrCode: string }>> {
     return firstValueFrom(
-      this.http.post<ResponseDto<{ file: FileModel; qrCode: string }>>(
+      this.http.post<Response<{ file: FileModel; qrCode: string }>>(
         `${this.namespace}/sign`,
         data,
       ),
     );
   }
 
-  getQrCode(fileId: number): Promise<ResponseDto<string>> {
+  getQrCode(fileId: number): Promise<Response<string>> {
     return firstValueFrom(
-      this.http.get<ResponseDto<string>>(`${this.namespace}/${fileId}/qr-code`),
+      this.http.get<Response<string>>(`${this.namespace}/${fileId}/qr-code`),
     );
   }
 }

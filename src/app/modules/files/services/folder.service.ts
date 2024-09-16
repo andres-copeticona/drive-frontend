@@ -3,7 +3,6 @@ import { BaseCrudService } from '@app/shared/services/base-crud.service';
 import { Folder } from '../models/folder.model';
 import { firstValueFrom } from 'rxjs';
 import { Response } from '@app/shared/models/response.model';
-import { ResponseDto } from '@app/model/response';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
 import { IListResponse } from '@app/shared/models/list-response';
 
@@ -54,7 +53,15 @@ export class FolderService extends BaseCrudService<Folder> {
 
   async getPublicByCode(code: string) {
     return firstValueFrom(
-      this.http.get<ResponseDto<Folder>>(this.namespace + '/public/' + code),
+      this.http.get<Response<Folder>>(this.namespace + '/public/' + code),
+    );
+  }
+
+  async togglePrivacity(id: number | string) {
+    return firstValueFrom(
+      this.http.get<Response<string>>(
+        this.namespace + `/${id}/toggle-privacity`,
+      ),
     );
   }
 }

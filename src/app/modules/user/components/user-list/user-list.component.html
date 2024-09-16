@@ -12,33 +12,31 @@
     </mat-form-field>
 
     <div class="mat-elevation-z8">
-      <table mat-table [dataSource]="dataSource" matSort>
+      <table mat-table [dataSource]="dataSource">
         <ng-container matColumnDef="usuarioId">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+          <th mat-header-cell *matHeaderCellDef>ID</th>
           <td mat-cell *matCellDef="let row">{{ row.id }}</td>
         </ng-container>
 
         <ng-container matColumnDef="nombre">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Nombre completo
-          </th>
+          <th mat-header-cell *matHeaderCellDef>Nombre completo</th>
           <td mat-cell *matCellDef="let row">
             {{ row.fullName }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="celular">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Celular</th>
+          <th mat-header-cell *matHeaderCellDef>Celular</th>
           <td mat-cell *matCellDef="let row">{{ row.cellphone }}</td>
         </ng-container>
 
         <ng-container matColumnDef="cargo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
+          <th mat-header-cell *matHeaderCellDef>Cargo</th>
           <td mat-cell *matCellDef="let row">{{ row.position }}</td>
         </ng-container>
 
         <ng-container matColumnDef="estado">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
           <td mat-cell *matCellDef="let row">
             @if (row.status == true) {
               Activo
@@ -50,14 +48,12 @@
         </ng-container>
 
         <ng-container matColumnDef="dependencia">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Dependencia</th>
+          <th mat-header-cell *matHeaderCellDef>Dependencia</th>
           <td mat-cell *matCellDef="let row">{{ row.dependence }}</td>
         </ng-container>
 
         <ng-container matColumnDef="rol">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            Rol en sistema
-          </th>
+          <th mat-header-cell *matHeaderCellDef>Rol en sistema</th>
           <td mat-cell *matCellDef="let element">
             @if (rolesForEdit[element.id]) {
               <mat-form-field>
@@ -74,7 +70,7 @@
         </ng-container>
 
         <ng-container matColumnDef="edit-rol">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+          <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let element">
             <div class="button-secction">
               <mat-slide-toggle
@@ -95,7 +91,7 @@
         </ng-container>
 
         <ng-container matColumnDef="view-details">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+          <th mat-header-cell *matHeaderCellDef></th>
           <td mat-cell *matCellDef="let row">
             <div class="button-secction">
               <button mat-raised-button color="primary" (click)="view(row.id)">

@@ -33,7 +33,6 @@ export class AuthService extends BaseService {
     const body = {
       login: username,
       password: password,
-      token: 'servidoresgadc12345',
     };
     return firstValueFrom(
       this.http.post<Response<LoginResponse>>(`${this.namespace}/login`, body, {

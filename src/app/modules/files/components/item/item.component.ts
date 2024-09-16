@@ -77,7 +77,10 @@ export class ListItemComponent implements OnInit {
       this.item().type == 'folder' ? this.folderService : this.fileService;
 
     try {
-      if (this.item().accessType === ACCESS_TYPES.PUBLIC)
+      if (
+        this.item().accessType === ACCESS_TYPES.PUBLIC &&
+        this.item().type != 'folder'
+      )
         service.publicDownload({
           code: this.item().code,
           title: this.item().name,
@@ -154,6 +157,7 @@ export class ListItemComponent implements OnInit {
         type: this.item().type == 'folder' ? 'folder' : 'file',
         code: this.item().code,
         id: this.item().id,
+        accessType: this.item().accessType,
       },
     });
   }

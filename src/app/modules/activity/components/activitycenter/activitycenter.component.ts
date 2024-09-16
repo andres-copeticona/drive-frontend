@@ -1,11 +1,4 @@
-import {
-  AfterContentInit,
-  AfterViewInit,
-  Component,
-  OnInit,
-  ViewChild,
-  afterNextRender,
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {
   MatPaginator,
   MatPaginatorIntl,
@@ -30,17 +23,19 @@ import { FormatDatePipe } from '@app/pipes/format-date.pipe';
 import { Activity } from '../../models/activity.model';
 import { ActivityService } from '../../services/activity.service';
 import { PaginatorIntl } from '@app/shared/components/paginator-intl/paginator-intl.component';
+import { HttpParams } from '@angular/common/http';
+import { ACCESS_TYPES, SORT_DIR } from '@app/shared/constants/constants';
+import { MatTabsModule } from '@angular/material/tabs';
+import { FolderService } from '@app/modules/files/services/folder.service';
+import { Folder } from '@app/modules/files/models/folder.model';
+import { FilesService } from '@app/modules/files/services/files.service';
+import { FileModel } from '@app/modules/files/models/file.model';
+import { QrService } from '@app/shared/services/qr.service';
+import { QrCodeData } from '@app/modules/details-qr/models/qr-code-data';
 
-export interface UserData {
-  id: number;
-  nombre: string;
-  fecha: string;
-  ip: string;
-  usuarioId: string;
-  tipoActividad: string;
-}
 @Component({
   selector: 'app-activitycenter',
+  host: { ngSkipHydratation: 'true' },
   standalone: true,
   imports: [
     DatePipe,
@@ -56,6 +51,7 @@ export interface UserData {
     MatInputModule,
     MatTableModule,
     MatSortModule,
+    MatTabsModule,
     MatPaginatorModule,
   ],
   templateUrl: './activitycenter.component.html',
@@ -67,85 +63,158 @@ export class ActivityCenterComponent implements OnInit, AfterViewInit {
   userSearchControl = new FormControl('');
   userDataSource = new MatTableDataSource<Activity>();
   userColumns: string[] = ['userId', 'fullname', 'date', 'ip', 'activityType'];
-  @ViewChild(MatPaginator) userPaginator!: MatPaginator;
+  @ViewChild('userPaginator') userPaginator!: MatPaginator;
+  userTotals = 0;
+  userFilter = {
+    searchTerm: '',
+    page: 0,
+    size: 5,
+    sortDirection: SORT_DIR.DESC,
+  };
+
+  async onUserPage(event: PageEvent) {
+    this.userFilter.page = event.pageIndex;
+    this.userFilter.size = event.pageSize;
+    await this.loadUsersActivities();
+  }
 
   sharedSearchControl = new FormControl('');
-  sharedDataSource = new MatTableDataSource<Activity>();
-  sharedActivityColumns: string[] = [
-    'name',
-    'type',
-    'fileId',
-    'fodlerId',
-    'quantity',
-  ];
-  @ViewChild(MatPaginator) sharedPaginator!: MatPaginator;
+  sharedDataSource = new MatTableDataSource<Folder>();
+  sharedActivityColumns: string[] = ['id', 'name', 'code', 'quantity'];
+  @ViewChild('sharedPaginator') sharedPaginator!: MatPaginator;
   sharedFilter = {
     searchTerm: '',
     page: 0,
     size: 5,
+    accessType: ACCESS_TYPES.PUBLIC,
+    sortDirection: SORT_DIR.DESC,
   };
 
   onSharedPage(event: PageEvent) {
     this.sharedFilter.page = event.pageIndex;
     this.sharedFilter.size = event.pageSize;
-    // this.loadShared
+    this.loadShared();
   }
 
   constructor(
     public activityService: ActivityService,
-    // public actividadeService: ActividadService,
-    // public actividadesCompartidasService: ActividadcompartidoService,
+    public folderService: FolderService,
+    public fileService: FilesService,
+    public qrService: QrService,
   ) {
     this.userSearchControl.valueChanges
       .pipe(debounceTime(300))
       .subscribe((value) => {
-        const res = this.userList.filter((user) => {
-          return (
-            user.user.fullName.includes(value!) ||
-            user.activityType.includes(value!)
-          );
-        });
-
-        this.userDataSource.data = res;
-
-        if (this.userDataSource.paginator)
-          this.userDataSource.paginator.firstPage();
+        this.userFilter.searchTerm = value!;
+        this.userPaginator.firstPage();
+        this.loadUsersActivities();
       });
 
     this.sharedSearchControl.valueChanges
       .pipe(debounceTime(300))
       .subscribe((value) => {
         this.sharedFilter.searchTerm = value!;
-        // this.loadShared();
-        if (this.userPaginator) this.userPaginator.firstPage();
+        this.sharedPaginator.firstPage();
+        this.loadShared();
+      });
+
+    this.fileSearchControl.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((value) => {
+        this.fileFilter.searchTerm = value!;
+        this.filePaginator.firstPage();
+        this.loadFiles();
+      });
+
+    this.qrSearchControl.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((value) => {
+        this.qrFilter.searchTerm = value!;
+        this.qrPaginator.firstPage();
+        this.loadqrs();
       });
   }
 
   async ngAfterViewInit() {
-    this.userDataSource.paginator = this.userPaginator;
+    await this.loadUsersActivities();
+    await this.loadShared();
+    await this.loadFiles();
+    await this.loadqrs();
   }
 
-  async ngOnInit() {
-    await this.loadUsersActivities();
-    // await this.loadShared();
-  }
+  async ngOnInit() {}
 
   async loadUsersActivities() {
-    const res = await this.activityService.findMany();
-    this.userList = res.data.data;
-    this.userDataSource.data = this.userList;
+    const res = await this.activityService.findMany({
+      params: new HttpParams({ fromObject: this.userFilter }),
+    });
+    this.userDataSource.data = res.data.data;
+    this.userPaginator.length = res.data.total;
   }
 
-  // async loadShared() {
-  //   const res = await this.activityService.findMany({
-  //     params: new HttpParams({
-  //       fromObject: {
-  //         searchTerm: this.sharedDataSource.filter,
-  //         page: this.sharedDataSource.paginator?.pageIndex!,
-  //         size: this.sharedDataSource.paginator?.pageSize!,
-  //       },
-  //     }),
-  //   });
-  //   this.sharedDataSource.data = res.data.data;
-  // }
+  async loadShared() {
+    const res = await this.folderService.findMany({
+      params: new HttpParams({
+        fromObject: this.sharedFilter,
+      }),
+    });
+    this.sharedDataSource.data = res.data.data;
+    this.sharedPaginator.length = res.data.total;
+  }
+
+  fileSearchControl = new FormControl('');
+  fileDataSource = new MatTableDataSource<FileModel>();
+  fileActivityColumns: string[] = ['id', 'name', 'code', 'quantity'];
+  @ViewChild('filePaginator') filePaginator!: MatPaginator;
+  fileFilter = {
+    searchTerm: '',
+    page: 0,
+    size: 5,
+    accessType: ACCESS_TYPES.PUBLIC,
+    sortDirection: SORT_DIR.DESC,
+    category: 'Nuevo',
+  };
+
+  onFilePage(event: PageEvent) {
+    this.fileFilter.page = event.pageIndex;
+    this.fileFilter.size = event.pageSize;
+    this.loadFiles();
+  }
+
+  async loadFiles() {
+    const res = await this.fileService.findMany({
+      params: new HttpParams({
+        fromObject: this.fileFilter,
+      }),
+    });
+    this.fileDataSource.data = res.data.data;
+    this.filePaginator.length = res.data.total;
+  }
+
+  qrSearchControl = new FormControl('');
+  qrDataSource = new MatTableDataSource<QrCodeData>();
+  qrActivityColumns: string[] = ['id', 'name', 'title', 'code', 'quantity'];
+  @ViewChild('qrPaginator') qrPaginator!: MatPaginator;
+  qrFilter = {
+    searchTerm: '',
+    page: 0,
+    size: 5,
+    sortDirection: SORT_DIR.DESC,
+  };
+
+  onQrPage(event: PageEvent) {
+    this.qrFilter.page = event.pageIndex;
+    this.qrFilter.size = event.pageSize;
+    this.loadqrs();
+  }
+
+  async loadqrs() {
+    const res = await this.qrService.findMany({
+      params: new HttpParams({
+        fromObject: this.qrFilter,
+      }),
+    });
+    this.qrDataSource.data = res.data.data;
+    this.qrPaginator.length = res.data.total;
+  }
 }

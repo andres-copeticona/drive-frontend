@@ -4,7 +4,6 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { UsuarioService } from '../../service/usuario.service';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -37,7 +36,6 @@ export class DetailsQRComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private qrservice: QrService,
-    public usuarioService: UsuarioService,
     @Inject(PLATFORM_ID) private platformId: Object,
   ) {}
 
