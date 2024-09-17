@@ -126,7 +126,7 @@ export class ShareFolderComponent implements OnInit {
           .includes(this.searchSharedFolderTerm.toLowerCase()),
       );
 
-    if (!(this.dependencySelected === ''))
+    if (this.dependencySelected && this.dependencySelected !== '')
       folders = folders.filter(
         (f) =>
           f.emisor.dependence.toLowerCase() ==
