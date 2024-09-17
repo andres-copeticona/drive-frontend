@@ -4,11 +4,14 @@
   width: 100vw;
   background-color: #ebf2fc;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
   background-image: url("/assets/fondo-web.jpg");
+}
+
+.logo {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .bold {
@@ -22,5 +25,40 @@
 ngx-extended-pdf-viewer {
   width: 100%;
   max-width: 1000px;
-  height: calc(100vh - 300px);
+  height: calc(100vh - 230px);
+}
+
+.qr-container {
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(100vh - 230px);
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+@media (max-width: 900px) {
+  .qr-container {
+    flex-direction: column;
+    padding: 0 1rem;
+  }
+}
+
+.charging {
+  background-image: url("/assets/espera_web.gif");
+  background-size: cover;
+  background-position: center;
+  display: none;
+  height: 100vh;
+}
+
+@media only screen and (max-width: 768px) {
+  .charging {
+    background-image: url("/assets/espera_movil.gif");
+    background-size: cover;
+    background-position: center;
+    display: none;
+    height: 100vh;
+  }
 }

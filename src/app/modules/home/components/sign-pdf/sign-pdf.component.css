@@ -36,7 +36,9 @@
 
 .sign-form {
   display: flex;
+  flex-direction: column;
   gap: 1rem;
+  flex: 1;
 }
 
 @media (max-width: 1000px) {
@@ -56,4 +58,25 @@
 .header {
   display: flex;
   justify-content: space-between;
+}
+
+.preview-container {
+  display: flex;
+  gap: 0.5rem;
+  height: 100%;
+
+  height: calc(100vh - 300px);
+  height: calc(100lvh - 300px);
+}
+
+@media (max-width: 1200px) {
+  .preview-container {
+    flex-direction: column;
+  }
+}
+
+ngx-extended-pdf-viewer {
+  min-height: 500px;
+  flex-grow: 1;
+  flex: 3;
 }

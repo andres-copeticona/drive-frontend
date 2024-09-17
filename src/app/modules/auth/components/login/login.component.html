@@ -1,52 +1,52 @@
-<div class="container" [style.display]="displaylogin">
-  <div class="center">
-    <div class="left-section">
-      <div class="text-welcome-section"></div>
-      <div class="login-text-section">
-        {{ this.mensajeBienvenido }}
+@if (!isLoading) {
+  <div class="container" [style.display]="'flex'">
+    <div class="center">
+      <div class="left-section">
+        <div class="text-welcome-section"></div>
+        <form (ngSubmit)="onLogin($event)">
+          <div class="email-section">
+            <div class="example-container">
+              <mat-form-field>
+                <mat-label>Ingrese tu usuario</mat-label>
+                <input matInput [(ngModel)]="username" name="usuario" />
+                <button mat-icon-button matSuffix type="button">
+                  <mat-icon>person</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="password-section">
+            <div class="example-container">
+              <mat-form-field>
+                <mat-label>Ingrese tu contraseña</mat-label>
+                <input
+                  matInput
+                  [type]="hide ? 'password' : 'text'"
+                  [(ngModel)]="password"
+                  name="password"
+                />
+                <button
+                  mat-icon-button
+                  matSuffix
+                  (click)="hide = !hide"
+                  type="button"
+                >
+                  <mat-icon>{{
+                    hide ? "visibility_off" : "visibility"
+                  }}</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="button-section">
+            <div class="example-button-row">
+              <button mat-raised-button type="submit">Acceder</button>
+            </div>
+          </div>
+        </form>
       </div>
-      <form (ngSubmit)="onLogin($event)">
-        <div class="email-section">
-          <div class="example-container">
-            <mat-form-field>
-              <mat-label>Ingrese tu usuario</mat-label>
-              <input matInput [(ngModel)]="username" name="usuario" />
-              <button mat-icon-button matSuffix type="button">
-                <mat-icon>person</mat-icon>
-              </button>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="password-section">
-          <div class="example-container">
-            <mat-form-field>
-              <mat-label>Ingrese tu contraseña</mat-label>
-              <input
-                matInput
-                [type]="hide ? 'password' : 'text'"
-                [(ngModel)]="password"
-                name="password"
-              />
-              <button
-                mat-icon-button
-                matSuffix
-                (click)="hide = !hide"
-                type="button"
-              >
-                <mat-icon>{{
-                  hide ? "visibility_off" : "visibility"
-                }}</mat-icon>
-              </button>
-            </mat-form-field>
-          </div>
-        </div>
-        <div class="button-section">
-          <div class="example-button-row">
-            <button mat-raised-button type="submit">Acceder</button>
-          </div>
-        </div>
-      </form>
     </div>
   </div>
-</div>
-<div class="charging" [style.display]="displaycharging"></div>
+} @else {
+  <div class="charging"></div>
+}

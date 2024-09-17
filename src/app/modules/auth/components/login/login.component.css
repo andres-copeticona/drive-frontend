@@ -8,15 +8,14 @@
   height: 100vh; /* Ajusta esto según tus necesidades */
 }
 .container {
-  background-image: url('/assets/entrada_web.gif');
+  background-image: url("/assets/entrada_web.gif");
   background-size: cover;
   background-position: center;
 }
 .charging {
-  background-image: url('/assets/espera_web.gif');
+  background-image: url("/assets/espera_web.gif");
   background-size: cover;
   background-position: center;
-  display: none;
   height: 100vh;
 }
 
@@ -62,7 +61,7 @@
   padding: 5%;
 }
 .alert {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 15px;
   text-align: center;
@@ -104,7 +103,7 @@ input.example-right-align {
 }
 
 .custom-input {
-  background-color: #6663FE;
+  background-color: #6663fe;
   color: white;
 }
 
@@ -115,25 +114,11 @@ input.example-right-align {
 }
 
 @media only screen and (max-width: 768px) {
-  .image-section{
-    display: none;
-  }
-  .container {
-    background-image: url('/assets/entrada_movil.gif');
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    background-color: #EBF2FC;
-    padding-left:2%;
-    padding-right: 2%;
-    height: 100vh;
-  }
   .charging {
-    background-image: url('/assets/espera_movil.gif');
+    background-image: url("/assets/espera_movil.gif");
     background-size: cover;
     background-position: center;
-    display: none;
     height: 100vh;
   }
 }
+

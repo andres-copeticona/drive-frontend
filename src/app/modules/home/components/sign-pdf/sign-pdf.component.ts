@@ -73,9 +73,19 @@ export class SignPdfComponent implements OnInit {
   categoryType = FILE_CATEGORY.NEW;
 
   formGroup: FormGroup = new FormGroup({
-    title: new FormControl('', [Validators.required]),
-    description: new FormControl('', [Validators.required]),
+    title: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(100),
+    ]),
+    description: new FormControl('', [
+      Validators.required,
+      Validators.maxLength(255),
+    ]),
   });
+
+  get formControls(): any {
+    return this.formGroup.controls;
+  }
 
   qrUrl?: string;
   qrCode?: string;
@@ -238,7 +248,7 @@ export class SignPdfComponent implements OnInit {
     pdfDoc.getPages().forEach((page) => {
       page.drawImage(qrImage, {
         x: 10,
-        y: page.getHeight() - 110,
+        y: page.getHeight() - 160,
         width: 80,
         height: 80,
       });

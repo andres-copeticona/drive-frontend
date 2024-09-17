@@ -71,17 +71,17 @@ export class FolderFormComponent implements OnInit {
     if (this.formGroup.invalid) return;
 
     const { name } = this.formGroup.value;
-    let res: Response<Folder> | undefined;
     try {
-      res = await this.folderService.store({
+      const res = await this.folderService.store({
         name,
         parentId: this.data?.parentId,
       });
       this.ref.close(res?.data);
       this.ts.success(res?.message ?? 'Carpeta guardada', 'Guardado');
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
-      this.ts.error(res?.message ?? 'Error al guardar la carpeta', 'Error');
+      const msg = error?.error?.message ?? 'Error al guardar la carpeta';
+      this.ts.error(msg, 'Error');
     }
   }
 }

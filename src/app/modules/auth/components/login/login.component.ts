@@ -26,13 +26,12 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
-  mensajeBienvenido: string = 'Bienvenid@';
-  displaylogin: string = 'flex';
-  displaycharging: string = 'none';
   username: string = '';
   password: string = '';
   hide = true;
   errorMessage: string = '';
+
+  isLoading = false;
 
   constructor(
     private authService: AuthService,
@@ -44,6 +43,7 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {}
 
   async onLogin(_event: any) {
+    this.isLoading = true;
     try {
       const res = await this.authService.login(this.username, this.password);
       const { data } = res;
@@ -70,6 +70,8 @@ export class LoginComponent implements OnInit {
     } catch (error) {
       console.error(error);
       this.ts.error('Error al iniciar sesión', 'Error');
+    } finally {
+      this.isLoading = false;
     }
   }
 }
