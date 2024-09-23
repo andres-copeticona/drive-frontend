@@ -128,6 +128,7 @@ export class SignPdfComponent implements OnInit {
             sortDirection: SORT_DIR.DESC,
             type: 'application/pdf',
             createdBy: this.authService.getInfo()?.userId!,
+            showAll: true,
           },
         }),
       });
