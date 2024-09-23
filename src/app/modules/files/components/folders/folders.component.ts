@@ -134,6 +134,7 @@ export class FolderComponent implements OnInit {
           fromObject: {
             parentId: this.currentFolder?.id ?? 0,
             createdBy: this.authService.getInfo()?.userId?.toString() ?? '',
+            showAll: true,
           },
         }),
       });
@@ -153,7 +154,7 @@ export class FolderComponent implements OnInit {
       if (!this.currentFolder?.id) return;
       const files = await this.fileService.findMany({
         params: new HttpParams({
-          fromObject: { parentId: this.currentFolder?.id },
+          fromObject: { parentId: this.currentFolder?.id, showAll: true },
         }),
       });
       this.files = files.data?.data ?? [];

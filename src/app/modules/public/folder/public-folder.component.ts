@@ -21,7 +21,6 @@ import { ItemList } from '@app/modules/files/models/item.model';
 import { FileModel } from '@app/modules/files/models/file.model';
 import { FolderService } from '@app/modules/files/services/folder.service';
 import { HttpParams } from '@angular/common/http';
-import { ShareFileService } from '@app/modules/files/services/share-file.service';
 import { ACCESS_TYPES } from '@app/shared/constants/constants';
 
 @Component({
@@ -112,6 +111,7 @@ export class PublicFolderComponent implements OnInit {
         params: new HttpParams({
           fromObject: {
             parentId: this.currentFolder.id,
+            showAll: true,
           },
         }),
       });
@@ -131,7 +131,7 @@ export class PublicFolderComponent implements OnInit {
       if (!this.currentFolder?.id) return;
       const files = await this.fileService.getPublics({
         params: new HttpParams({
-          fromObject: { parentId: this.currentFolder.id },
+          fromObject: { parentId: this.currentFolder.id, showAll: true },
         }),
       });
       this.files = files.data?.data ?? [];
@@ -209,9 +209,4 @@ export class PublicFolderComponent implements OnInit {
     this.currentFolder = folder;
     this.load();
   }
-
-  // download() {
-  //   if (!this.file?.code) return;
-  //   this.fileService.publicDownload(this.file);
-  // }
 }
