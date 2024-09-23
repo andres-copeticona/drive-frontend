@@ -41,6 +41,8 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    if (window === undefined) return;
+
     this.inactivityService.stop();
     this.inactivityService.start();
     const role = this.authService.getInfo()?.roleId;
