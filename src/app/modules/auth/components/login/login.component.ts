@@ -40,7 +40,20 @@ export class LoginComponent implements OnInit {
     private ts: ToastrService,
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.inactivityService.stop();
+    this.inactivityService.start();
+    const role = this.authService.getInfo()?.roleId;
+
+    if (role === 1) {
+      this.router.navigate(['/cloud/home']);
+    } else if (role === 2) {
+      this.router.navigate(['/cloud/userlist']);
+    } else {
+      this.inactivityService.stop();
+      this.authService.logout();
+    }
+  }
 
   async onLogin(_event: any) {
     this.isLoading = true;
