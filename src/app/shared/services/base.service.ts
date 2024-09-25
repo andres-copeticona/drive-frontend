@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { enviroment } from '../../../environments/enviroment';
 import { inject } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 export abstract class BaseService {
-  protected baseUrl = enviroment.API_URL;
+  protected baseUrl = environment.API_URL;
   protected readonly http: HttpClient = inject(HttpClient);
   protected namespace: string;
 

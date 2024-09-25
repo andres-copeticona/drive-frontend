@@ -2,16 +2,16 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { QrCodeData } from '@app/modules/details-qr/models/qr-code-data';
 import { firstValueFrom } from 'rxjs';
-import { enviroment } from 'src/environments/enviroment';
 import { IListResponse } from '../models/list-response';
 import { Response } from '../models/response.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QrService {
-  baseUrl = enviroment.ANGULAR_URL;
-  apiUrl = enviroment.API_URL;
+  baseUrl = environment.ANGULAR_URL;
+  apiUrl = environment.API_URL;
 
   constructor(private http: HttpClient) {}
 
