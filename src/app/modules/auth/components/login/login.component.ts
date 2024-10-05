@@ -49,9 +49,9 @@ export class LoginComponent implements OnInit {
     const role = this.authService.getInfo()?.roleId;
 
     if (role === 1) {
-      this.router.navigate(['/cloud/home']);
+      this.router.navigate(['/nube/inicio']);
     } else if (role === 2) {
-      this.router.navigate(['/cloud/userlist']);
+      this.router.navigate(['/nube/listausuarios']);
     } else {
       this.inactivityService.stop();
       this.authService.logout();
@@ -72,9 +72,9 @@ export class LoginComponent implements OnInit {
       this.inactivityService.start();
 
       if (data.user.role.id === 1) {
-        this.router.navigate(['/cloud/home']);
+        this.router.navigate(['/nube/inicio']);
       } else if (data.user.role.id === 2) {
-        this.router.navigate(['/cloud/userlist']);
+        this.router.navigate(['/nube/listausuarios']);
       } else {
         this.inactivityService.stop();
         this.authService.logout();

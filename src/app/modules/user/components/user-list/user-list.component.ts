@@ -150,7 +150,7 @@ export class UserListComponent implements OnInit {
   }
 
   view(id: number) {
-    this.router.navigate(['/cloud/profile'], {
+    this.router.navigate(['/nube/perfil'], {
       queryParams: { number: id },
     });
   }

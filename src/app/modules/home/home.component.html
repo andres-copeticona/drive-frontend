@@ -22,34 +22,36 @@
       </button>
       <mat-accordion multi>
         @if (roleId == 1) {
-          <mat-expansion-panel [expanded]="true">
-            <mat-expansion-panel-header>
-              <mat-panel-title> Mensaje General </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="message">
-              <form [formGroup]="formGroup" (submit)="sendAllMessage()">
-                <mat-form-field [style.width]="'100%'" appearance="outline">
-                  <mat-label>Titulo del mensaje</mat-label>
-                  <input formControlName="title" matInput />
-                </mat-form-field>
+          @if (showGeneralMessage) {
+            <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel-header>
+                <mat-panel-title> Mensaje General </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div class="message">
+                <form [formGroup]="formGroup" (submit)="sendAllMessage()">
+                  <mat-form-field [style.width]="'100%'" appearance="outline">
+                    <mat-label>Titulo del mensaje</mat-label>
+                    <input formControlName="title" matInput />
+                  </mat-form-field>
 
-                <mat-form-field [style.width]="'100%'" appearance="outline">
-                  <mat-label>Mensaje</mat-label>
-                  <textarea formControlName="message" matInput></textarea>
-                </mat-form-field>
+                  <mat-form-field [style.width]="'100%'" appearance="outline">
+                    <mat-label>Mensaje</mat-label>
+                    <textarea formControlName="message" matInput></textarea>
+                  </mat-form-field>
 
-                <button
-                  [disabled]="formGroup.invalid"
-                  type="submit"
-                  [style.width]="'100%'"
-                  mat-raised-button
-                >
-                  <mat-icon>send</mat-icon>
-                  Enviar mensaje a todos los usuarios
-                </button>
-              </form>
-            </div>
-          </mat-expansion-panel>
+                  <button
+                    [disabled]="formGroup.invalid"
+                    type="submit"
+                    [style.width]="'100%'"
+                    mat-raised-button
+                  >
+                    <mat-icon>send</mat-icon>
+                    Enviar mensaje a todos los usuarios
+                  </button>
+                </form>
+              </div>
+            </mat-expansion-panel>
+          }
         }
 
         <mat-expansion-panel [expanded]="true">

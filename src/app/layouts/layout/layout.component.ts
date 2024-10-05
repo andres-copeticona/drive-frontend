@@ -58,33 +58,26 @@ export class LayoutComponent implements OnInit {
   }
 
   rol1Menu: MenuItem[] = [
-    { icon: 'account_circle', label: 'Perfil', route: '/profile' },
-    { icon: 'home', label: 'Página principal', route: '/home' },
+    { icon: 'account_circle', label: 'Perfil', route: '/perfil' },
+    { icon: 'home', label: 'Página principal', route: '/inicio' },
 
-    { icon: 'folder_open', label: 'Carpetas', route: '/folders' },
+    { icon: 'folder_open', label: 'Carpetas', route: '/carpetas' },
     {
       icon: 'folder_shared',
       label: 'Carpetas Compartidas',
-      route: '/sharedfolders',
+      route: '/carpetascompartidas',
     },
     {
       icon: 'contact_page',
       label: 'Archivos Compartidos',
-      route: '/sharedFiles',
+      route: '/archivoscompartidos',
     },
-    // { icon: 'settings', label: 'Archivos Firmados', route: '/signedfiles' },
-    // { icon: 'settings', label: 'Pdf Preview', route: '/pdfview' },
-    // { icon: 'settings', label: 'Actividad', route: '/activity' },
-    //
-    // { icon: 'settings', label: 'Sello', route: '/detalleSello' },
-    // { icon: 'settings', label: 'Archivo', route: '/file' },
-    // { icon: 'settings', label: 'Carpeta', route: '/folder' },
   ];
 
   rol2Menu: MenuItem[] = [
-    { icon: 'account_circle', label: 'Perfil', route: '/profile' },
-    { icon: 'person', label: 'Usuarios del sistema', route: '/userlist' },
-    { icon: 'summarize', label: 'Reportes', route: '/activity' },
+    { icon: 'account_circle', label: 'Perfil', route: '/perfil' },
+    { icon: 'person', label: 'Usuarios del sistema', route: '/listausuarios' },
+    { icon: 'summarize', label: 'Reportes', route: '/actividad' },
   ];
 
   constructor(

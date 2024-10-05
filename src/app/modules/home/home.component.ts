@@ -69,6 +69,8 @@ import { SignPdfComponent } from './components/sign-pdf/sign-pdf.component';
 export class HomeComponent implements OnInit {
   isLoading = signal(false);
 
+  showGeneralMessage = false;
+
   recentFiles = signal<FileModel[]>([]);
   notifications = signal<Notification[]>([]);
   usageStorage = signal<UsageStorage | null>(null);

@@ -194,7 +194,7 @@ export class FolderComponent implements OnInit {
     if (!folder) return;
     this.breadcrumbs.push(folder);
     this.currentFolder = folder;
-    this.router.navigate(['/cloud/folders'], {
+    this.router.navigate(['/nube/carpetas'], {
       queryParams: { folder: folder.id },
     });
     this.load();
@@ -204,7 +204,7 @@ export class FolderComponent implements OnInit {
     if (!folder) {
       this.currentFolder = undefined;
       this.breadcrumbs = [];
-      this.router.navigate(['/cloud/folders']);
+      this.router.navigate(['/nube/carpetas']);
       this.load();
       return;
     }
@@ -213,7 +213,7 @@ export class FolderComponent implements OnInit {
     if (index === -1) return;
     this.breadcrumbs = this.breadcrumbs.slice(0, index + 1);
     this.currentFolder = folder;
-    this.router.navigate(['/cloud/folders'], {
+    this.router.navigate(['/nube/carpetas'], {
       queryParams: { folder: folder.id },
     });
     this.load();

@@ -16,26 +16,26 @@ import { PublicFolderComponent } from './modules/public/folder/public-folder.com
 export const routes: Routes = [
   { path: '', component: LoginComponent },
   {
-    path: 'public',
+    path: 'publico',
     children: [
-      { path: 'details/:code', component: DetailsQRComponent },
-      { path: 'file/:code/view', component: PublicFileComponent },
+      { path: 'detalles/:code', component: DetailsQRComponent },
+      { path: 'file/:code/ver', component: PublicFileComponent },
       { path: 'folder/:code', component: PublicFolderComponent },
     ],
   },
   {
-    path: 'cloud',
+    path: 'nube',
     component: LayoutComponent,
     canActivateChild: [authGuard],
     canMatch: [authGuard],
     children: [
-      { path: 'home', component: HomeComponent },
-      { path: 'sharedFiles', component: SharedFilesComponent },
-      { path: 'folders', component: FolderComponent },
-      { path: 'profile', component: UserDetailsComponent },
-      { path: 'userlist', component: UserListComponent },
-      { path: 'sharedfolders', component: ShareFolderComponent },
-      { path: 'activity', component: ActivityCenterComponent },
+      { path: 'inicio', component: HomeComponent },
+      { path: 'archivoscompartidos', component: SharedFilesComponent },
+      { path: 'carpetas', component: FolderComponent },
+      { path: 'perfil', component: UserDetailsComponent },
+      { path: 'listausuarios', component: UserListComponent },
+      { path: 'carpetascompartidas', component: ShareFolderComponent },
+      { path: 'actividad', component: ActivityCenterComponent },
     ],
   },
   {

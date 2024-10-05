@@ -39,14 +39,14 @@ export class QrService {
   }
 
   getFileQr(code: string) {
-    return `${this.baseUrl}/public/file/${code}/view`;
+    return `${this.baseUrl}/publico/archivos/${code}/ver`;
   }
 
   getSignQr(code: string) {
-    return `${this.baseUrl}/public/details/${code}`;
+    return `${this.baseUrl}/publico/detalles/${code}`;
   }
 
   getFolderQr(code: string) {
-    return `${this.baseUrl}/public/folder/${code}`;
+    return `${this.baseUrl}/publico/carpetas/${code}`;
   }
 }
