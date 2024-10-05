@@ -20,6 +20,8 @@ export class InactivityService {
   }
 
   private startWatching() {
+    if (typeof window === 'undefined') return;
+
     this.ngZone.runOutsideAngular(() => {
       this.resetTimer();
 

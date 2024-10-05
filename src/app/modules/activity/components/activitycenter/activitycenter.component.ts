@@ -62,7 +62,14 @@ export class ActivityCenterComponent implements OnInit, AfterViewInit {
   userList: Activity[] = [];
   userSearchControl = new FormControl('');
   userDataSource = new MatTableDataSource<Activity>();
-  userColumns: string[] = ['userId', 'fullname', 'date', 'ip', 'activityType'];
+  userColumns: string[] = [
+    'userId',
+    'fullname',
+    'date',
+    'ip',
+    'activityType',
+    'description',
+  ];
   @ViewChild('userPaginator') userPaginator!: MatPaginator;
   userTotals = 0;
   userFilter = {

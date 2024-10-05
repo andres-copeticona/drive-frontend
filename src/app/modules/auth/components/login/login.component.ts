@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '@shared/services/auth.service';
 import { InactivityService } from '@app/shared/services/inactivity.service';
 import { ToastrService } from 'ngx-toastr';
+import { window } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -41,7 +42,7 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    if (window === undefined) return;
+    if (typeof window === 'undefined') return;
 
     this.inactivityService.stop();
     this.inactivityService.start();
