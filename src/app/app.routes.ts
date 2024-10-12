@@ -19,8 +19,8 @@ export const routes: Routes = [
     path: 'publico',
     children: [
       { path: 'detalles/:code', component: DetailsQRComponent },
-      { path: 'file/:code/ver', component: PublicFileComponent },
-      { path: 'folder/:code', component: PublicFolderComponent },
+      { path: 'archivos/:code/ver', component: PublicFileComponent },
+      { path: 'carpetas/:code', component: PublicFolderComponent },
     ],
   },
   {

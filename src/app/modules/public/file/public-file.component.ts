@@ -25,7 +25,7 @@ export class PublicFileComponent implements OnInit {
   file?: FileModel;
 
   get url() {
-    return this.file?.link ?? '';
+    return this.file?.minioLink ?? '';
   }
 
   constructor(

@@ -29,7 +29,7 @@
       }
       @case ("application/pdf") {
         <ngx-extended-pdf-viewer
-          [src]="item?.link ?? ''"
+          [src]="item?.minioLink ?? ''"
         ></ngx-extended-pdf-viewer>
       }
     }

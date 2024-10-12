@@ -27,7 +27,9 @@ export class PreviewComponent implements OnInit {
   item = this.inputItem();
 
   get url() {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.item?.link ?? '');
+    return this.sanitizer.bypassSecurityTrustResourceUrl(
+      this.item?.minioLink ?? '',
+    );
   }
 
   constructor(
