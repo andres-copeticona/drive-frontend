@@ -125,9 +125,9 @@
                 </mat-accordion>
               </div>
             </div>
-            @if (itemSelected?.link) {
+            @if (itemSelected?.minioLink) {
               <ngx-extended-pdf-viewer
-                [src]="itemSelected?.link ?? ''"
+                [src]="itemSelected?.minioLink ?? ''"
               ></ngx-extended-pdf-viewer>
             }
           </div>
