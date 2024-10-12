@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, effect, signal } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -67,7 +67,7 @@ export class SignPdfComponent implements OnInit {
   files: FileModel[] = [];
   filteredFiles: FileModel[] = [];
 
-  itemSelected?: FileModel;
+  itemSelected = signal<FileModel | null>(null);
 
   search = '';
   categoryType = FILE_CATEGORY.NEW;
@@ -90,13 +90,19 @@ export class SignPdfComponent implements OnInit {
   qrUrl?: string;
   qrCode?: string;
 
+  pdfSrc?: string | undefined;
+
   constructor(
     private qrService: QrService,
     private fileService: FilesService,
     private ts: ToastrService,
     private authService: AuthService,
     public sanitizer: DomSanitizer,
-  ) {}
+  ) {
+    effect(() => {
+      this.itemSelected();
+    });
+  }
 
   async ngOnInit() {
     this.isLoading = true;
@@ -105,9 +111,9 @@ export class SignPdfComponent implements OnInit {
   }
 
   async loadQrCode() {
-    if (!this.itemSelected?.qrId) return;
+    if (!this.itemSelected()?.qrId) return;
     try {
-      const res = await this.fileService.getQrCode(this.itemSelected.qrId);
+      const res = await this.fileService.getQrCode(this.itemSelected()!.qrId!);
       this.qrCode = res.data;
       this.qrUrl = this.qrService.getSignQr(res.data);
     } catch (error: any) {
@@ -145,8 +151,8 @@ export class SignPdfComponent implements OnInit {
 
   download() {
     console.log(this.itemSelected);
-    if (!this.itemSelected?.id) return;
-    this.fileService.download(this.itemSelected);
+    if (!this.itemSelected()?.id) return;
+    this.fileService.download(this.itemSelected()!);
   }
 
   toItem(item: FileModel): ItemList {
@@ -163,12 +169,14 @@ export class SignPdfComponent implements OnInit {
 
   async onSelectItem(file: FileModel) {
     this.qrCode = undefined;
-    this.itemSelected = file;
+    this.itemSelected.set(file);
+    this.pdfSrc = file.minioLink;
     this.selectedTab = 1;
     try {
       this.isLoadingItem = true;
       const res = await this.fileService.getPublicByCode(file.code);
-      this.itemSelected = res.data;
+      this.itemSelected.set(res.data);
+      this.pdfSrc = res.data.minioLink;
       await this.loadQrCode();
     } catch (error: any) {
       const msg =
@@ -203,8 +211,12 @@ export class SignPdfComponent implements OnInit {
       });
   }
 
+  public isSigning = false;
+
   async signDocument() {
     if (this.formGroup.invalid) return;
+
+    this.isSigning = true;
 
     const qrCode = this.qrCode ?? uuidv4();
     const file = await this.addQrToPdf(this.qrService.getSignQr(qrCode));
@@ -218,12 +230,13 @@ export class SignPdfComponent implements OnInit {
     data.append('file', file);
     data.append('title', this.formGroup.value.title);
     data.append('description', this.formGroup.value.description);
-    data.append('fileId', this.itemSelected.id.toString());
+    data.append('fileId', this.itemSelected()!.id.toString());
     data.append('qrCode', qrCode);
 
     try {
       const res = await this.fileService.signFile(data);
-      this.itemSelected = res.data.file;
+      this.itemSelected.set(res.data.file);
+      this.pdfSrc = res.data.file.minioLink;
       this.qrCode = res.data.qrCode;
       this.qrUrl = this.qrService.getSignQr(res.data.qrCode);
 
@@ -235,12 +248,14 @@ export class SignPdfComponent implements OnInit {
       const msg =
         error?.error?.message ?? 'Ocurrió un error al firmar el archivo';
       this.ts.error(msg, 'Error');
+    } finally {
+      this.isSigning = false;
     }
   }
 
   async addQrToPdf(qrUrl: string) {
-    if (!this.itemSelected?.minioLink) return;
-    const pdfResponse = await fetch(this.itemSelected.minioLink);
+    if (!this.itemSelected()?.minioLink) return;
+    const pdfResponse = await fetch(this.itemSelected()!.minioLink);
     const pdfArrayBuffer = await pdfResponse.arrayBuffer();
     const qrCodeDataUri = await QRCode.toDataURL(qrUrl);
     const pdfDoc = await PDFDocument.load(pdfArrayBuffer);
@@ -260,7 +275,7 @@ export class SignPdfComponent implements OnInit {
     const blob = new Blob([modifiedPdfArrayBuffer], {
       type: 'application/pdf',
     });
-    return new File([blob], 'Sellado_' + this.itemSelected?.title, {
+    return new File([blob], 'Sellado_' + this.itemSelected()?.title, {
       type: 'application/pdf',
     });
   }

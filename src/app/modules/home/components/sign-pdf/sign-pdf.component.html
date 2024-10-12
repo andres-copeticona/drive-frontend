@@ -50,7 +50,7 @@
         <div>
           <button
             mat-icon-button
-            (click)="itemSelected = undefined; selectedTab = 0"
+            (click)="itemSelected.set(null); selectedTab = 0"
           >
             <mat-icon>arrow_back</mat-icon>
           </button>
@@ -87,7 +87,7 @@
               </form>
               <div class="qr-container">
                 <button
-                  [disabled]="!itemSelected?.qrId"
+                  [disabled]="!itemSelected()?.qrId"
                   type="button"
                   [style.width]="'100%'"
                   [style.margin-bottom]="'0.5rem'"
@@ -98,7 +98,7 @@
                   Descargar Documento firmado
                 </button>
                 <mat-accordion>
-                  <mat-expansion-panel [disabled]="!itemSelected?.qrId">
+                  <mat-expansion-panel [disabled]="!itemSelected()?.qrId">
                     <mat-expansion-panel-header>
                       <mat-panel-title> Código QR </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -125,10 +125,8 @@
                 </mat-accordion>
               </div>
             </div>
-            @if (itemSelected?.minioLink) {
-              <ngx-extended-pdf-viewer
-                [src]="itemSelected?.minioLink ?? ''"
-              ></ngx-extended-pdf-viewer>
+            @if (pdfSrc && !isSigning) {
+              <ngx-extended-pdf-viewer [src]="pdfSrc"></ngx-extended-pdf-viewer>
             }
           </div>
         }

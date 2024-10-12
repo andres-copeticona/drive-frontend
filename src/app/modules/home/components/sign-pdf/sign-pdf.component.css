@@ -72,6 +72,8 @@
 @media (max-width: 1200px) {
   .preview-container {
     flex-direction: column;
+
+    height: 100%;
   }
 }
 
