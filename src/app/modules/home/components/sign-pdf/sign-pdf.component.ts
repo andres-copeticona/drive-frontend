@@ -239,8 +239,8 @@ export class SignPdfComponent implements OnInit {
   }
 
   async addQrToPdf(qrUrl: string) {
-    if (!this.itemSelected?.link) return;
-    const pdfResponse = await fetch(this.itemSelected.link);
+    if (!this.itemSelected?.minioLink) return;
+    const pdfResponse = await fetch(this.itemSelected.minioLink);
     const pdfArrayBuffer = await pdfResponse.arrayBuffer();
     const qrCodeDataUri = await QRCode.toDataURL(qrUrl);
     const pdfDoc = await PDFDocument.load(pdfArrayBuffer);
