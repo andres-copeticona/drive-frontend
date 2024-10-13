@@ -47,89 +47,93 @@
         </div>
       </mat-tab>
       <mat-tab label="Firmar documento" [disabled]="itemSelected === undefined">
-        <div>
-          <button
-            mat-icon-button
-            (click)="itemSelected.set(null); selectedTab = 0"
-          >
-            <mat-icon>arrow_back</mat-icon>
-          </button>
-        </div>
-        @if (!isLoadingItem) {
-          <div class="preview-container">
-            <div class="sign-form">
-              <form [formGroup]="formGroup" (submit)="signDocument()">
-                <mat-form-field [style.width]="'100%'" appearance="outline">
-                  <mat-label>Titulo</mat-label>
-                  <input formControlName="title" matInput />
-                  @if (formControls.title?.errors?.maxlength) {
-                    <mat-error>No puede ser mayor a 100 caracteres</mat-error>
-                  }
-                </mat-form-field>
-
-                <mat-form-field [style.width]="'100%'" appearance="outline">
-                  <mat-label>Descripción</mat-label>
-                  <textarea formControlName="description" matInput></textarea>
-                  @if (formControls.description?.errors?.maxlength) {
-                    <mat-error>No puede ser mayor a 255 caracteres</mat-error>
-                  }
-                </mat-form-field>
-
-                <button
-                  [disabled]="formGroup.invalid"
-                  type="submit"
-                  [style.width]="'100%'"
-                  mat-raised-button
-                >
-                  <mat-icon>edit_document</mat-icon>
-                  Firmar Documento
-                </button>
-              </form>
-              <div class="qr-container">
-                <button
-                  [disabled]="!itemSelected()?.qrId"
-                  type="button"
-                  [style.width]="'100%'"
-                  [style.margin-bottom]="'0.5rem'"
-                  mat-raised-button
-                  (click)="download()"
-                >
-                  <mat-icon>download</mat-icon>
-                  Descargar Documento firmado
-                </button>
-                <mat-accordion>
-                  <mat-expansion-panel [disabled]="!itemSelected()?.qrId">
-                    <mat-expansion-panel-header>
-                      <mat-panel-title> Código QR </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <div
-                      style="
-                        color: gray;
-                        justify-content: center;
-                        font-size: small;
-                      "
-                    >
-                      {{ qrUrl }}
-                      <button mat-icon-button matSuffix (click)="copyText()">
-                        <mat-icon>file_copy</mat-icon>
-                      </button>
-                    </div>
-                    @if (qrUrl) {
-                      <qrcode
-                        [qrdata]="qrUrl"
-                        [width]="256"
-                        [errorCorrectionLevel]="'M'"
-                      ></qrcode>
-                    }
-                  </mat-expansion-panel>
-                </mat-accordion>
-              </div>
-            </div>
-            @if (pdfSrc && !isSigning) {
-              <ngx-extended-pdf-viewer [src]="pdfSrc"></ngx-extended-pdf-viewer>
-            }
+        <div class="sign-form-pdf">
+          <div>
+            <button
+              mat-icon-button
+              (click)="itemSelected.set(null); selectedTab = 0"
+            >
+              <mat-icon>arrow_back</mat-icon>
+            </button>
           </div>
-        }
+          @if (!isLoadingItem) {
+            <div class="preview-container">
+              <div class="sign-form">
+                <form [formGroup]="formGroup" (submit)="signDocument()">
+                  <mat-form-field [style.width]="'100%'" appearance="outline">
+                    <mat-label>Titulo</mat-label>
+                    <input formControlName="title" matInput />
+                    @if (formControls.title?.errors?.maxlength) {
+                      <mat-error>No puede ser mayor a 100 caracteres</mat-error>
+                    }
+                  </mat-form-field>
+
+                  <mat-form-field [style.width]="'100%'" appearance="outline">
+                    <mat-label>Descripción</mat-label>
+                    <textarea formControlName="description" matInput></textarea>
+                    @if (formControls.description?.errors?.maxlength) {
+                      <mat-error>No puede ser mayor a 255 caracteres</mat-error>
+                    }
+                  </mat-form-field>
+
+                  <button
+                    [disabled]="formGroup.invalid"
+                    type="submit"
+                    [style.width]="'100%'"
+                    mat-raised-button
+                  >
+                    <mat-icon>edit_document</mat-icon>
+                    Firmar Documento
+                  </button>
+                </form>
+                <div class="qr-container">
+                  <button
+                    [disabled]="!itemSelected()?.qrId"
+                    type="button"
+                    [style.width]="'100%'"
+                    [style.margin-bottom]="'0.5rem'"
+                    mat-raised-button
+                    (click)="download()"
+                  >
+                    <mat-icon>download</mat-icon>
+                    Descargar Documento firmado
+                  </button>
+                  <mat-accordion>
+                    <mat-expansion-panel [disabled]="!itemSelected()?.qrId">
+                      <mat-expansion-panel-header>
+                        <mat-panel-title> Código QR </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div
+                        style="
+                          color: gray;
+                          justify-content: center;
+                          font-size: small;
+                        "
+                      >
+                        {{ qrUrl }}
+                        <button mat-icon-button matSuffix (click)="copyText()">
+                          <mat-icon>file_copy</mat-icon>
+                        </button>
+                      </div>
+                      @if (qrUrl) {
+                        <qrcode
+                          [qrdata]="qrUrl"
+                          [width]="256"
+                          [errorCorrectionLevel]="'M'"
+                        ></qrcode>
+                      }
+                    </mat-expansion-panel>
+                  </mat-accordion>
+                </div>
+              </div>
+              @if (pdfSrc && !isSigning) {
+                <ngx-extended-pdf-viewer
+                  [src]="pdfSrc"
+                ></ngx-extended-pdf-viewer>
+              }
+            </div>
+          }
+        </div>
       </mat-tab>
     </mat-tab-group>
   </div>

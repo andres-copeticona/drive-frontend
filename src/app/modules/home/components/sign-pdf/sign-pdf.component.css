@@ -63,18 +63,18 @@
 .preview-container {
   display: flex;
   gap: 0.5rem;
-  height: 100%;
-
-  height: calc(100vh - 300px);
-  height: calc(100lvh - 300px);
+  min-height: min-content;
 }
 
 @media (max-width: 1200px) {
   .preview-container {
     flex-direction: column;
-
-    height: 100%;
   }
+}
+
+.sign-form-pdf {
+  height: calc(100vh - 42px - 32px);
+  overflow-y: auto;
 }
 
 ngx-extended-pdf-viewer {

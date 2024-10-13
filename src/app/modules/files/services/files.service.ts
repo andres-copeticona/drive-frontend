@@ -51,26 +51,30 @@ export class FilesService
   download(file: FileModel): void {
     const downloadURL = `${this.namespace}/${file.id}/download`;
     this.http.get(downloadURL, { responseType: 'blob' }).subscribe((res) => {
-      const url = window.URL.createObjectURL(res);
+      const blob = new Blob([res], { type: res.type });
+      const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = file.title;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     });
   }
 
   publicDownload(file: FileModel): void {
     const downloadURL = `${this.namespace}/public/${file.code}/download`;
     this.http.get(downloadURL, { responseType: 'blob' }).subscribe((res) => {
-      const url = window.URL.createObjectURL(res);
+      const blob = new Blob([res], { type: res.type });
+      const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = file.title;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     });
   }
 
