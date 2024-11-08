@@ -64,14 +64,15 @@
         </button>
       </mat-chip-row>
     }
+    @if(files.length > 6){
+      <mat-hint> No se pueden cargar mas de 6 archivos a la vez</mat-hint>
+    }
   </mat-dialog-content>
   <mat-dialog-actions>
     <button mat-raised-button mat-dialog-close>Cancelar</button>
     <button
       mat-raised-button
-      [disabled]="
-        fileControl.invalid || (passControl.invalid && showPasswordField)
-      "
+      [disabled]="fileControl.invalid || (passControl.invalid && showPasswordField) || (files.length > 6)"
       (click)="uploadFiles()"
     >
       Subir
