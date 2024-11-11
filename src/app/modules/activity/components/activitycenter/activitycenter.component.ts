@@ -32,6 +32,9 @@ import { FilesService } from '@app/modules/files/services/files.service';
 import { FileModel } from '@app/modules/files/models/file.model';
 import { QrService } from '@app/shared/services/qr.service';
 import { QrCodeData } from '@app/modules/details-qr/models/qr-code-data';
+import { formatDate } from '@angular/common';
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 @Component({
   selector: 'app-activitycenter',
@@ -150,6 +153,35 @@ export class ActivityCenterComponent implements OnInit, AfterViewInit {
   }
 
   async ngOnInit() {}
+
+  async printActivityPDF(){
+    let doc = new jsPDF();
+    doc.text("Reporte de Actividades",20,10)
+    autoTable(doc, {html: "#activityTable"})
+    doc.save("ReporteActividades"+formatDate(new Date(),'dd-MM-yyyy-hh:mm:ss','en')+".pdf")
+  }
+
+  async printSharedPDF(){
+    let doc = new jsPDF();
+    doc.text("Reporte de Carpetas Compartidas",20,10)
+    autoTable(doc, {html: "#sharedTable"})
+    doc.save("Reporte_de_Carpetas_Compartidas_"+formatDate(new Date(),'dd-MM-yyyy-hh:mm:ss','en')+".pdf")
+  }
+
+  async printFilesPDF(){
+    let doc = new jsPDF();
+    doc.text("Reporte de Archivos Compartidos",20,10)
+    autoTable(doc, {html: "#filesTable"})
+    doc.save("Reporte_de_Archivos_Compartidos"+formatDate(new Date(),'dd-MM-yyyy-hh:mm:ss','en')+".pdf")
+  }
+
+  async printQRPDF(){
+    let doc = new jsPDF();
+    doc.text("Reporte de Firmas QR",20,10)
+    autoTable(doc, {html: "#qrTable"})
+    doc.save("Reporte_de_QR_"+formatDate(new Date(),'dd-MM-yyyy-hh:mm:ss','en')+".pdf")
+  }
+
 
   async loadUsersActivities() {
     const res = await this.activityService.findMany({
