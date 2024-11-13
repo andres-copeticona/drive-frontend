@@ -33,6 +33,7 @@ import { QrService } from '@app/shared/services/qr.service';
 import { QrCodeData } from '@app/modules/details-qr/models/qr-code-data';
 import { formatDate } from '@angular/common';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
@@ -195,6 +196,7 @@ export class ActivityCenterComponent implements OnInit, AfterViewInit {
   }
 
   async printActivityPDF(){
+    await this.createChart();
     let doc = new jsPDF();
     doc.text("Reporte de Actividades",20,10);
     autoTable(doc, {html: "#activityTable"});
@@ -267,8 +269,25 @@ export class ActivityCenterComponent implements OnInit, AfterViewInit {
               },
             },
           },
+          datalabels: {
+            anchor: 'center',
+            align: 'center',
+            offset: 0,
+            formatter: (value, context) => {
+              const datapoints: number[] = <number[]>context.chart.data.datasets[0].data;
+              function totalSum(total:number, datapoint:number){
+                return total + datapoint;
+              }
+              const returnValue: string[] = [value, (((value/datapoints.reduce(totalSum,0))*100).toFixed(2)+"%")];
+              return returnValue;
+            },
+            font: {
+              size: 30,
+            }
+          }
         },
       },
+      plugins: [ChartDataLabels]
     };
 
     if (this.chartCanvas?.nativeElement) {
