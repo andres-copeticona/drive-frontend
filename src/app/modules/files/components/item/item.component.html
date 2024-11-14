@@ -49,6 +49,9 @@
         @if(item().accessType === "compartido"){
           <mat-icon [ngClass]="{ icon: !isInline, 'icon-inline': isInline,}">share</mat-icon>
         }
+        @if(item().accessType === "publico"){
+          <mat-icon [ngClass]="{ icon: !isInline, 'icon-inline': isInline,}">ios_share</mat-icon>
+        }
       </div>
       <div [ngClass]="{ 'item-name-container': !isInline }">
         @if (item().accessType === "restringido") {
